@@ -12,10 +12,15 @@ void setup(){
 pinMode(left_reciever,INPUT);
 pinMode(right_reciever,INPUT);
 pinMode(front_reciever,INPUT);
-    
+
 }
 
-leftSensor == analogRead
+void readSensor(){
+    leftSensor = analogRead(left_reciever);
+    rightSensor = analogRead(right_reciever);
+    frontSensor = analogRead(front_reciever);
+    
+}
 
 void PID(void)
 {
