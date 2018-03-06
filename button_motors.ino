@@ -9,17 +9,22 @@ void setup() {
   pinMode(turn_on_en_output,OUTPUT);
   pinMode(forward_pin,OUTPUT);
   pinMode(reverse_pin,OUTPUT);
-  
-
 }
 
 void forward(){
-digitalWrite(turn_on_en_output,HIGH);
-digitalWrite(forward_pin,HIGH);
-digitalWrite(reverse_pin,LOW);
+  digitalWrite(turn_on_en_output,HIGH);
+  digitalWrite(forward_pin,HIGH);
+  digitalWrite(reverse_pin,LOW);
+}
+
+void reverse(){
+  digitalWrite(turn_on_en_output,HIGH);
+  digitalWrite(forward_pin,LOW);
+  digitalWrite(reverse_pin,HIGH);
 }
 
 
+//testing loop
 void loop() {
   val = digitalRead(turn_on_en_input);
 if (val == 1){
