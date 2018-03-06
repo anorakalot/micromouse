@@ -5,6 +5,8 @@ int front_reciever = A2;
 int leftSensor;
 int rightSensor;
 int frontSensor;
+int errorP;
+int errorD;
 
 void setup(){
 pinMode(left_reciever,INPUT);
