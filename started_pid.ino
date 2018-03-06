@@ -1,3 +1,20 @@
+//Global variables;
+int left_reciever = A0;
+int right_reciever = A1;
+int front_reciever = A2;
+int leftSensor;
+int rightSensor;
+int frontSensor;
+
+void setup(){
+pinMode(left_reciever,INPUT);
+pinMode(right_reciever,INPUT);
+pinMode(front_reciever,INPUT);
+    
+}
+
+leftSensor == analogRead
+
 void PID(void)
 {
     if((leftSensor > hasLeftWall && rightSensor > hasRightWall))//has both walls
