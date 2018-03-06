@@ -1,6 +1,11 @@
 //Assume dimensions are both equal for the rest of the code
 //put into brackets of the number of cells in the maze
 //using 5 * 5 for testing
+
+
+
+//FIXME the color problem
+
 int dim_1 = 5;
 int dim_2 = 5;
 int maze [dim_1][dim_2];
