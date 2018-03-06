@@ -4,7 +4,7 @@
 
 
 
-//FIXME the color problem
+//FIXME the color problem maybe use chars instead
 
 int dim_1 = 5;
 int dim_2 = 5;
@@ -30,9 +30,9 @@ void floodfill(node,target_color,replacement_color){
 //2
   floodfill(node+1,target_color,replacement_color)
 //3
-  floodfill(node+dim_1,target_color,replacement_color
+  floodfill(node+dim_1,target_color,replacement_color)
 //4
-  floodfill(node-dim_1,target_color,replacement_color
+  floodfill(node-dim_1,target_color,replacement_color)
 
   return;
 
