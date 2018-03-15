@@ -25,7 +25,7 @@ random_solve (0,0,9,9);
 
 void random_solve(int pos_x,int pos_y,int finish_x,int finish_y){
 
-  
+
   srand(time(0));
 
   maze.at(pos_x).at(pos_y) = 1;
@@ -35,6 +35,9 @@ void random_solve(int pos_x,int pos_y,int finish_x,int finish_y){
     if (random_move == 1){
       //get rid of
       maze.at(pos_x).at(pos_y) = 0;
+      if (pos_y + 1 >= 10){
+        continue;
+      }
       pos_y +=1;
       maze.at(pos_x).at(pos_y) = 1;
       print_maze();
@@ -43,6 +46,9 @@ void random_solve(int pos_x,int pos_y,int finish_x,int finish_y){
     else if (random_move ==2){
 
       maze.at(pos_x).at(pos_y) = 0;
+      if (pos_y - 1 < 0){
+        continue;
+      }
       pos_y -=1;
       maze.at(pos_x).at(pos_y) = 1;
       print_maze();
@@ -52,6 +58,9 @@ void random_solve(int pos_x,int pos_y,int finish_x,int finish_y){
 
       maze.at(pos_x).at(pos_y) = 0;
       pos_x +=1;
+      if (pos_x + 1 >= 10){
+        continue;
+      }
       maze.at(pos_x).at(pos_y) = 1;
       print_maze();
       usleep(1000);
@@ -60,6 +69,9 @@ void random_solve(int pos_x,int pos_y,int finish_x,int finish_y){
 
       maze.at(pos_x).at(pos_y) = 0;
       pos_x -=1;
+      if (pos_x - 1 < 0){
+        continue;
+      }
       maze.at(pos_x).at(pos_y) = 1;
       print_maze();
       usleep(1000);
