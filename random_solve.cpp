@@ -20,12 +20,12 @@ fill_maze(10,10);
 print_maze();
 
 
-random_solve (0,0,6,6);
+random_solve (0,0,5,6);
 
 }
 
 void random_solve(int pos_x,int pos_y,int finish_x,int finish_y){
-  int delay_sec = 10000;
+  int delay_sec = 1000000;
 
   srand(time(0));
 
