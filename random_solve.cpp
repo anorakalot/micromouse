@@ -5,7 +5,7 @@
 #include <cstdlib>
 #include <unistd.h>
 
-std::vector<std::vector<int>> maze;
+std::vector<std::vector<int> > maze;
 int random_move;
 
 
@@ -15,16 +15,17 @@ void random_solve(int start_x,int start_y,int finish_x,int finish_y);
 
 int main(){
 
-std::cout << "Start (0,0) " <<"End at (9,9)";
+std::cout << "Start (0,0) " <<"End at (6,6)" << std::endl;
 fill_maze(10,10);
 print_maze();
 
-random_solve (0,0,9,9);
+
+random_solve (0,0,6,6);
 
 }
 
 void random_solve(int pos_x,int pos_y,int finish_x,int finish_y){
-
+  int delay_sec = 10000;
 
   srand(time(0));
 
@@ -36,12 +37,15 @@ void random_solve(int pos_x,int pos_y,int finish_x,int finish_y){
       //get rid of
       maze.at(pos_x).at(pos_y) = 0;
       if (pos_y + 1 >= 10){
-        continue;
+        //continue;
       }
+      else{
       pos_y +=1;
+      }
       maze.at(pos_x).at(pos_y) = 1;
       print_maze();
-      usleep(1000);
+      std::cout <<std::endl;
+      usleep(delay_sec);
     }
     else if (random_move ==2){
 
@@ -49,32 +53,41 @@ void random_solve(int pos_x,int pos_y,int finish_x,int finish_y){
       if (pos_y - 1 < 0){
         continue;
       }
+      else{
       pos_y -=1;
+      }
       maze.at(pos_x).at(pos_y) = 1;
       print_maze();
-      usleep(1000);
+      std::cout << std::endl;
+      usleep(delay_sec);
     }
     else if (random_move ==3){
 
       maze.at(pos_x).at(pos_y) = 0;
-      pos_x +=1;
       if (pos_x + 1 >= 10){
         continue;
       }
+      else{
+      pos_x +=1;
+      }
       maze.at(pos_x).at(pos_y) = 1;
       print_maze();
-      usleep(1000);
+      std::cout << std::endl;
+      usleep(delay_sec);
     }
     else if (random_move ==4){
 
       maze.at(pos_x).at(pos_y) = 0;
-      pos_x -=1;
       if (pos_x - 1 < 0){
         continue;
       }
+      else{
+        pos_x -=1;
+      }
       maze.at(pos_x).at(pos_y) = 1;
       print_maze();
-      usleep(1000);
+      std::cout << std::endl;
+      usleep(delay_sec);
     }
 
   }
