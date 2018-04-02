@@ -10,29 +10,29 @@ int dim_1 = 5;
 int dim_2 = 5;
 int maze [dim_1][dim_2];
 
-int target_color = 1;
-int replacement_color = 0;
+int target = 1;
+int replacement = 0;
 int node = 13;
 
 
 //FIXME make it doable for mazes of different dimensions
 
-void floodfill(node,target_color,replacement_color){
-  if (target_color == replacement_color){
+void floodfill(node,target,replacement){
+  if (target == replacement){
     return;
   }
-  if (node != target_color){
+  if (node != target){
     return;
   }
-  node = replacement_color;
+  node = replacement;
 //1
-  floodfill(node-1,target_color,replacement_color)
+  floodfill(node-1,target,replacement)
 //2
-  floodfill(node+1,target_color,replacement_color)
+  floodfill(node+1,target,replacement)
 //3
-  floodfill(node+dim_1,target_color,replacement_color)
+  floodfill(node+dim_1,target,replacement)
 //4
-  floodfill(node-dim_1,target_color,replacement_color)
+  floodfill(node-dim_1,target,replacement)
 
   return;
 
