@@ -1,10 +1,13 @@
-int sensor_1 = 1;
+//LEFT
+int sensor_1 = A2;
 int sensorReading_1;
 
-int sensor_2 = 2;
+//MIDDLE
+int sensor_2 =A4 ;
 int sensorReading_2;
 
-int sensor_3 = 3;
+//RIGHT
+int sensor_3 = A1;
 int sensorReading_3;
 
 void setup() {
