@@ -1,14 +1,12 @@
 //TO DO DO PID  
 //CHANGE FORWARD TO ANALOG WRITE (WITH TWO PARAMETERS)
 
-//GLOBAL
+//GLOBAL for pid
 int permReading_left;
 int permReading_middle;
 int permReading_right;
 int base_speed = 250;
 double kp = 0.25;
-
-
 
 
 //LEFT
@@ -42,6 +40,7 @@ int val;
 
 
 void setup() {
+ calibrate();
 //irled
 Serial.begin(9600);
 pinMode(sensor_left,INPUT);
@@ -66,13 +65,56 @@ pinMode(sensor_right,INPUT);
 
 }
 
-void calibrate(){
-permReading_left = analogRead(sensor_left);
-permReading_middle= analogRead(sensor_middle);
-permReading_right= analogRead(sensor_right);
-
-
+bool hasfrontwall(){
+  if (sensorReading_middle > 100){
+    return true;
+  }
+  return false;
 }
+
+bool hasleftwall(){
+  if (sensorReading_left > 100) {
+      return true;
+  }
+  return false;
+}
+
+
+bool hasrightwall(){
+  if (sensorReading_right > 100) {
+      return true;
+  }
+  return false;
+}
+
+//possibly change so in main loop this only runs if hasfrontwall returns true 
+void random_move(){
+  int random_move;
+  //if (hasfrontwall()){
+    if (hasleftwall() && hasrightwall()){
+      reverse_turn();
+    }
+    if (hasleftwall() && !hasrightwall()){
+      right_turn();
+    }
+    if (hasrightwall() && !hasleftwall()){
+      left_turn();
+    }
+    else{
+      random_move = random(millis()) % 2;
+      if (random_move = 1){
+        left_turn();
+      }
+      else{
+        right_turn();
+      }
+    }
+  //}
+
+
+  
+}
+
 
 
 
@@ -92,6 +134,14 @@ void regulateSensorR(){
 }
 
 
+void calibrate(){
+permReading_left = analogRead(sensor_left);
+permReading_middle= analogRead(sensor_middle);
+permReading_right= analogRead(sensor_right);
+
+
+}
+
 void pid_control(){
   regulateSensorL();
   regulateSensorR();
@@ -104,9 +154,13 @@ void pid_control(){
 }
 
 
-
+/*
 void loop() {
+  printIR();
+  delay(1000);
 }
+*/
+
 void readIR(){
 sensorReading_left = analogRead(sensor_left);
 sensorReading_middle = analogRead(sensor_middle);
@@ -131,15 +185,34 @@ Serial.println();
 delay(500);
 }
 
+void reverse_turn(){
+  digitalWrite(turn_on_en_1,HIGH);
+  digitalWrite(turn_on_en_2,HIGH);
+
+  halt();
+  delay(50);
+  
+  analogWrite(motor_1_logic_1,100);
+  digitalWrite(motor_1_logic_2,LOW);
+  digitalWrite(motor_2_logic_1,LOW);
+  digitalWrite(motor_2_logic_2,100);
+  delay(100);
+  
+}
+
+
 void left_turn(){
   digitalWrite(turn_on_en_1,HIGH);
   digitalWrite(turn_on_en_2,HIGH);
+
+  halt();
+  delay(50);
   
-  digitalWrite(motor_1_logic_1,HIGH);
+  analogWrite(motor_1_logic_1,100);
   digitalWrite(motor_1_logic_2,LOW);
   digitalWrite(motor_2_logic_1,LOW);
-  digitalWrite(motor_2_logic_2,HIGH);
-  
+  digitalWrite(motor_2_logic_2,100);
+  delay(50);
   
 }
 
@@ -147,14 +220,19 @@ void left_turn(){
 void right_turn(){
   digitalWrite(turn_on_en_1,HIGH);
   digitalWrite(turn_on_en_2,HIGH);
+
+  halt();
+  delay(50);
   
   digitalWrite(motor_1_logic_1,LOW);
-  digitalWrite(motor_1_logic_2,HIGH);
-  digitalWrite(motor_2_logic_1,HIGH);
+  analogWrite(motor_1_logic_2,100);
+  analogWrite(motor_2_logic_1,100);
   digitalWrite(motor_2_logic_2,LOW);
-  
+  delay(50);
   
 }
+
+
 
 
 void forward(int left_speed,int right_speed){
@@ -167,7 +245,19 @@ void forward(int left_speed,int right_speed){
   digitalWrite(motor_2_logic_2,LOW);
   
 }
+void loop (){
+  ///testing
+  //forward(200,200);
 
+
+  pid_control();
+
+  if (hasfrontwall()){
+    random_move();
+  }
+
+  read_ir();
+}
 
 void halt(){
   digitalWrite(turn_on_en_1,LOW);
@@ -178,6 +268,7 @@ void halt(){
   digitalWrite(motor_2_logic_1,LOW);
   digitalWrite(motor_2_logic_2,LOW);
     
+
 }
 
 
@@ -208,58 +299,4 @@ delay(500);
 */
 
 
-/*
-//Global variables;
-int left_reciever = A0;
-int right_reciever = A1;
-int front_reciever = A2;
-int leftSensor;
-int rightSensor;
-int frontSensor;
-int errorP;
-int errorD;
-
-void setup(){
-pinMode(left_reciever,INPUT);
-pinMode(right_reciever,INPUT);
-pinMode(front_reciever,INPUT);
-
-}
-
-void readSensor(){
-    leftSensor = analogRead(left_reciever);
-    rightSensor = analogRead(right_reciever);
-    frontSensor = analogRead(front_reciever);
-    
-}
-
-void PID(void)
-{
-    if((leftSensor > hasLeftWall && rightSensor > hasRightWall))//has both walls
-    {  //ccw direction is positive
-        errorP = rightSensor – leftSensor – 63;//63 is the offset between left and right sensor when mouse in the middle of cell
-        errorD = errorP – oldErrorP;
-    }
-    else if((leftSensor > hasLeftWall))//only has left wall
-    {
-        errorP = 2 * (leftMiddleValue – leftSensor);
-        errorD = errorP – oldErrorP;
-    }
-    else if((rightSensor > hasRightWall))//only has right wall
-    {
-        errorP = 2 * (rightSensor – rightMiddleValue);
-        errorD = errorP – oldErrorP;
-    }
-    else if((leftSensor < hasLeftWall && rightSensor <hasRightWall))//no wall, use encoder or gyro
-    {
-        errorP = 0;//(leftEncoder – rightEncoder*1005/1000)*3;
-        errorD = 0;
-    }
-    totalError = P * errorP + D * errorD;
-    oldErrorP = errorP;
-    setLeftPwm(leftBaseSpeed – totalError);
-    setRightPwm(rightBaseSpeed + totalError);
-}
-
-*/
 
