@@ -36,11 +36,19 @@ int turn_on_en_2 = 23;
 int val;
 
 
+void calibrate_pid(){
+permReading_left = analogRead(sensor_left);
+permReading_middle= analogRead(sensor_middle);
+permReading_right= analogRead(sensor_right);
+
+
+}
 
 
 
 void setup() {
- calibrate();
+ calibrate_pid();
+ //calibrate
 //irled
 Serial.begin(9600);
 pinMode(sensor_left,INPUT);
@@ -66,14 +74,14 @@ pinMode(sensor_right,INPUT);
 }
 
 bool hasfrontwall(){
-  if (sensorReading_middle > 100){
+  if (sensorReading_middle >50){ //100){
     return true;
   }
   return false;
 }
 
 bool hasleftwall(){
-  if (sensorReading_left > 100) {
+  if (sensorReading_left >910){ //100) {
       return true;
   }
   return false;
@@ -81,7 +89,7 @@ bool hasleftwall(){
 
 
 bool hasrightwall(){
-  if (sensorReading_right > 100) {
+  if (sensorReading_right >50){ //100) {
       return true;
   }
   return false;
@@ -134,13 +142,6 @@ void regulateSensorR(){
 }
 
 
-void calibrate(){
-permReading_left = analogRead(sensor_left);
-permReading_middle= analogRead(sensor_middle);
-permReading_right= analogRead(sensor_right);
-
-
-}
 
 void pid_control(){
   regulateSensorL();
@@ -239,10 +240,10 @@ void forward(int left_speed,int right_speed){
   digitalWrite(turn_on_en_1,HIGH);
   digitalWrite(turn_on_en_2,HIGH);
   
-  analogWrite(motor_1_logic_1,left_speed);
-  digitalWrite(motor_1_logic_2,LOW);
-  analogWrite(motor_2_logic_1,right_speed);
-  digitalWrite(motor_2_logic_2,LOW);
+  analogWrite(motor_1_logic_2,left_speed);
+  digitalWrite(motor_1_logic_1,LOW);
+  analogWrite(motor_2_logic_2,right_speed);
+  digitalWrite(motor_2_logic_1,LOW);
   
 }
 void loop (){
@@ -256,7 +257,7 @@ void loop (){
     random_move();
   }
 
-  read_ir();
+  readIR();
 }
 
 void halt(){
