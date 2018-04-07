@@ -47,13 +47,13 @@ permReading_right= analogRead(sensor_right);
 
 
 void setup() {
- calibrate_pid();
- //calibrate
-//irled
-Serial.begin(9600);
-pinMode(sensor_left,INPUT);
-pinMode(sensor_middle,INPUT);
-pinMode(sensor_right,INPUT);
+  calibrate_pid();
+   //calibrate
+  //irled
+  Serial.begin(9600);
+  pinMode(sensor_left,INPUT);
+  pinMode(sensor_middle,INPUT);
+  pinMode(sensor_right,INPUT);
 
 //motors
  // pinMode(turn_on_en_input,INPUT);
@@ -163,27 +163,27 @@ void loop() {
 */
 
 void readIR(){
-sensorReading_left = analogRead(sensor_left);
-sensorReading_middle = analogRead(sensor_middle);
-sensorReading_right = analogRead(sensor_right);
-  
+  sensorReading_left = analogRead(sensor_left);
+  sensorReading_middle = analogRead(sensor_middle);
+  sensorReading_right = analogRead(sensor_right);
+    
 }
 
 
 
 
 void printIR(){
-  // put your main code here, to run repeatedly:
-sensorReading_left = analogRead(sensor_left);
-sensorReading_middle = analogRead(sensor_middle);
-sensorReading_right = analogRead(sensor_right);
-
-Serial.print("Sensor Reading: ");
-Serial.println(sensorReading_left);
-Serial.println(sensorReading_middle);
-Serial.println(sensorReading_right);
-Serial.println();
-delay(500);
+    // put your main code here, to run repeatedly:
+  sensorReading_left = analogRead(sensor_left);
+  sensorReading_middle = analogRead(sensor_middle);
+  sensorReading_right = analogRead(sensor_right);
+  
+  Serial.print("Sensor Reading: ");
+  Serial.println(sensorReading_left);
+  Serial.println(sensorReading_middle);
+  Serial.println(sensorReading_right);
+  Serial.println();
+  delay(500);
 }
 
 void reverse_turn(){
