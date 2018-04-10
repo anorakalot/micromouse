@@ -1,0 +1,7 @@
+problems 
+motor and ir
+
+motor fix by fixing m2 (its connected to ground somehow)
+
+
+ir fix: try turning on emitter digital outputs and attaching pulldown resistors
