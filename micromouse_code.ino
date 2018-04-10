@@ -36,6 +36,15 @@ int turn_on_en_2 = 23;
 int val;
 
 
+
+digitalWrite(sensor_left_power, HIGH);
+
+digitalWrite(sensor_middle_power, HIGH);
+
+digitalWrite(sensor_right_power, HIGH);
+
+
+
 void calibrate_pid(){
 permReading_left = analogRead(sensor_left);
 permReading_middle= analogRead(sensor_middle);
@@ -70,6 +79,16 @@ void setup() {
   
   digitalWrite(turn_on_en_1,LOW);
   digitalWrite(turn_on_en_2,LOW);
+
+
+//ir output 
+  digitalWrite(sensor_left_power, HIGH);
+  
+  digitalWrite(sensor_middle_power, HIGH);
+  
+  digitalWrite(sensor_right_power, HIGH);
+
+
 
 }
 
