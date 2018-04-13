@@ -12,15 +12,17 @@ double kp = 0.25;
 //LEFT
 int sensor_left = A2;
 int sensorReading_left;
+int sensor_left_power =2; 
 
 //MIDDLE
 int sensor_middle =A4 ;
 int sensorReading_middle;
+int sensor_middle_power = 7;
 
 //RIGHT
 int sensor_right = A1;
 int sensorReading_right;
-
+int sensor_right_power = 12;
 
 int motor_1_logic_1 = 3;
 int motor_1_logic_2 = 4;
@@ -34,14 +36,6 @@ int turn_on_en_2 = 23;
 
 
 int val;
-
-
-
-digitalWrite(sensor_left_power, HIGH);
-
-digitalWrite(sensor_middle_power, HIGH);
-
-digitalWrite(sensor_right_power, HIGH);
 
 
 
@@ -93,14 +87,14 @@ void setup() {
 }
 
 bool hasfrontwall(){
-  if (sensorReading_middle >50){ //100){
+  if (sensorReading_middle >350){ //100){
     return true;
   }
   return false;
 }
 
 bool hasleftwall(){
-  if (sensorReading_left >910){ //100) {
+  if (sensorReading_left >1000){ //100) {
       return true;
   }
   return false;
@@ -108,7 +102,7 @@ bool hasleftwall(){
 
 
 bool hasrightwall(){
-  if (sensorReading_right >50){ //100) {
+  if (sensorReading_right >150){ //100) {
       return true;
   }
   return false;
@@ -265,6 +259,7 @@ void forward(int left_speed,int right_speed){
   digitalWrite(motor_2_logic_1,LOW);
   
 }
+
 void loop (){
   ///testing
   //forward(200,200);
@@ -291,32 +286,48 @@ void halt(){
 
 }
 
-
-void reverse(){
+void forward(){
   
   digitalWrite(turn_on_en_1,HIGH);
   digitalWrite(turn_on_en_2,HIGH);
   
   digitalWrite(motor_1_logic_1,LOW);
   digitalWrite(motor_1_logic_2,HIGH);
+  
   digitalWrite(motor_2_logic_1,LOW);
   digitalWrite(motor_2_logic_2,HIGH);
   
 }
 
+void reverse(){
+  digitalWrite(turn_on_en_1,HIGH);
+  digitalWrite(turn_on_en_2,HIGH);
+  
+  digitalWrite(motor_1_logic_1,HIGH);
+  digitalWrite(motor_1_logic_2,LOW);
+  
+  digitalWrite(motor_2_logic_1,HIGH);
+  digitalWrite(motor_2_logic_2,LOW);
+  
+}
 
-//testing loop
+
 /*
-void loop() {
- 
-forward();
-delay(500);
-reverse();
-delay(500);
+//testing loop
 
+void loop() {
+//only turns on right motor for some reason 
+ 
+  forward();
+  delay(500);
+  halt();
+  delay(500);
+  reverse();
+  delay(500);
+  halt();
+  delay(500);
+//left_turn();
 
 }
+
 */
-
-
-
