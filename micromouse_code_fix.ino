@@ -1,5 +1,5 @@
-//FIX TURNS 
-//FIX PID
+//FIX TURNS (possibly do while loop until IR read right/ have other functions that call turn until right) 
+//FIX PID (possibly map IR values)
 
 
 bool first_check = true;
@@ -9,7 +9,7 @@ bool first_check = true;
 int permReading_left;
 int permReading_middle;
 int permReading_right;
-int base_speed = 250;
+int base_speed = 200;
 double kp = 0.25;
 
 
@@ -58,23 +58,23 @@ void setup() {
    
   //irled
   //Serial.begin(9600);
- 
-Serial.begin(9600);
-pinMode(sensor_left,INPUT);
-pinMode(sensor_middle,INPUT);
-pinMode(sensor_right,INPUT);
+   
+  Serial.begin(9600);
+  pinMode(sensor_left,INPUT);
+  pinMode(sensor_middle,INPUT);
+  pinMode(sensor_right,INPUT);
+  
+  pinMode(sensor_left_power,OUTPUT);
+  pinMode(sensor_middle_power,OUTPUT);
+  pinMode(sensor_right_power,OUTPUT);
+  digitalWrite(sensor_left_power, HIGH);
+  
+  digitalWrite(sensor_middle_power, HIGH);
+  
+  digitalWrite(sensor_right_power, HIGH);
 
-pinMode(sensor_left_power,OUTPUT);
-pinMode(sensor_middle_power,OUTPUT);
-pinMode(sensor_right_power,OUTPUT);
-digitalWrite(sensor_left_power, HIGH);
-
-digitalWrite(sensor_middle_power, HIGH);
-
-digitalWrite(sensor_right_power, HIGH);
-
-//motors
- // pinMode(turn_on_en_input,INPUT);
+  //motors
+  // pinMode(turn_on_en_input,INPUT);
   pinMode(turn_on_en_1,OUTPUT);
   pinMode(turn_on_en_2,OUTPUT);
   
@@ -170,7 +170,7 @@ void loop(){
   delay(500);
   */
   
-
+/*
 while(first_check){
   readIR();
   //delay(500);
@@ -195,6 +195,11 @@ while(first_check){
     //halt();
     //delay(1000);  
   }
+*/
+
+readIR_map();
+//readIR();
+delay(500);
 
 }
 
@@ -214,6 +219,25 @@ Serial.println(sensorReading_right);
 Serial.println();
 }
 
+
+void readIR_map(){
+    
+sensorReading_left = analogRead(sensor_left);
+sensorReading_middle = analogRead(sensor_middle);
+sensorReading_right = analogRead(sensor_right);
+
+//sensorReading_left = map(sensorReading_left s
+sensorReading_left = map(sensorReading_left, 993,1008,0,100);
+sensorReading_right = map(sensorReading_left, 194,820,0,100);
+
+
+Serial.print("Sensor Reading: ");
+Serial.println(sensorReading_left);
+Serial.println(sensorReading_middle);
+Serial.println(sensorReading_right);
+Serial.println();
+
+}
 
 
 
