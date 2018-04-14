@@ -1,4 +1,6 @@
-//ASK GIAN ABOUT TURNS
+//FIX TURNS 
+//FIX PID
+
 
 bool first_check = true;
 
@@ -48,15 +50,6 @@ int sensor_right_power = 12;
 
 
 
-void calibrate_pid(){
-permReading_left = analogRead(sensor_left);
-permReading_middle= analogRead(sensor_middle);
-permReading_right= analogRead(sensor_right);
-
-
-}
-
-
 
 void setup() {
   Serial.begin(9600);
@@ -104,6 +97,15 @@ digitalWrite(sensor_right_power, HIGH);
   calibrate_pid();
   
 }
+//CALIBRATION
+void calibrate_pid(){
+permReading_left = analogRead(sensor_left);
+permReading_middle= analogRead(sensor_middle);
+permReading_right= analogRead(sensor_right);
+
+
+}
+
 
 
 //CHOICES
@@ -161,6 +163,12 @@ void random_move(){
 
 
 void loop(){
+  /*
+ 
+  reverse_turn();
+  halt();
+  delay(500);
+  */
   
 
 while(first_check){
@@ -178,11 +186,14 @@ while(first_check){
   readIR();
 
   if (hasfrontwall()){
-   halt();
-   
-   delay(3000);
+   //halt();
+   //delay(1000);
+  // delay(3000);
    //right_turn(); 
- //  random_move();
+   //random_move();
+    //left_turn();
+    //halt();
+    //delay(1000);  
   }
 
 }
@@ -228,9 +239,11 @@ void regulateSensorR(){
 void pid_control(){
   regulateSensorL();
   regulateSensorR();
+  //too close left
   if (sensorReading_left > sensorReading_right){
     forward(base_speed,base_speed - (( sensorReading_left - sensorReading_right) * kp));
   }
+  //too close right
   if (sensorReading_right > sensorReading_left){
     forward(base_speed - (( sensorReading_left - sensorReading_right) * kp),base_speed);
   }
@@ -292,7 +305,7 @@ void reverse_turn(){
   digitalWrite(motor_1_logic_2,LOW);
   digitalWrite(motor_2_logic_1,LOW);
   digitalWrite(motor_2_logic_2,100);
-  delay(100);
+  delay(840);
   
 }
 
