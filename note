@@ -1,7 +1,4 @@
 problems 
-motor and ir
+fix pid by mapping ir values 
 
-motor fix by fixing m2 (its connected to ground somehow)
-
-
-ir fix: try turning on emitter digital outputs and attaching pulldown resistors
+fix turns by making it turn until ir reads of the front is good 
