@@ -108,7 +108,7 @@ digitalWrite(sensor_right_power, HIGH);
 
 //CHOICES
 bool hasfrontwall(){
-  if (sensorReading_middle >300){ //100){
+  if (sensorReading_middle >300){ //300){
     return true;
   }
   return false;
@@ -123,7 +123,7 @@ bool hasleftwall(){
 
 
 bool hasrightwall(){
-  if (sensorReading_right >150){ //100) {
+  if (sensorReading_right >350){ 
       return true;
   }
   return false;
