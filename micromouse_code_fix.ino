@@ -1,5 +1,4 @@
-//FIX EVERYTHING IN MICROMOUSE_CODE 
-//ESPECIALLY THE IRLED READINGS
+//ASK GIAN ABOUT TURNS
 
 bool first_check = true;
 
@@ -130,8 +129,12 @@ reverse();
 delay(500);
 */
 
-left_turn();
-
+//left_turn();
+//halt();
+//delay(10000);
+right_turn();
+halt();
+delay(5000);
   //pid_control();
 
 
@@ -258,8 +261,8 @@ void left_turn(){
   digitalWrite(motor_1_logic_2,LOW);
   digitalWrite(motor_2_logic_1,LOW);
   digitalWrite(motor_2_logic_2,100);
-  delay(140);
-  
+  delay(420);
+  //DELAY ON POINT
 }
 
 
@@ -274,7 +277,7 @@ void right_turn(){
   analogWrite(motor_1_logic_2,100);
   analogWrite(motor_2_logic_1,100);
   digitalWrite(motor_2_logic_2,LOW);
-  delay(50);
+  delay(860);
   
 }
 
