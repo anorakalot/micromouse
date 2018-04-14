@@ -1,3 +1,8 @@
+//992 tr 1000 left
+//181 tr 350 middle
+//85 tr 150 right(0LD)
+//200 tr 350 right
+
 //LEFT
 int sensor_left = A2;
 int sensorReading_left;
@@ -7,7 +12,7 @@ int sensor_left_power =2;
 //MIDDLE
 int sensor_middle =A4 ;
 int sensorReading_middle;
-int sensor_middle_power  = 7;
+int sensor_middle_power = 7;
 
 
 //RIGHT
