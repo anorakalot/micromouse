@@ -106,37 +106,84 @@ digitalWrite(sensor_right_power, HIGH);
 }
 
 
+//CHOICES
+bool hasfrontwall(){
+  if (sensorReading_middle >300){ //100){
+    return true;
+  }
+  return false;
+}
+
+bool hasleftwall(){
+  if (sensorReading_left >1000){ //100) {
+      return true;
+  }
+  return false;
+}
+
+
+bool hasrightwall(){
+  if (sensorReading_right >150){ //100) {
+      return true;
+  }
+  return false;
+}
+
+//possibly change so in main loop this only runs if hasfrontwall returns true 
+void random_move(){
+  int random_move;
+  //if (hasfrontwall()){
+    if (hasleftwall() && hasrightwall()){
+      reverse_turn();
+    }
+    if (hasleftwall() && !hasrightwall()){
+      right_turn();
+    }
+    if (hasrightwall() && !hasleftwall()){
+      left_turn();
+    }
+    else{
+      random_move = random(millis()) % 2;
+      if (random_move = 1){
+        left_turn();
+      }
+      else{
+        right_turn();
+      }
+    }
+  //}
+
+
+  
+}
+
 
 
 
 void loop(){
   
+
 while(first_check){
   readIR();
   //delay(500);
 
-  if (sensorReading_middle > 350){
+  if (sensorReading_middle > 300){
     first_check = false;
+    //delay(300);
   }
 }
-/*
-readIR();
- //delay(500);
 
-forward();
-delay(500);
-reverse();
-delay(500);
-*/
 
-//left_turn();
-//halt();
-//delay(10000);
-right_turn();
-halt();
-delay(5000);
-  //pid_control();
+  pid_control();
+  readIR();
 
+  if (hasfrontwall()){
+   halt();
+   
+   delay(3000);
+   //right_turn(); 
+ //  random_move();
+  }
 
 }
 
@@ -278,7 +325,7 @@ void right_turn(){
   analogWrite(motor_2_logic_1,100);
   digitalWrite(motor_2_logic_2,LOW);
   delay(860);
-  
+  //NOT ON POINT AS MUCH
 }
 
 
