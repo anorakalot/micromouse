@@ -105,8 +105,6 @@ void calibrate_pid(){
 permReading_left = analogRead(sensor_left);
 permReading_middle= analogRead(sensor_middle);
 permReading_right= analogRead(sensor_right);
-
-
 }
 
 
@@ -174,31 +172,33 @@ void loop(){
   */
   
 
-while(first_check){
-  readIR();
+//while(first_check){
+  //readIR();
+  //readIR_map();
   //delay(500);
 
-  if (sensorReading_middle > 300){
-    first_check = false;
+  //if (sensorReading_middle > 300){
+  //  first_check = false;
     //delay(300);
-  }
-}
+ // }
+//}
 
 
-  pid_control();
-  readIR();
-
-  if (hasfrontwall()){
+  //pid_control();
+//  readIR();
+  readIR_map();
+  delay(500);
+ // if (hasfrontwall()){
    //halt();
    //delay(2000);
-  left_turn_until();
+ // left_turn_until();
   // delay(3000);
    //right_turn(); 
    //random_move();
    // left_turn();
     //halt();
     //delay(1000);  
-  }
+ // }
 
 
 /*
@@ -233,7 +233,7 @@ sensorReading_middle = analogRead(sensor_middle);
 sensorReading_right = analogRead(sensor_right);
 
 //sensorReading_left = map(sensorReading_left s
-//sensorReading_left = map(sensorReading_left, 993,1008,0,100);
+//sensorReading_left = map(sensorReading_left, 993,1009,0,100);
 //sensorReading_right = map(sensorReading_left, 194,820,0,100);
 
 
@@ -241,9 +241,10 @@ sensorReading_right = analogRead(sensor_right);
 Serial.println(map(sensorReading_left,993,1008,0,100));
 Serial.println(map(sensorReading_right,194,820,0,100));
 */
-
-sensorReading_left = map(sensorReading_left,993,1008,0,100);
-sensorReading_right = map(sensorReading_right,194,820,0,100);
+//right on point 
+//left not as on point 
+sensorReading_left = map(sensorReading_left,993,1009,0,100);
+sensorReading_right = map(sensorReading_right,178,820,0,100);
 
 
 Serial.print("Sensor Reading: ");
@@ -330,7 +331,9 @@ void halt(){
 }
 
 void left_turn_until(){
+  readIR_map();
   while(hasfrontwall()){
+    readIR_map();
     left_turn();
   }
 }
