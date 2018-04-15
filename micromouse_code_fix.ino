@@ -1,6 +1,9 @@
 //FIX TURNS (possibly do while loop until IR read right/ have other functions that call turn until right) 
 //FIX PID (possibly map IR values)
 
+//STATE MACHINES 
+//ENUM
+
 
 bool first_check = true;
 
@@ -9,7 +12,7 @@ bool first_check = true;
 int permReading_left;
 int permReading_middle;
 int permReading_right;
-int base_speed = 200;
+int base_speed =150;// 200;
 double kp = 0.25;
 
 
@@ -170,7 +173,7 @@ void loop(){
   delay(500);
   */
   
-/*
+
 while(first_check){
   readIR();
   //delay(500);
@@ -187,19 +190,22 @@ while(first_check){
 
   if (hasfrontwall()){
    //halt();
-   //delay(1000);
+   //delay(2000);
+  left_turn_until();
   // delay(3000);
    //right_turn(); 
    //random_move();
-    //left_turn();
+   // left_turn();
     //halt();
     //delay(1000);  
   }
-*/
 
+
+/*
 readIR_map();
 //readIR();
 delay(500);
+*/
 
 }
 
@@ -227,8 +233,17 @@ sensorReading_middle = analogRead(sensor_middle);
 sensorReading_right = analogRead(sensor_right);
 
 //sensorReading_left = map(sensorReading_left s
-sensorReading_left = map(sensorReading_left, 993,1008,0,100);
-sensorReading_right = map(sensorReading_left, 194,820,0,100);
+//sensorReading_left = map(sensorReading_left, 993,1008,0,100);
+//sensorReading_right = map(sensorReading_left, 194,820,0,100);
+
+
+/*
+Serial.println(map(sensorReading_left,993,1008,0,100));
+Serial.println(map(sensorReading_right,194,820,0,100));
+*/
+
+sensorReading_left = map(sensorReading_left,993,1008,0,100);
+sensorReading_right = map(sensorReading_right,194,820,0,100);
 
 
 Serial.print("Sensor Reading: ");
@@ -314,7 +329,11 @@ void halt(){
 
 }
 
-
+void left_turn_until(){
+  while(hasfrontwall()){
+    left_turn();
+  }
+}
 
 
 
@@ -345,7 +364,7 @@ void left_turn(){
   digitalWrite(motor_1_logic_2,LOW);
   digitalWrite(motor_2_logic_1,LOW);
   digitalWrite(motor_2_logic_2,100);
-  delay(420);
+  //delay(420);
   //DELAY ON POINT
 }
 
