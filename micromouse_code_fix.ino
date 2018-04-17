@@ -105,6 +105,11 @@ void calibrate_pid(){
 permReading_left = analogRead(sensor_left);
 permReading_middle= analogRead(sensor_middle);
 permReading_right= analogRead(sensor_right);
+
+//map left and right
+permReading_left = map(permReading_left,993,1009,0,100);
+permReading_right = map(permReading_right,180,820,0,100);
+
 }
 
 
@@ -172,33 +177,36 @@ void loop(){
   */
   
 
-//while(first_check){
+while(first_check){
   //readIR();
-  //readIR_map();
-  //delay(500);
+  readIR_map();
+//  delay(500);
 
-  //if (sensorReading_middle > 300){
-  //  first_check = false;
+  if (sensorReading_middle > 300){
+    first_check = false;
     //delay(300);
- // }
-//}
+  }
+}
 
 
-  //pid_control();
+  pid_control();
 //  readIR();
+
   readIR_map();
   delay(500);
- // if (hasfrontwall()){
-   //halt();
+ 
+  //if (hasfrontwall()){
+  // halt();
    //delay(2000);
- // left_turn_until();
+   //reverse_turn();
+  //left_turn_until();
   // delay(3000);
    //right_turn(); 
    //random_move();
    // left_turn();
     //halt();
     //delay(1000);  
- // }
+  //}
 
 
 /*
@@ -244,7 +252,7 @@ Serial.println(map(sensorReading_right,194,820,0,100));
 //right on point 
 //left not as on point 
 sensorReading_left = map(sensorReading_left,993,1009,0,100);
-sensorReading_right = map(sensorReading_right,178,820,0,100);
+sensorReading_right = map(sensorReading_right,180,820,0,100);
 
 
 Serial.print("Sensor Reading: ");
@@ -261,6 +269,9 @@ Serial.println();
 
 void regulateSensorL(){
   sensorReading_left = analogRead(sensor_left);
+  
+  sensorReading_left = map(sensorReading_left,993,1009,0,100);
+
   sensorReading_left = sensorReading_left- permReading_left;
   if (analogRead(sensor_left) - permReading_left < 0){
     sensorReading_left = ~sensorReading_left + 1;
@@ -268,6 +279,9 @@ void regulateSensorL(){
 }
 void regulateSensorR(){
   sensorReading_right = analogRead(sensor_right);
+  
+  sensorReading_right = map(sensorReading_right,180,820,0,100);
+  
   sensorReading_right = sensorReading_right- permReading_right;
   if (analogRead(sensor_right) - permReading_right < 0){
     sensorReading_right = ~sensorReading_right + 1;
@@ -285,8 +299,10 @@ void pid_control(){
   }
   //too close right
   if (sensorReading_right > sensorReading_left){
-    forward(base_speed - (( sensorReading_left - sensorReading_right) * kp),base_speed);
+    forward(base_speed - ( (sensorReading_right - sensorReading_left)* kp),base_speed);
   }
+  //( sensorReading_left - sensorReading_right)
+//(sensorReading_right - sensorReading_left)
 }
 
 
