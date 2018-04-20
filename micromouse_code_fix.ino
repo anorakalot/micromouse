@@ -14,7 +14,7 @@ int permReading_left;
 int permReading_middle;
 int permReading_right;
 int base_speed =200;// 200;
-double kp = 0.50;
+double kp = 0.25;//0.50
 
 //Motor 
 int motor_1_logic_1 = 3;
@@ -206,18 +206,18 @@ while(first_check){
   readIR_map();
   //delay(500);
  
- // if (hasfrontwall()){
- //  halt();
- //  delay(2000);
- // reverse_turn();
-  //left_turn_until();
+  if (hasfrontwall()){
+   halt();
+   delay(2000);
+  //reverse_turn();
+  left_turn_until();
   // delay(3000);
    //right_turn(); 
    //random_move();
     //left_turn();
     //halt();
    //delay(2000);  
- // }
+  }
  //*/
 
 /*
@@ -255,8 +255,8 @@ void readIR_map(){
 //sensorReading_left = map(sensorReading_left s
 //sensorReading_left = map(sensorReading_left, 993,1009,0,100);
 //sensorReading_right = map(sensorReading_left, 194,820,0,100);
-
-
+  
+  
 /*
   Serial.println(map(sensorReading_left,993,1008,0,100));
   Serial.println(map(sensorReading_right,194,820,0,100));
@@ -267,7 +267,7 @@ void readIR_map(){
   sensorReading_left = map(sensorReading_left,993,1009,0,200);
   
   sensorReading_left -= left_offset;
-
+  
   sensorReading_right = map(sensorReading_right,180,820,0,200);
 
 
