@@ -4,16 +4,17 @@
 //STATE MACHINES 
 //ENUM
 
+//CALIBRATION PID DOESNT HELP
 
 bool first_check = true;
-int left_offset = 0; // maybe change to 5
+int left_offset = 15; // maybe change to 5
 
 //GLOBAL for pid
 int permReading_left;
 int permReading_middle;
 int permReading_right;
 int base_speed =200;// 200;
-double kp = 0.25;
+double kp = 0.50;
 
 //Motor 
 int motor_1_logic_1 = 3;
@@ -101,13 +102,18 @@ void setup() {
 
 //CALIBRATION
 void calibrate_pid(){
+/*
 permReading_left = analogRead(sensor_left);
 permReading_middle= analogRead(sensor_middle);
 permReading_right= analogRead(sensor_right);
 
 //map left and right
-permReading_left = map(permReading_left,993,1009,0,100);
-permReading_right = map(permReading_right,180,820,0,100);
+permReading_left = map(permReading_left,993,1009,0,200);
+permReading_right = map(permReading_right,180,820,0,200);
+*/
+permReading_left = 0;
+permReading_middle= 0;
+permReading_right= 0;
 
 
 //trying to get readings to be the same 
@@ -258,11 +264,11 @@ void readIR_map(){
 
 //right on point 
 //left not as on point 
-  sensorReading_left = map(sensorReading_left,993,1009,0,100);
+  sensorReading_left = map(sensorReading_left,993,1009,0,200);
+  
+  sensorReading_left -= left_offset;
 
-//sensorReading_left -= left_offset;
-
-  sensorReading_right = map(sensorReading_right,180,820,0,100);
+  sensorReading_right = map(sensorReading_right,180,820,0,200);
 
 
   Serial.print("Sensor Reading: ");
@@ -280,8 +286,8 @@ void readIR_map(){
 void regulateSensorL(){
   sensorReading_left = analogRead(sensor_left);
   
-  sensorReading_left = map(sensorReading_left,993,1009,0,100);
-  //sensorReading_left -= left_offset;
+  sensorReading_left = map(sensorReading_left,993,1009,0,200);
+  sensorReading_left -= left_offset;
   
   sensorReading_left = sensorReading_left- permReading_left;
   if (analogRead(sensor_left) - permReading_left < 0){
@@ -293,7 +299,7 @@ void regulateSensorL(){
 void regulateSensorR(){
   sensorReading_right = analogRead(sensor_right);
   
-  sensorReading_right = map(sensorReading_right,180,820,0,100);
+  sensorReading_right = map(sensorReading_right,180,820,0,200);
   
   sensorReading_right = sensorReading_right- permReading_right;
   if (analogRead(sensor_right) - permReading_right < 0){
