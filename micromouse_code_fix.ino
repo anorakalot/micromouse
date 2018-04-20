@@ -13,7 +13,7 @@ int left_offset = 15; // maybe change to 5
 int permReading_left;
 int permReading_middle;
 int permReading_right;
-int base_speed =200;// 200;
+int base_speed =150;// 200;
 double kp = 0.25;//0.50
 
 //Motor 
@@ -209,8 +209,8 @@ while(first_check){
   if (hasfrontwall()){
    halt();
    delay(2000);
-  //reverse_turn();
-  left_turn_until();
+  // reverse_turn();
+  //left_turn_until();
   // delay(3000);
    //right_turn(); 
    //random_move();
@@ -383,12 +383,12 @@ void reverse_turn(){
   //halt();
   //delay(50);
   
-  analogWrite(motor_1_logic_1,100);
+  digitalWrite(motor_1_logic_1,100);
   digitalWrite(motor_1_logic_2,LOW);
   digitalWrite(motor_2_logic_1,LOW);
   digitalWrite(motor_2_logic_2,100);
   delay(840);
-  
+  //840
 }
 
 
@@ -403,7 +403,7 @@ void left_turn(){
   digitalWrite(motor_1_logic_2,LOW);
   digitalWrite(motor_2_logic_1,LOW);
   digitalWrite(motor_2_logic_2,100);
-  //delay(420);
+  delay(420);
   //DELAY ON POINT
 }
 
