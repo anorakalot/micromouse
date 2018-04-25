@@ -7,7 +7,7 @@
 //CALIBRATION PID DOESNT HELP
 
 bool first_check = true;
-int left_offset = 15; // maybe change to 5
+int left_offset = 5; // last value was 15
 
 //GLOBAL for pid
 int permReading_left;
@@ -148,6 +148,7 @@ void right_encoder_event() {
     }
   }
 }
+//ENDED COPYING HERE
 
 //CALIBRATION
 void calibrate_pid(){
@@ -236,7 +237,7 @@ void loop(){
   delay(500);
   */
   
-///*
+/*
 while(first_check){
   //readIR();
   readIR_map();
@@ -267,14 +268,14 @@ while(first_check){
     //halt();
    //delay(2000);  
   }
- //*/
+ */
 
-/*
+///*
 readIR_map();
 //readIR();
 delay(500);
 //forward(base_speed, base_speed);;
-*/
+//*/
 
 }
 
@@ -313,16 +314,23 @@ void readIR_map(){
 
 //right on point 
 //left not as on point 
-  sensorReading_left = map(sensorReading_left,993,1009,0,200);
   
-  sensorReading_left -= left_offset;
+  //sensorReading_left = map(sensorReading_left,993,1009,0,200);
+
+  //CURRENT TRY TO MAP LEFT READING TO RIGHT SENSOR READING RANGE (180 - 820)
+  sensorReading_left = map(sensorReading_left,992,1005,180,820);
+                                             //991
+  //sensorReading_left -= left_offset;
   
-  sensorReading_right = map(sensorReading_right,180,820,0,200);
+  //sensorReading_right = map(sensorReading_right,180,820,0,200);
 
 
   Serial.print("Sensor Reading: ");
+  Serial.print( "LEFT : ");
   Serial.println(sensorReading_left);
+  Serial.print( "MIDDLE : ");
   Serial.println(sensorReading_middle);
+  Serial.print( "RIGHT : ");
   Serial.println(sensorReading_right);
   Serial.println();
 
