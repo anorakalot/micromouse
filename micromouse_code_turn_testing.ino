@@ -113,22 +113,60 @@ void setup() {
 void loop(){
   print_encoder_count();
 
-/*
-  forward();
+
+  //forward();
   //left_turn();
-  delay(1000);
+  //delay(1000);
   //right_turn();
-  halt();
-  delay(1000);
+  //halt();
+  //delay(1000);
   //reverse();
   //delay(1000);
   //halt();
   //delay(1000);
-*/
+  
+  
+  //left_turn_until();
+  //right_turn_until();
+
+  reverse_turn_until();
+  
+  halt();
+  delay(2000);
+  
+//*/
 
 //left_turn();
-right_turn();
+//right_turn();
 }
+
+void left_turn_until(){
+  unsigned long curr = left_count;
+  while( left_count - curr < 380){
+    left_turn();
+  }
+  
+}
+
+void right_turn_until(){
+  unsigned long curr = right_count;
+  while( right_count - curr < 370){
+    right_turn();
+  }
+  
+}
+
+
+
+void reverse_turn_until(){
+  unsigned long curr = left_count;
+  while( left_count - curr < 870){
+    left_turn();
+  }
+  
+}
+
+
 
 void left_encoder_event() {
   /*
