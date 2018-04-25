@@ -1,5 +1,5 @@
-//FIX TURNS (possibly do while loop until IR read right/ have other functions that call turn until right) 
-//FIX PID (possibly map IR values)
+//FIX TURNS (possibly do while loop until IR read right/ have other functions that call turn until right) // NO DO ENCODER TICKS 
+//MAKE PID ON AND OFF
 
 //STATE MACHINES 
 //ENUM
@@ -27,13 +27,24 @@ int turn_on_en_1 = 22;
 int turn_on_en_2 = 23;
 
 
+//encoder
+int RH_ENCODER_A = 24; 
+int RH_ENCODER_B = 25;
+
+int LH_ENCODER_A = 0;
+int LH_ENCODER_B = 1;
+
+unsigned long left_count=0;
+unsigned long right_count=0;
+
+
 
 //IRLED
 
 //LEFT
 int sensor_left = A2;
 int sensorReading_left;
-int sensor_left_power =2; 
+int sensor_left_power = 2; 
 
 
 //MIDDLE
@@ -54,6 +65,9 @@ int sensor_right_power = 12;
 
 
 void setup() {
+  attachInterrupt(digitalPinToInterrupt(13),left_encoder_event,CHANGE);
+  attachInterrupt(digitalPinToInterrupt(14),right_encoder_event,CHANGE);
+  
   Serial.begin(9600);
   //calibrate
 
@@ -98,6 +112,41 @@ void setup() {
   
   calibrate_pid();
   
+}
+
+
+void left_encoder_event() {
+  if (digitalRead(LH_ENCODER_A) == HIGH) {
+    if (digitalRead(LH_ENCODER_B) == LOW) {
+      left_count++;
+    } else {
+      left_count--;
+    }
+  } else {
+    if (digitalRead(LH_ENCODER_B) == LOW) {
+      left_count--;
+    } else {
+      left_count++;
+    }
+  }
+}
+
+ 
+// encoder event for the interrupt call
+void right_encoder_event() {
+  if (digitalRead(RH_ENCODER_A) == HIGH) {
+    if (digitalRead(RH_ENCODER_B) == LOW) {
+      right_count++;
+    } else {
+      right_count--;
+    }
+  } else {
+    if (digitalRead(RH_ENCODER_B) == LOW) {
+      right_count--;
+    } else {
+      right_count++;
+    }
+  }
 }
 
 //CALIBRATION
