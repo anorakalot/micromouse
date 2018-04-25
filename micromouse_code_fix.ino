@@ -7,7 +7,7 @@
 //CALIBRATION PID DOESNT HELP
 
 bool first_check = true;
-int left_offset = 5; // last value was 15
+int left_offset = 10; // last value was 15 , 5 , 30
 
 //GLOBAL for pid
 int permReading_left;
@@ -320,7 +320,7 @@ void readIR_map(){
   //CURRENT TRY TO MAP LEFT READING TO RIGHT SENSOR READING RANGE (180 - 820)
   sensorReading_left = map(sensorReading_left,992,1005,180,820);
                                              //991
-  //sensorReading_left -= left_offset;
+  sensorReading_left -= left_offset;
   
   //sensorReading_right = map(sensorReading_right,180,820,0,200);
 
@@ -397,6 +397,7 @@ void reverse(){
   
 } 
   
+
 void forward(){
   
   digitalWrite(turn_on_en_1,HIGH);
@@ -409,6 +410,7 @@ void forward(){
   digitalWrite(motor_2_logic_2,HIGH);
   
 }
+
 
 
 void halt(){
