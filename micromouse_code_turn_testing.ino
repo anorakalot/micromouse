@@ -113,7 +113,7 @@ void setup() {
 void loop(){
   print_encoder_count();
 
-
+/*
   forward();
   //left_turn();
   delay(1000);
@@ -124,7 +124,10 @@ void loop(){
   //delay(1000);
   //halt();
   //delay(1000);
+*/
 
+//left_turn();
+right_turn();
 }
 
 void left_encoder_event() {
@@ -178,6 +181,9 @@ void print_encoder_count(){
 }
 
 
+
+
+
 //MOTOR
   
 
@@ -219,4 +225,37 @@ void reverse(){
   digitalWrite(motor_2_logic_2,LOW);
   
 } 
+
+
+void left_turn(){
+  digitalWrite(turn_on_en_1,HIGH);
+  digitalWrite(turn_on_en_2,HIGH);
+
+  //halt();
+  //delay(50);
+  
+  analogWrite(motor_1_logic_1,100);
+  digitalWrite(motor_1_logic_2,LOW);
+  digitalWrite(motor_2_logic_1,LOW);
+  analogWrite(motor_2_logic_2,100);
+  //delay(420);
+  //DELAY ON POINT
+}
+
+
+
+void right_turn(){
+  digitalWrite(turn_on_en_1,HIGH);
+  digitalWrite(turn_on_en_2,HIGH);
+
+  ///halt();
+  //delay(50);
+  
+  digitalWrite(motor_1_logic_1,LOW);
+  analogWrite(motor_1_logic_2,100);
+  analogWrite(motor_2_logic_1,100);
+  digitalWrite(motor_2_logic_2,LOW);
+//  delay(860);
+  //NOT ON POINT AS MUCH
+}
 
