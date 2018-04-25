@@ -28,8 +28,8 @@ int turn_on_en_2 = 23;
 
 
 //encoder
-int RH_ENCODER_A = 24; 
-int RH_ENCODER_B = 25;
+int RH_ENCODER_A = 20; 
+int RH_ENCODER_B = 21;
 
 int LH_ENCODER_A = 0;
 int LH_ENCODER_B = 1;
@@ -65,8 +65,11 @@ int sensor_right_power = 12;
 
 
 void setup() {
-  attachInterrupt(digitalPinToInterrupt(13),left_encoder_event,CHANGE);
-  attachInterrupt(digitalPinToInterrupt(14),right_encoder_event,CHANGE);
+  attachInterrupt(digitalPinToInterrupt(LH_ENCODER_A),left_encoder_event,CHANGE);
+  attachInterrupt(digitalPinToInterrupt(LH_ENCODER_B),left_encoder_event,CHANGE);
+  
+  attachInterrupt(digitalPinToInterrupt(RH_ENCODER_A),right_encoder_event,CHANGE);
+  attachInterrupt(digitalPinToInterrupt(RH_ENCODER_B),right_encoder_event,CHANGE);
   
   Serial.begin(9600);
   //calibrate
@@ -114,41 +117,62 @@ void setup() {
   
 }
 
-
+//encoder and turns
 void left_encoder_event() {
-  if (digitalRead(LH_ENCODER_A) == HIGH) {
-    if (digitalRead(LH_ENCODER_B) == LOW) {
-      left_count++;
-    } else {
-      left_count--;
-    }
-  } else {
-    if (digitalRead(LH_ENCODER_B) == LOW) {
-      left_count--;
-    } else {
-      left_count++;
-    }
-  }
+left_count ++;
 }
 
  
 // encoder event for the interrupt call
 void right_encoder_event() {
-  if (digitalRead(RH_ENCODER_A) == HIGH) {
-    if (digitalRead(RH_ENCODER_B) == LOW) {
-      right_count++;
-    } else {
-      right_count--;
-    }
-  } else {
-    if (digitalRead(RH_ENCODER_B) == LOW) {
-      right_count--;
-    } else {
-      right_count++;
-    }
+right_count ++;
+}
+
+
+
+void print_encoder_count(){
+  
+  Serial.print("left_count");
+  Serial.println(left_count);
+  Serial.print("right_count");
+  Serial.println(right_count);
+}
+
+void left_turn_until(){
+  unsigned long curr = left_count;
+  while( left_count - curr < 380){
+    left_turn();
+  }
+  
+}
+
+void right_turn_until(){
+  unsigned long curr = right_count;
+  while( right_count - curr < 370){
+    right_turn();
+  }
+  
+}
+
+
+
+void reverse_turn_until(){
+  unsigned long curr = left_count;
+  while( left_count - curr < 870){
+    left_turn();
+  }
+  
+}
+
+void go_one_cell(){
+  unsigned long curr = left_count;
+  while(left_count-curr < 450){
+    forward();
   }
 }
-//ENDED COPYING HERE
+
+
+
 
 //CALIBRATION
 void calibrate_pid(){
@@ -203,21 +227,21 @@ void random_move(){
   int random_move;
   //if (hasfrontwall()){
     if (hasleftwall() && hasrightwall()){
-      reverse_turn();
+      reverse_turn_until();
     }
     if (hasleftwall() && !hasrightwall()){
-      right_turn();
+      right_turn_until();
     }
     if (hasrightwall() && !hasleftwall()){
-      left_turn();
+      left_turn_until();
     }
     else{
       random_move = random(millis()) % 2;
       if (random_move = 1){
-        left_turn();
+        left_turn_until();
       }
       else{
-        right_turn();
+        right_turn_until();
       }
     }
   //}
@@ -237,7 +261,7 @@ void loop(){
   delay(500);
   */
   
-/*
+
 while(first_check){
   //readIR();
   readIR_map();
@@ -263,19 +287,19 @@ while(first_check){
   //left_turn_until();
   // delay(3000);
    //right_turn(); 
-   //random_move();
+   random_move();
     //left_turn();
     //halt();
    //delay(2000);  
   }
- */
+ 
 
-///*
+/*
 readIR_map();
 //readIR();
 delay(500);
 //forward(base_speed, base_speed);;
-//*/
+*/
 
 }
 
@@ -425,14 +449,6 @@ void halt(){
 
 }
 
-void left_turn_until(){
-  readIR_map();
-  while(hasfrontwall()){
-    readIR_map();
-    left_turn();
-  }
-}
-
 
 
 void reverse_turn(){
@@ -446,7 +462,7 @@ void reverse_turn(){
   digitalWrite(motor_1_logic_2,LOW);
   digitalWrite(motor_2_logic_1,LOW);
   digitalWrite(motor_2_logic_2,100);
-  delay(840);
+  //delay(840);
   //840
 }
 
@@ -462,7 +478,7 @@ void left_turn(){
   digitalWrite(motor_1_logic_2,LOW);
   digitalWrite(motor_2_logic_1,LOW);
   digitalWrite(motor_2_logic_2,100);
-  delay(420);
+  //delay(420);
   //DELAY ON POINT
 }
 
@@ -478,7 +494,7 @@ void right_turn(){
   analogWrite(motor_1_logic_2,100);
   analogWrite(motor_2_logic_1,100);
   digitalWrite(motor_2_logic_2,LOW);
-  delay(860);
+  //delay(860);
   //NOT ON POINT AS MUCH
 }
 
