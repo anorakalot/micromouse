@@ -166,6 +166,14 @@ void reverse_turn_until(){
   
 }
 
+void go_one_cell(){
+  unsigned long curr = left_count;
+  while(left_count-curr < 450){
+    forward();
+  }
+}
+
+
 
 
 void left_encoder_event() {
