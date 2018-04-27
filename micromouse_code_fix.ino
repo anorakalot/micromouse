@@ -144,7 +144,7 @@ void print_encoder_count(){
 
 void left_turn_until(){
   unsigned long curr = left_count;
-  while( left_count - curr < 380){
+  while( left_count - curr < 280){//380 330 300
     left_turn();
   }
   
@@ -152,7 +152,7 @@ void left_turn_until(){
 
 void right_turn_until(){
   unsigned long curr = right_count;
-  while( right_count - curr < 370){
+  while( right_count - curr < 300){ //320,340, 370
     right_turn();
   }
   
@@ -221,14 +221,14 @@ permReading_right= 0;
 
 //CHOICES
 bool hasfrontwall(){
-  if (sensorReading_middle >300){ //300){
+  if (sensorReading_middle >370){ //300 , 350
     return true;
   }
   return false;
 }
 
 bool hasleftwall(){
-  if (sensorReading_left >500){ //100) {
+  if (sensorReading_left >275){ //100 ,500,300,250
       return true;
   }
   return false;
@@ -236,7 +236,7 @@ bool hasleftwall(){
 
 
 bool hasrightwall(){
-  if (sensorReading_right >500){//350 
+  if (sensorReading_right >275){//350 ,500,300,250 
       return true;
   }
   return false;
@@ -250,11 +250,11 @@ void random_move(){
       reverse_turn_until();
       return;
     }
-    if (hasleftwall() && !hasrightwall() && hasfrontwall()){
+    else if (hasleftwall() && !hasrightwall() && hasfrontwall()){
       right_turn_until();
       return;
     }
-    if (hasrightwall() && !hasleftwall() && hasfrontwall()){
+    else if (hasrightwall() && !hasleftwall() && hasfrontwall()){
       left_turn_until();
       return;
     }
@@ -262,7 +262,8 @@ void random_move(){
     //random choice cases 
 
     // 
-    if (!hasleftwall()&& !hasfrontwall() && hasrightwall())  {
+    
+    else if (!hasleftwall()&& !hasfrontwall() && hasrightwall())  {
       random_move = random(millis()) % 2;
       if (random_move = 1){
         left_turn_until();
@@ -276,7 +277,7 @@ void random_move(){
     } 
 
     
-    if (hasleftwall()&& !hasfrontwall() && !hasrightwall() ) {
+    else if (hasleftwall()&& !hasfrontwall() && !hasrightwall() ) {
       random_move = random(millis()) % 2;
       if (random_move = 1){
         right_turn_until();
@@ -289,7 +290,7 @@ void random_move(){
       }
     } 
 
-    if (!hasleftwall()&& hasfrontwall() && !hasrightwall())  {
+    else if (!hasleftwall()&& hasfrontwall() && !hasrightwall())  {
       random_move = random(millis()) % 2;
       if (random_move = 1){
         right_turn_until();
@@ -360,10 +361,10 @@ while(first_check){
    //delay(2000);
    halt_until(2000);
    //reverse_turn_until();
-  //left_turn_until();
+   left_turn_until();
   // delay(3000);
    //right_turn(); 
-   random_move();
+   //random_move();
     //left_turn();
    //halt();
    //delay(2000);  
