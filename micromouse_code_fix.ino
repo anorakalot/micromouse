@@ -10,6 +10,9 @@
 //TO DO CALIBRATE GO ONE CELL
 //TEST RANDOM MOVE CASES
 
+//DO NOW
+//MAKE PID MORE ACCURATE
+//FIX LED RANGE FOR HAS FUNCTIONS
 bool first_check = true;
 int left_offset = 10; // last value was 15 , 5 , 30
 
