@@ -6,6 +6,10 @@
 
 //CALIBRATION PID DOESNT HELP
 
+
+//TO DO CALIBRATE GO ONE CELL
+//TEST RANDOM MOVE CASES
+
 bool first_check = true;
 int left_offset = 10; // last value was 15 , 5 , 30
 
@@ -157,22 +161,38 @@ void right_turn_until(){
 
 
 void reverse_turn_until(){
-  unsigned long curr = left_count;
-  while( left_count - curr < 870){
+  unsigned long curr_l = left_count;
+  unsigned long curr_r = right_count;
+ 
+ if (sensorReading_left < sensorReading_right){
+  while( left_count - curr_l < 830){ // 860,870
     left_turn();
   }
-  
+ }
+
+  else{
+   while( right_count - curr_r < 830){ // 860,870
+    right_turn();
+    }    
+  }
+ 
 }
 
 void go_one_cell(){
   unsigned long curr = left_count;
-  while(left_count-curr < 450){
-    forward();
+  while(left_count-curr < 600 ){ // 450
+    pid_control();
+    //forward(150,150);
   }
 }
 
 
-
+void halt_until(int stop_time ){
+ unsigned long curr = millis();
+  while (millis() - curr < stop_time){
+    halt();
+  } 
+}
 
 //CALIBRATION
 void calibrate_pid(){
@@ -208,7 +228,7 @@ bool hasfrontwall(){
 }
 
 bool hasleftwall(){
-  if (sensorReading_left >1000){ //100) {
+  if (sensorReading_left >500){ //100) {
       return true;
   }
   return false;
@@ -216,7 +236,7 @@ bool hasleftwall(){
 
 
 bool hasrightwall(){
-  if (sensorReading_right >350){ 
+  if (sensorReading_right >500){//350 
       return true;
   }
   return false;
@@ -225,28 +245,62 @@ bool hasrightwall(){
 //possibly change so in main loop this only runs if hasfrontwall returns true 
 void random_move(){
   int random_move;
-  //if (hasfrontwall()){
-    if (hasleftwall() && hasrightwall()){
+  //has to turn cases
+    if (hasleftwall() && hasrightwall() && hasfrontwall()){
       reverse_turn_until();
+      return;
     }
-    if (hasleftwall() && !hasrightwall()){
+    if (hasleftwall() && !hasrightwall() && hasfrontwall()){
       right_turn_until();
+      return;
     }
-    if (hasrightwall() && !hasleftwall()){
+    if (hasrightwall() && !hasleftwall() && hasfrontwall()){
       left_turn_until();
+      return;
     }
-    else{
+
+    //random choice cases 
+
+    // 
+    if (!hasleftwall()&& !hasfrontwall() && hasrightwall())  {
       random_move = random(millis()) % 2;
       if (random_move = 1){
         left_turn_until();
+        return;
       }
       else{
-        right_turn_until();
+      //goes straight
+        return;
+        
       }
-    }
-  //}
+    } 
 
+    
+    if (hasleftwall()&& !hasfrontwall() && !hasrightwall() ) {
+      random_move = random(millis()) % 2;
+      if (random_move = 1){
+        right_turn_until();
+        return;
+      }
+      else{
+      //goes straight
+        return;
+        
+      }
+    } 
 
+    if (!hasleftwall()&& hasfrontwall() && !hasrightwall())  {
+      random_move = random(millis()) % 2;
+      if (random_move = 1){
+        right_turn_until();
+        return;
+      }
+      else{
+        left_turn_until();
+        return;
+        
+      }
+    } 
   
 }
   
@@ -261,38 +315,62 @@ void loop(){
   delay(500);
   */
   
-
+///*
 while(first_check){
   //readIR();
   readIR_map();
-//  delay(500);
-
+  //delay(500);
+     /*
+      unsigned long curr = millis();
+      while (millis() - curr < 500){
+      //nothing (just waiting for 500 seconds to pass
+      }
+      */
   if (sensorReading_middle > 300){
     first_check = false;
-    delay(300);
-  }
+    //delay(300);
+    
+    unsigned long curr = millis();
+    while (millis() - curr < 500){
+    //nothing (just waiting for 500 seconds to pass
+    }
+   }
 } 
 
-
+//forward(100,100);
   pid_control();
+ // go_one_cell();
+ // halt_until(1000);
+  //go one cell now uses pid control too   
+
 //  readIR();
   
   readIR_map();
   //delay(500);
- 
+
+  //NEW LOOP
+  //go up one cell
+  //go_one_cell
+  //if wall / opening
+  //random_move(); 
+
+  
   if (hasfrontwall()){
-   halt();
-   delay(2000);
-  // reverse_turn();
+   //halt();
+   //delay(2000);
+   halt_until(2000);
+   //reverse_turn_until();
   //left_turn_until();
   // delay(3000);
    //right_turn(); 
    random_move();
     //left_turn();
-    //halt();
+   //halt();
    //delay(2000);  
+    halt_until(2000);
   }
- 
+  //*/
+//*/ 
 
 /*
 readIR_map();
@@ -300,7 +378,17 @@ readIR_map();
 delay(500);
 //forward(base_speed, base_speed);;
 */
-
+/*
+go_one_cell();
+//delay(1000);
+halt_until(1000);
+*/
+/*
+right_turn_until();
+halt_until(1000);
+*/
+//pid_control();
+//forward(200,200);
 }
 
 
@@ -487,12 +575,14 @@ void right_turn(){
   digitalWrite(turn_on_en_1,HIGH);
   digitalWrite(turn_on_en_2,HIGH);
 
+  //analogWrite(motor_1_logic_2,100);
+  //analogWrite(motor_2_logic_1,100);
+  
   ///halt();
   //delay(50);
-  
+  digitalWrite(motor_1_logic_2,HIGH);
+  digitalWrite(motor_2_logic_1,HIGH);
   digitalWrite(motor_1_logic_1,LOW);
-  analogWrite(motor_1_logic_2,100);
-  analogWrite(motor_2_logic_1,100);
   digitalWrite(motor_2_logic_2,LOW);
   //delay(860);
   //NOT ON POINT AS MUCH
