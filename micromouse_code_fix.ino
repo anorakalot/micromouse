@@ -1,4 +1,12 @@
-//FIX TURNS (possibly do while loop until IR read right/ have other functions that call turn until right) // NO DO ENCODER TICKS 
+
+//DO NOW
+//TO DO CALIBRATE GO ONE CELL
+//TEST RANDOM MOVE CASES
+
+//MAKE PID MORE ACCURATE
+//FIX LED RANGE FOR HAS FUNCTIONS
+
+
 //MAKE PID ON AND OFF
 
 //STATE MACHINES 
@@ -7,20 +15,14 @@
 //CALIBRATION PID DOESNT HELP
 
 
-//TO DO CALIBRATE GO ONE CELL
-//TEST RANDOM MOVE CASES
-
-//DO NOW
-//MAKE PID MORE ACCURATE
-//FIX LED RANGE FOR HAS FUNCTIONS
 bool first_check = true;
-int left_offset = 10; // last value was 15 , 5 , 30
+int left_offset = 20; // last value was 15 , 5 , 30, 10
 
 //GLOBAL for pid
 int permReading_left;
 int permReading_middle;
 int permReading_right;
-int base_speed =150;// 200;
+int base_speed =125;// 200,150
 double kp = 0.25;//0.50
 
 //Motor 
@@ -147,7 +149,7 @@ void print_encoder_count(){
 
 void left_turn_until(){
   unsigned long curr = left_count;
-  while( left_count - curr < 280){//380 330 300
+  while( left_count - curr < 290){//380 330 300,280
     left_turn();
   }
   
@@ -155,7 +157,7 @@ void left_turn_until(){
 
 void right_turn_until(){
   unsigned long curr = right_count;
-  while( right_count - curr < 300){ //320,340, 370
+  while( right_count - curr < 290){ //320,340, 370,300
     right_turn();
   }
   
@@ -183,7 +185,7 @@ void reverse_turn_until(){
 
 void go_one_cell(){
   unsigned long curr = left_count;
-  while(left_count-curr < 600 ){ // 450
+  while(left_count-curr < 950){ // 450,600, 800
     pid_control();
     //forward(150,150);
   }
@@ -208,10 +210,11 @@ permReading_right= analogRead(sensor_right);
 permReading_left = map(permReading_left,993,1009,0,200);
 permReading_right = map(permReading_right,180,820,0,200);
 */
+/*
 permReading_left = 0;
 permReading_middle= 0;
 permReading_right= 0;
-
+*/
 
 //trying to get readings to be the same 
 
@@ -224,14 +227,14 @@ permReading_right= 0;
 
 //CHOICES
 bool hasfrontwall(){
-  if (sensorReading_middle >370){ //300 , 350
+  if (sensorReading_middle >275){ //300 , 350,370,400
     return true;
   }
   return false;
 }
 
 bool hasleftwall(){
-  if (sensorReading_left >275){ //100 ,500,300,250
+  if (sensorReading_left >350){ //100 ,500,300,250,275,400
       return true;
   }
   return false;
@@ -257,7 +260,8 @@ void random_move(){
       right_turn_until();
       return;
     }
-    else if (hasrightwall() && !hasleftwall() && hasfrontwall()){
+    //this isnt running 
+    else if (hasrightwall()  && hasfrontwall()){//&& !hasleftwall()
       left_turn_until();
       return;
     }
@@ -324,12 +328,7 @@ while(first_check){
   //readIR();
   readIR_map();
   //delay(500);
-     /*
-      unsigned long curr = millis();
-      while (millis() - curr < 500){
-      //nothing (just waiting for 500 seconds to pass
-      }
-      */
+
   if (sensorReading_middle > 300){
     first_check = false;
     //delay(300);
@@ -341,10 +340,12 @@ while(first_check){
    }
 } 
 
+
+
 //forward(100,100);
-  pid_control();
- // go_one_cell();
- // halt_until(1000);
+  //pid_control();
+  go_one_cell();
+  halt_until(1000);
   //go one cell now uses pid control too   
 
 //  readIR();
@@ -364,17 +365,17 @@ while(first_check){
    //delay(2000);
    halt_until(2000);
    //reverse_turn_until();
-   left_turn_until();
+   //left_turn_until();
   // delay(3000);
    //right_turn(); 
-   //random_move();
+   random_move();
     //left_turn();
    //halt();
    //delay(2000);  
     halt_until(2000);
   }
   //*/
-//*/ 
+ 
 
 /*
 readIR_map();
@@ -434,8 +435,8 @@ void readIR_map(){
   //sensorReading_left = map(sensorReading_left,993,1009,0,200);
 
   //CURRENT TRY TO MAP LEFT READING TO RIGHT SENSOR READING RANGE (180 - 820)
-  sensorReading_left = map(sensorReading_left,992,1005,180,820);
-                                             //991
+  sensorReading_left = map(sensorReading_left,991,1005,180,820);
+                                             //991,992
   sensorReading_left -= left_offset;
   
   //sensorReading_right = map(sensorReading_right,180,820,0,200);
@@ -459,7 +460,8 @@ void readIR_map(){
 void regulateSensorL(){
   sensorReading_left = analogRead(sensor_left);
   
-  sensorReading_left = map(sensorReading_left,993,1009,0,200);
+  //sensorReading_left = map(sensorReading_left,993,1009,0,200);
+  sensorReading_left = map(sensorReading_left,991,1005,0,200);
   sensorReading_left -= left_offset;
   
   sensorReading_left = sensorReading_left- permReading_left;
