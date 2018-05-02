@@ -123,7 +123,27 @@ void setup() {
   //readIR();
   
   calibrate_pid();
-  
+
+
+  while(first_check){
+  //readIR();
+  readIR_map();
+  //delay(500);
+
+  if (sensorReading_middle > 300){
+    first_check = false;
+    //delay(300);
+    /*
+    unsigned long curr = millis();
+    while (millis() - curr < 500){
+    //nothing (just waiting for 500 seconds to pass
+    }
+   }
+   */
+   delay(300);
+    }
+
+  }
 }
 
 //encoder and turns
@@ -166,27 +186,27 @@ void right_turn_until(){
 void reverse_turn_until(){
   unsigned long curr_l = left_count;
   //use left_count instead of right_count
-  unsigned long curr_r = right_count;
+  unsigned long curr_r = left_count;
   
  if (sensorReading_left < sensorReading_right){
-  while( left_count - curr_l <830 ){ //, 860,870
+  while( left_count - curr_l < 790){ //800,830, 860,870
     left_turn();
  }
- return;
+ 
 }
 
   else{//use left_count instead of right_count
-    while( left_count - curr_r < 830){ // 860,870
+    while( left_count - curr_r < 790){ //800,830, 860,870
       right_turn();
     }
-    return;    
+       
   }
  
 }
 
 void go_one_cell(){
   unsigned long curr = left_count;
-  while(left_count-curr < 950){ // 450,600, 800
+  while(left_count-curr < 900){ // 450,600, 800,950
     pid_control();
     //forward(150,150);
   }
@@ -228,7 +248,7 @@ permReading_right= 0;
 
 //CHOICES
 bool hasfrontwall(){
-  if (sensorReading_middle >275){ //300 , 350,370,400
+  if (sensorReading_middle >300){ //300 , 350,370,400,275
     return true;
   }
   return false;
@@ -325,21 +345,7 @@ void loop(){
   */
   
 ///*
-while(first_check){
-  //readIR();
-  readIR_map();
-  //delay(500);
 
-  if (sensorReading_middle > 300){
-    first_check = false;
-    //delay(300);
-    
-    unsigned long curr = millis();
-    while (millis() - curr < 500){
-    //nothing (just waiting for 500 seconds to pass
-    }
-   }
-} 
 
 
 
@@ -362,20 +368,12 @@ while(first_check){
 
   
   if (hasfrontwall()){
-   //halt();
-   //delay(2000);
-   halt_until(2000);
-   right_turn_until();
+   halt_until(1000);
+   //right_turn_until();
    //left_turn_until();
-   //reverse_turn_until();
-   halt_until(2000);
-  // delay(3000);
-   //right_turn(); 
-   //random_move();
-    //left_turn();
-   //halt();
-   //delay(2000);  
-    
+   reverse_turn_until();
+   halt_until(1000);
+   //random_move();  
   }
   //*/
  
