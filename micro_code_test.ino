@@ -177,7 +177,7 @@ void print_encoder_count(){
 
 void left_turn_until(){
   unsigned long curr = left_count;
-  while( left_count - curr < 320){//380 330 ,280,290,300,310
+  while( left_count - curr < 330){//380 330 ,280,290,300,310,320
     left_turn();
   }
 }
