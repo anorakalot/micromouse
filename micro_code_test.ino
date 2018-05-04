@@ -1,17 +1,14 @@
-
+//FRONT_PROG
 //DO NOW
-//TO DO CALIBRATE GO ONE CELL
 //TEST RANDOM MOVE CASES
 
-//MAKE PID MORE ACCURATE
-//FIX LED RANGE FOR HAS FUNCTIONS
-
-
+//LOOK OUT FOR MORE ERROR CATCHES TO ADD TO ERROR CATCHING PROGRAM 
 //MAKE PID ON AND OFF
 
 //STATE MACHINES 
 //ENUM
 
+//LET IT HIT THE WALL TO STRAIGHTEN OUT
 //CALIBRATION PID DOESNT HELP
 
 
@@ -23,10 +20,10 @@ int permReading_left;
 int permReading_middle;
 int permReading_right;
 int base_speed =125;// 200,150
-double kp = 0.25;//0.50
+double kp = 0.30;//0.50,0.25
 
-double prev_motor_left = 125;
-double prev_motor_right = 125;
+double motor_left = 125;
+double motor_right = 125;
 
 //Motor 
 int motor_1_logic_1 = 3;
@@ -70,6 +67,10 @@ int sensor_right = A1;
 int sensorReading_right;
 int sensor_right_power = 12;
 
+//prev led values 
+int prev_sensorReading_right;
+int prev_sensorReading_middle;
+int prev_sensorReading_left;
 
 //int val;
 
@@ -127,7 +128,13 @@ void setup() {
   
   calibrate_pid();
 
+  wait_until_start_hand();
 
+  //}
+}
+
+void wait_until_start_hand(){
+  
   while(first_check){
   //readIR();
   readIR_map();
@@ -145,8 +152,6 @@ void setup() {
    //*/
    //delay(300);
   }
-
-  //}
 }
 
 //encoder and turns
@@ -172,7 +177,7 @@ void print_encoder_count(){
 
 void left_turn_until(){
   unsigned long curr = left_count;
-  while( left_count - curr < 300){//380 330 ,280,290
+  while( left_count - curr < 320){//380 330 ,280,290,300,310
     left_turn();
   }
 }
@@ -192,7 +197,7 @@ void reverse_turn_until(){
   unsigned long curr_r = left_count;
   
  if (sensorReading_left < sensorReading_right){
-  while( left_count - curr_l < 790){ //800,830, 860,870
+  while( left_count - curr_l < 850){ //800,830, 860,870,790,800,810,840
     left_turn();
  }
  
@@ -209,9 +214,10 @@ void reverse_turn_until(){
 
 void go_one_cell(){
   unsigned long curr = left_count;
-  while(left_count-curr < 950){ // 450,600, 800,950,900
+  while(left_count-curr < 950){ // 450,600, 800,950,900,960,955,945
     pid_control();
     //forward(150,150);
+    forward(motor_left,motor_right);
   }
 }
 
@@ -251,14 +257,14 @@ permReading_right= 0;
 
 //CHOICES
 bool hasfrontwall(){
-  if (sensorReading_middle >370){ //300 , 350,370,400,275,330,360
+  if (sensorReading_middle >360){ //300 , 350,370,400,275,330,360
     return true;
   }
   return false;
 }
 
-bool hasleftwall(){
-  if (sensorReading_left >350){ //100 ,500,300,250,275,400
+bool hasleftwall(){                                      //350 maybe a bit too high
+  if (sensorReading_left >550){ //100 ,500,300,250,275,400,350,310,320,343,410,420
       return true;
   }
   return false;
@@ -266,7 +272,7 @@ bool hasleftwall(){
 
 
 bool hasrightwall(){
-  if (sensorReading_right >275){//350 ,500,300,250 
+  if (sensorReading_right >320){//350 ,500,300,250,275 ,280
       return true;
   }
   return false;
@@ -284,8 +290,8 @@ void random_move(){
       right_turn_until();
       return;
     }
-    //this isnt running 
-    else if (hasrightwall()  && hasfrontwall()&& !hasleftwall()){//
+    //this isnt running //hopefully it runs now //STILL NOT RUNNING 
+    else if (hasrightwall()  && !hasleftwall() && hasfrontwall()){//|| (hasfronwall() &&(hasrightwall - hasleftwall > 200) ){//
       left_turn_until();
       return;
     }
@@ -334,6 +340,20 @@ void random_move(){
       }
     }
 
+
+//in case of errors 
+    else{
+      random_move = random(millis()) % 2;
+      if (random_move = 1){
+        right_turn_until();
+        return;
+      }
+      else{
+        left_turn_until();
+        return;
+        
+      }
+    }
     return;
   
 }
@@ -350,13 +370,10 @@ void loop(){
   */
   
 ///*
-
-
-
-
-//forward(100,100);
+//loop
   pid_control();
-  //go_one_cell();
+  //forward(motor_left,motor_right);
+  go_one_cell();
   //halt_until(700);
   //go one cell now uses pid control too   
 
@@ -373,14 +390,16 @@ void loop(){
 
   
   if (hasfrontwall()){
-   halt_until(1000);
+   halt_until(700);
    //right_turn_until();
    //left_turn_until();
    random_move(); 
    //reverse_turn_until();
-   halt_until(1000);
+   halt_until(700);
     
   }
+
+  error_catch();
   //*/
  
 
@@ -421,6 +440,9 @@ void readIR(){
   
   
 void readIR_map(){
+  prev_sensorReading_left = sensorReading_left;
+  prev_sensorReading_middle = sensorReading_middle;
+  prev_sensorReading_right = sensorReading_right;
     
   sensorReading_left = analogRead(sensor_left);
   sensorReading_middle = analogRead(sensor_middle);
@@ -462,7 +484,19 @@ void readIR_map(){
 
 
 
-//PID
+//PID / ERROR_CATCHING 
+
+void error_catch(){
+  if (prev_sensorReading_left== sensorReading_left && prev_sensorReading_middle== sensorReading_middle && prev_sensorReading_right== sensorReading_right){
+    int rand_num = random(millis()%2);
+    if (rand_num == 1){
+      left_turn_until();
+    }
+    else{
+      right_turn_until();
+    }
+  }
+}
 
 void regulateSensorL(){
   /*
@@ -514,16 +548,16 @@ void pid_control(){
   //too close left
   if (sensorReading_left > sensorReading_right){
     forward(base_speed,base_speed - (( sensorReading_left - sensorReading_right) * kp));
-    prev_motor_left = base_speed;
-    prev_motor_right = base_speed - (( sensorReading_left - sensorReading_right) * kp);
+    motor_left = base_speed;
+    motor_right = base_speed - (( sensorReading_left - sensorReading_right) * kp);
     return;
   }
   
   //too close right
   if (sensorReading_right > sensorReading_left){
-    forward(base_speed - ((sensorReading_right - sensorReading_left) * kp),base_speed);
-    prev_motor_left = base_speed - ((sensorReading_right - sensorReading_left) * kp);
-    prev_motor_right = base_speed;
+    //forward(base_speed - ((sensorReading_right - sensorReading_left) * kp),base_speed);
+    motor_left = base_speed - ((sensorReading_right - sensorReading_left) * kp);
+    motor_right = base_speed;
     return;
   }
   //( sensorReading_left - sensorReading_right)
@@ -578,16 +612,12 @@ void halt(){
 void reverse_turn(){
   digitalWrite(turn_on_en_1,HIGH);
   digitalWrite(turn_on_en_2,HIGH);
-
-  //halt();
-  //delay(50);
-  
+    
   digitalWrite(motor_1_logic_1,100);
   digitalWrite(motor_1_logic_2,LOW);
   digitalWrite(motor_2_logic_1,LOW);
   digitalWrite(motor_2_logic_2,100);
-  //delay(840);
-  //840
+
 }
 
 
@@ -595,15 +625,11 @@ void left_turn(){
   digitalWrite(turn_on_en_1,HIGH);
   digitalWrite(turn_on_en_2,HIGH);
 
-  //halt();
-  //delay(50);
   
   digitalWrite(motor_1_logic_1,100);
   digitalWrite(motor_1_logic_2,LOW);
   digitalWrite(motor_2_logic_1,LOW);
   digitalWrite(motor_2_logic_2,100);
-  //delay(420);
-  //DELAY ON POINT
 }
 
 
@@ -611,17 +637,11 @@ void right_turn(){
   digitalWrite(turn_on_en_1,HIGH);
   digitalWrite(turn_on_en_2,HIGH);
 
-  //analogWrite(motor_1_logic_2,100);
-  //analogWrite(motor_2_logic_1,100);
   
-  ///halt();
-  //delay(50);
   digitalWrite(motor_1_logic_2,HIGH);
   digitalWrite(motor_2_logic_1,HIGH);
   digitalWrite(motor_1_logic_1,LOW);
   digitalWrite(motor_2_logic_2,LOW);
-  //delay(860);
-  //NOT ON POINT AS MUCH
 }
 
 
