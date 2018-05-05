@@ -302,7 +302,7 @@ void random_move(){
     
     else if (!hasleftwall()&& !hasfrontwall() && hasrightwall())  {
       random_move = random(millis()) % 2;
-      if (random_move = 1){
+      if (random_move == 1){
         left_turn_until();
         return;
       }
@@ -316,7 +316,7 @@ void random_move(){
     
     else if (hasleftwall()&& !hasfrontwall() && !hasrightwall() ) {
       random_move = random(millis()) % 2;
-      if (random_move = 1){
+      if (random_move == 1){
         right_turn_until();
         return;
       }
@@ -329,7 +329,7 @@ void random_move(){
 
     else if (!hasleftwall()&& hasfrontwall() && !hasrightwall())  {
       random_move = random(millis()) % 2;
-      if (random_move = 1){
+      if (random_move == 1){
         right_turn_until();
         return;
       }
@@ -344,7 +344,7 @@ void random_move(){
 //in case of errors 
     else{
       random_move = random(millis()) % 2;
-      if (random_move = 1){
+      if (random_move == 1){
         right_turn_until();
         return;
       }
