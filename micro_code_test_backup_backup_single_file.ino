@@ -1,15 +1,17 @@
+
 //FRONT_PROG
 //DO NOW
+
 //MAKE SO IT DOESNT HAVE ONE WALL OR NO WALL AND IT JUST GOES STRAIGHT
-//FIX RIGHT ENCODERS
-//DO ERROR CATCH SO WHEN RIGHT AND LEFT ENCODER DONT GO UP IT TURNS 
-//MAKE PID BETTER
+//MAKE ERROR CATCH CATCH MORE ERRORS
+
 
 //MAKE PID ON AND OFF
 
 //STATE MACHINES 
 //ENUM
 
+//general notes
 //LET IT HIT THE WALL TO STRAIGHTEN OUT
 //CALIBRATION PID DOESNT HELP
 
@@ -149,14 +151,14 @@ void wait_until_start_hand(){
   readIR_map();
   //delay(500);
 
-  if (sensorReading_middle > 300){
+  if (hasfrontwall()){
     first_check = false;
-    //delay(300);
+    delay(500);
     ////*
-    unsigned long curr = millis();
-    while (millis() - curr < 500){
+    //unsigned long curr = millis();
+    //while (millis() - curr < 500){
     //nothing (just waiting for 500 seconds to pass
-    }
+    //}
    }
    //*/
    //delay(300);
@@ -183,6 +185,23 @@ void print_encoder_count(){
   Serial.print("right_count");
   Serial.println(right_count);
 }
+
+
+void forward_until(int left_speed,int right_speed,int stop_time){
+   
+  unsigned long curr = millis();
+  while (millis() - curr < stop_time){
+    digitalWrite(turn_on_en_1,HIGH);
+    digitalWrite(turn_on_en_2,HIGH);
+  
+    analogWrite(motor_1_logic_2,left_speed);
+    digitalWrite(motor_1_logic_1,LOW);
+    analogWrite(motor_2_logic_2,right_speed);
+    digitalWrite(motor_2_logic_1,LOW);
+  } 
+  
+}
+
 
 void left_turn_until(){
   unsigned long curr = left_count;
@@ -224,14 +243,18 @@ void reverse_turn_until(){
 void go_one_cell(){
   unsigned long curr = left_count;
   while(left_count-curr < 950){ // 450,600, 800,950,900,960,955,945
-    pid_control();
-    //readIR_map();
+    readIR_map();
     /*
+    
     if (hasleftwall()!= true || hasrightwall()!= true){
       motor_left = base_speed;
       motor_right= base_speed-10;
+      forward(motor_left,motor_right);
+      continue;
     }
     */
+    
+    pid_control();
     forward(motor_left,motor_right);
   }
 }
@@ -288,7 +311,7 @@ bool hasfrontwall(){
 }
 
 bool hasleftwall(){                                      //350 maybe a bit too high
-  if (sensorReading_left >550){ //100 ,500,300,250,275,400,350,310,320,343,410,420
+  if (sensorReading_left >500){ //100 ,500,300,250,275,400,350,310,320,343,410,420,550
       return true;
   }
   return false;
@@ -296,7 +319,7 @@ bool hasleftwall(){                                      //350 maybe a bit too h
 
 
 bool hasrightwall(){
-  if (sensorReading_right >320){//350 ,500,300,250,275 ,280
+  if (sensorReading_right >344){//350 ,500,300,250,275 ,280,320
       return true;
   }
   return false;
@@ -305,7 +328,13 @@ bool hasrightwall(){
 //possibly change so in main loop this only runs if hasfrontwall returns true 
 void random_move(){
   int random_move;
+  readIR_map();
   //has to turn cases
+    
+    if (hasleftwall() && hasrightwall() && !hasfrontwall()){
+      return;
+    }
+    
     if (hasleftwall() && hasrightwall() && hasfrontwall()){
       reverse_turn_until();
       return;
@@ -386,84 +415,35 @@ void random_move(){
   
   
 void loop(){
-  /*
- 
-  reverse_turn();
-  halt();
-  delay(500);
-  */
+  ///*
+  //readIR_map();
+  //pid_control();
   
-///*
-//loop
-  readIR_map();
-  pid_control();
+  //pid_control();
   //forward(motor_left,motor_right);
-  
-  pid_control();
-  
-  //if (hasleftwall()!= true || hasrightwall()!= true){
-  //  motor_left = base_speed;
-  //  motor_right= base_speed-10;
-  //  go_one_cell_no_wall();
-    
-    //return;
-//}
-  
+  //readIR_map();
  
   go_one_cell();
+  halt_until(800);
   
   
-  //halt_until(700);
-  //go one cell now uses pid control too   
-
   
   readIR_map();
 
-  //NEW LOOP
-  //go up one cell
-  //go_one_cell
-  //if wall / openingf
-  //random_move(); 
-
   
+  
+  //if (hasfrontwall()){
   if (hasfrontwall()){
    halt_until(700);
-   //right_turn_until();
-   //left_turn_until();
+   forward_until(125,125,400);
+   halt_until(600);
    random_move(); 
-   //reverse_turn_until();
    halt_until(700);
-    
   }
 
   error_catch();
   //*/
-  ///*
-  //forward(100,100);
-  print_encoder_count();
-  delay(1000);
-  //*/
- //good if no walls or only one wall  
- //forward(base_speed ,base_speed-10);
-
-/*
-readIR_map();
-//readIR();
-delay(500);
-//forward(base_speed, base_speed);;
-*/
-/*
-go_one_cell();
-//delay(1000);
-halt_until(1000);
-*/
-/*
-right_turn_until();
-halt_until(1000);
-*/
-//pid_control();
-//forward(200,200);
-  
+  //forward(base_speed,base_speed-10);  
 }
 
 
@@ -492,19 +472,7 @@ void readIR_map(){
   sensorReading_middle = analogRead(sensor_middle);
   sensorReading_right = analogRead(sensor_right);
 
-//sensorReading_left = map(sensorReading_left s
-//sensorReading_left = map(sensorReading_left, 993,1009,0,100);
-//sensorReading_right = map(sensorReading_left, 194,820,0,100);
-  
-  
-/*
-  Serial.println(map(sensorReading_left,993,1008,0,100));
-  Serial.println(map(sensorReading_right,194,820,0,100));
-*/
 
-//right on point 
-//left not as on point 
-  
   //sensorReading_left = map(sensorReading_left,993,1009,0,200);
 
   //CURRENT TRY TO MAP LEFT READING TO RIGHT SENSOR READING RANGE (180 - 820)
@@ -723,5 +691,6 @@ void forward(int left_speed,int right_speed){
   analogWrite(motor_2_logic_2,right_speed);
   digitalWrite(motor_2_logic_1,LOW);
 }
+
 
 
