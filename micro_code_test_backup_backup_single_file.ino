@@ -1,13 +1,13 @@
-
 //FRONT_PROG
 //DO NOW
+//FIRST PRIORITY
+//MAKE SO IT DOESNT HAVE ONE WALL OR NO WALL AND IT JUST GOES STRAIGHT (while going one cell at a atime) FIXED
+// and do random move without front wall
 
-//MAKE SO IT DOESNT HAVE ONE WALL OR NO WALL AND IT JUST GOES STRAIGHT
+//SECONDARY PRIORITIES
+//MAKE PID WITH I AND D 
 //MAKE ERROR CATCH CATCH MORE ERRORS
-
-
 //MAKE PID ON AND OFF
-
 //STATE MACHINES 
 //ENUM
 
@@ -141,7 +141,7 @@ void setup() {
 
   wait_until_start_hand();
 
-  //}
+  
 }
 
 void wait_until_start_hand(){
@@ -154,15 +154,9 @@ void wait_until_start_hand(){
   if (hasfrontwall()){
     first_check = false;
     delay(500);
-    ////*
-    //unsigned long curr = millis();
-    //while (millis() - curr < 500){
-    //nothing (just waiting for 500 seconds to pass
-    //}
-   }
-   //*/
-   //delay(300);
+    }
   }
+
 }
 
 //encoder and turns
@@ -205,14 +199,15 @@ void forward_until(int left_speed,int right_speed,int stop_time){
 
 void left_turn_until(){
   unsigned long curr = left_count;
-  while( left_count - curr < 340){//380 330 ,280,290,300,310,320,330
+  while( left_count - curr < 350){//380 330 ,280,290,300,310,320,330,340
     left_turn();
   }
 }
+
 //use left_count
 void right_turn_until(){
   unsigned long curr = left_count;
-  while( left_count - curr < 260){ //320,340, 370,300,290,280,270
+  while( left_count - curr < 300){ //320,340, 370,300,290,280,270,260,280
     right_turn();
   }
 }
@@ -242,19 +237,28 @@ void reverse_turn_until(){
 
 void go_one_cell(){
   unsigned long curr = left_count;
-  while(left_count-curr < 950){ // 450,600, 800,950,900,960,955,945
+  while(left_count-curr < 930){ // 450,600, 800,950,900,960,955,945,950,945
+    pid_control();
     readIR_map();
-    /*
+    ///*
     
     if (hasleftwall()!= true || hasrightwall()!= true){
       motor_left = base_speed;
       motor_right= base_speed-10;
+      //forward(motor_left,motor_right);
+      //continue;
+    }
+    //*/
+  /*
+    if (abs(sensorReading_left - sensorReading_right) > 300){
+      motor_left = base_speed;
+      motor_right= base_speed-10;
       forward(motor_left,motor_right);
       continue;
+      
     }
-    */
-    
-    pid_control();
+ */
+    //pid_control();
     forward(motor_left,motor_right);
   }
 }
@@ -311,7 +315,7 @@ bool hasfrontwall(){
 }
 
 bool hasleftwall(){                                      //350 maybe a bit too high
-  if (sensorReading_left >500){ //100 ,500,300,250,275,400,350,310,320,343,410,420,550
+  if (sensorReading_left >450){ //100 ,500,300,250,275,400,350,310,320,343,410,420,550,500,600,500
       return true;
   }
   return false;
@@ -319,7 +323,7 @@ bool hasleftwall(){                                      //350 maybe a bit too h
 
 
 bool hasrightwall(){
-  if (sensorReading_right >344){//350 ,500,300,250,275 ,280,320
+  if (sensorReading_right >340){//350 ,500,300,250,275 ,280,320,344
       return true;
   }
   return false;
@@ -332,20 +336,43 @@ void random_move(){
   //has to turn cases
     
     if (hasleftwall() && hasrightwall() && !hasfrontwall()){
+      //go_one_cell();
+      return;
+    }
+    //if (abs(sensorReading_left - sensorReading_right) < 300){
+    //  return;
+    //}
+    
+    if (hasleftwall() && hasrightwall() && hasfrontwall()){
+       halt_until(700);
+       forward_until(125,125,100);
+       halt_until(600);
+       reverse_turn_until();
+       halt_until(700);
+      
+      
+    // 
       return;
     }
     
-    if (hasleftwall() && hasrightwall() && hasfrontwall()){
-      reverse_turn_until();
-      return;
-    }
     else if (hasleftwall() && !hasrightwall() && hasfrontwall()){
-      right_turn_until();
+      
+       halt_until(700);
+       forward_until(125,125,100);
+       halt_until(600);
+       right_turn_until();
+       halt_until(700);
+      
       return;
     }
     //this isnt running //hopefully it runs now //STILL NOT RUNNING //It WORKS NOW
     else if (hasrightwall()  && !hasleftwall() && hasfrontwall()){//|| (hasfronwall() &&(hasrightwall - hasleftwall > 200) ){//
-      left_turn_until();
+       halt_until(700);
+       forward_until(125,125,100);
+       halt_until(600);
+       left_turn_until();
+       halt_until(700);
+      
       return;
     }
 
@@ -356,56 +383,75 @@ void random_move(){
     else if (!hasleftwall()&& !hasfrontwall() && hasrightwall())  {
       random_move = random(millis()) % 2;
       if (random_move == 1){
+        halt_until(700);
         left_turn_until();
+        halt_until(700);
         return;
       }
       else{
       //goes straight
+      
         return;
         
       }
     } 
 
     
-    else if (hasleftwall()&& !hasfrontwall() && !hasrightwall() ) {
+   else if (hasleftwall()&& !hasfrontwall() && !hasrightwall() ) {
       random_move = random(millis()) % 2;
       if (random_move == 1){
+        halt_until(700);
         right_turn_until();
+        halt_until(700);
         return;
       }
       else{
       //goes straight
         return;
-        
       }
     } 
 
     else if (!hasleftwall()&& hasfrontwall() && !hasrightwall())  {
       random_move = random(millis()) % 2;
       if (random_move == 1){
-        right_turn_until();
+       halt_until(700);
+       forward_until(125,125,100);
+       halt_until(600);
+       right_turn_until();
+       halt_until(700);
+      
         return;
       }
       else{
-        left_turn_until();
+       halt_until(700);
+       forward_until(125,125,100);
+       halt_until(600);
+       left_turn_until();
+       halt_until(700);
         return;
-        
       }
     }
 
 
 //in case of errors 
     else{
-      random_move = random(millis()) % 2;
-      if (random_move == 1){
-        right_turn_until();
-        return;
-      }
-      else{
-        left_turn_until();
-        return;
-        
-      }
+//      random_move = random(millis()) % 2;
+//      if (random_move == 1){
+//        halt_until(700);
+//        right_turn_until();
+//        halt_until(700);
+//        return;
+//      }
+//      else{
+//        halt_until(700);
+//        left_turn_until();
+//        halt_until(700);
+//        return;
+//        
+//      }
+    go_one_cell();
+    return;
+  
     }
     return;
   
@@ -415,35 +461,26 @@ void random_move(){
   
   
 void loop(){
-  ///*
-  //readIR_map();
-  //pid_control();
   
-  //pid_control();
-  //forward(motor_left,motor_right);
-  //readIR_map();
+
+//  readIR_map();
+//  delay(1000);
+//  pid_control();
+//  
+
+
  
   go_one_cell();
-  halt_until(800);
+  halt_until(780);
   
   
   
   readIR_map();
 
   
-  
-  //if (hasfrontwall()){
-  if (hasfrontwall()){
-   halt_until(700);
-   forward_until(125,125,400);
-   halt_until(600);
-   random_move(); 
-   halt_until(700);
-  }
+  random_move(); 
 
   error_catch();
-  //*/
-  //forward(base_speed,base_speed-10);  
 }
 
 
@@ -477,8 +514,9 @@ void readIR_map(){
 
   //CURRENT TRY TO MAP LEFT READING TO RIGHT SENSOR READING RANGE (180 - 820)
   //sensorReading_left = map(sensorReading_left,991,1005,180,820);
-                                             //991,992
-  sensorReading_left = map(sensorReading_left,left_ir_low_bound,left_ir_high_bound,0,200);
+    
+                                              //991,992
+  sensorReading_left = map(sensorReading_left,left_ir_low_bound,left_ir_high_bound,180,820);
   sensorReading_left -= left_offset;
   
   //sensorReading_right = map(sensorReading_right,180,820,0,200);
