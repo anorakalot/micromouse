@@ -2,12 +2,12 @@
 //DO NOW
 //FIRST PRIORITY
 //MAKE SO IT DOESNT HAVE ONE WALL OR NO WALL AND IT JUST GOES STRAIGHT (while going one cell at a atime) FIXED
-// and do random move without front wall //Working on it
+// and do random move without front wall //Working on it //Words most of the time
 
 //SECONDARY PRIORITIES
-//MAKE PID WITH I AND D 
+//MAKE PID WITH I AND D //did with d may add it back
 //MAKE ERROR CATCH CATCH MORE ERRORS
-//MAKE PID ON AND OFF
+//MAKE PID ON AND OFF //LEDS on and off to detect error 
 //STATE MACHINES 
 //ENUM
 
@@ -198,8 +198,8 @@ void forward_until(int left_speed,int right_speed,int stop_time){
 
 
 void left_turn_until(){
-  unsigned long curr = left_count;
-  while( left_count - curr < 382){//380 330 ,280,290,300,310,320,330,340,350,360,380
+  unsigned long curr = left_count;//382,380,375,378,380,383,390
+  while( left_count - curr <380 ){//380 330 ,280,290,300,310,320,330,340,350,360,380
     left_turn();
   }
 }
@@ -220,14 +220,14 @@ void reverse_turn_until(){
   unsigned long curr_r = left_count;
   
  if (sensorReading_left < sensorReading_right){
-  while( left_count - curr_l < 870){ //800,830, 860,870,790,800,810,840,860
+  while( left_count - curr_l < 880){ //800,830, 860,870,790,800,810,840,860,870
     left_turn();
  }
  
 }
 
   else{//use left_count instead of right_count
-    while( left_count - curr_r < 790){ //800,830, 860,870
+    while( left_count - curr_r < 800){ //800,830, 860,870,790
       right_turn();
     }
        
@@ -433,7 +433,27 @@ void random_move(){
       }
     }
 
-
+    else if (!hasfrontwall && !hasleftwall && !hasrightwall){
+      random_move = random(millis()) % 2;
+      if (random_move == 1){
+        halt_until(700);
+        right_turn_until();
+        halt_until(700);
+        return;
+      }
+      if (random_move == 2){
+        halt_until(700);
+        return;
+      }
+      else{
+        halt_until(700);
+        left_turn_until();
+        halt_until(700);
+        return;
+        
+      }
+    }
+    
 //in case of errors 
     else{
 //      random_move = random(millis()) % 2;
@@ -481,7 +501,7 @@ void loop(){
   
   random_move(); 
 
-  error_catch();
+  //error_catch();
 
 }
 
@@ -503,8 +523,6 @@ void readIR(){
   
   
 void readIR_map(){
- 
-   
   prev_sensorReading_left = sensorReading_left;
   prev_sensorReading_middle = sensorReading_middle;
   prev_sensorReading_right = sensorReading_right;
@@ -528,8 +546,6 @@ void readIR_map(){
   sensorReading_left = abs(sensorReading_left);
   sensorReading_right = abs(sensorReading_right);
   sensorReading_middle = abs(sensorReading_middle);
-
-  
   
   Serial.print("Sensor Reading: ");
   Serial.print( "LEFT : ");
@@ -540,10 +556,7 @@ void readIR_map(){
   Serial.println(sensorReading_right);
   Serial.println();
 
-  if (sensorReading_right < 100|| sensorReading_left < 100){
-    readIR_map();
-  }
-  
+
 }
 
 
@@ -632,7 +645,7 @@ void pid_control(){
     
     //forward(base_speed,base_speed - (( sensorReading_left - sensorReading_right) * kp));
     motor_left = base_speed;
-    motor_right = base_speed - (( sensorReading_left - sensorReading_right) * kp);//+d_control);
+    motor_right = base_speed - (( sensorReading_left - sensorReading_right) * kp+d_control);//+d_control);
     return;
   }
   
@@ -644,7 +657,7 @@ void pid_control(){
     d_control = (error -prev_error)*kd;
     
     //forward(base_speed - ((sensorReading_right - sensorReading_left) * kp),base_speed);
-    motor_left = base_speed - ((sensorReading_right - sensorReading_left) * kp); //+ d_control);
+    motor_left = base_speed - ((sensorReading_right - sensorReading_left) * kp+ d_control); //+ d_control);
     motor_right = base_speed;
     return;
   }
