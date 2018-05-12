@@ -2,7 +2,7 @@
 //DO NOW
 //FIRST PRIORITY
 //MAKE SO IT DOESNT HAVE ONE WALL OR NO WALL AND IT JUST GOES STRAIGHT (while going one cell at a atime) FIXED
-// and do random move without front wall
+// and do random move without front wall //Working on it
 
 //SECONDARY PRIORITIES
 //MAKE PID WITH I AND D 
@@ -199,7 +199,7 @@ void forward_until(int left_speed,int right_speed,int stop_time){
 
 void left_turn_until(){
   unsigned long curr = left_count;
-  while( left_count - curr < 350){//380 330 ,280,290,300,310,320,330,340
+  while( left_count - curr < 385){//380 330 ,280,290,300,310,320,330,340,350,360,380
     left_turn();
   }
 }
@@ -207,7 +207,7 @@ void left_turn_until(){
 //use left_count
 void right_turn_until(){
   unsigned long curr = left_count;
-  while( left_count - curr < 300){ //320,340, 370,300,290,280,270,260,280
+  while( left_count - curr < 325){ //320,340, 370,300,290,280,270,260,280,300
     right_turn();
   }
 }
@@ -220,7 +220,7 @@ void reverse_turn_until(){
   unsigned long curr_r = left_count;
   
  if (sensorReading_left < sensorReading_right){
-  while( left_count - curr_l < 850){ //800,830, 860,870,790,800,810,840
+  while( left_count - curr_l < 870){ //800,830, 860,870,790,800,810,840,860
     left_turn();
  }
  
@@ -237,7 +237,7 @@ void reverse_turn_until(){
 
 void go_one_cell(){
   unsigned long curr = left_count;
-  while(left_count-curr < 930){ // 450,600, 800,950,900,960,955,945,950,945
+  while(left_count-curr < 935){ // 450,600, 800,950,900,960,955,945,950,945,930,925,940
     pid_control();
     readIR_map();
     ///*
@@ -390,7 +390,7 @@ void random_move(){
       }
       else{
       //goes straight
-      
+      halt_until(700);
         return;
         
       }
@@ -407,6 +407,7 @@ void random_move(){
       }
       else{
       //goes straight
+        halt_until(700);
         return;
       }
     } 
@@ -449,7 +450,7 @@ void random_move(){
 //        return;
 //        
 //      }
-    go_one_cell();
+    //go_one_cell();
     return;
   
     }
@@ -471,7 +472,7 @@ void loop(){
 
  
   go_one_cell();
-  halt_until(780);
+  halt_until(760);
   
   
   
@@ -539,7 +540,7 @@ void readIR_map(){
 
 void error_catch(){
   if (prev_sensorReading_left== sensorReading_left && prev_sensorReading_middle== sensorReading_middle && prev_sensorReading_right== sensorReading_right){
-    int rand_num = random(millis()%2);
+    int rand_num = random(millis())% 2;
     if (rand_num == 1){
       left_turn_until();
     }
