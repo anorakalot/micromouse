@@ -198,8 +198,8 @@ void forward_until(int left_speed,int right_speed,int stop_time){
 
 
 void left_turn_until(){
-  unsigned long curr = left_count;//382,380,375,378,380,383,390
-  while( left_count - curr <380 ){//380 330 ,280,290,300,310,320,330,340,350,360,380
+  unsigned long curr = left_count;//382,380,375,378,380,383,390,380
+  while( left_count - curr <382 ){//380 330 ,280,290,300,310,320,330,340,350,360,380
     left_turn();
   }
 }
@@ -212,6 +212,18 @@ void right_turn_until(){
   }
 }
 
+
+void reverse_until(){
+  unsigned long curr_l = left_count;
+  //use left_count instead of right_count
+  
+  while( left_count - curr_l < 100){ //800,830, 860,870,790,800,810,840,860,870
+    reverse();
+  }
+ 
+
+ 
+}
 
 
 void reverse_turn_until(){
@@ -453,7 +465,8 @@ void random_move(){
         
       }
     }
-    
+
+   
 //in case of errors 
     else{
 //      random_move = random(millis()) % 2;
@@ -482,28 +495,23 @@ void random_move(){
   
   
 void loop(){
-  
-//
 //  readIR_map();
 //  delay(1000);
 //  pid_control();
   
-
-
- 
+  
+  
   go_one_cell();
   halt_until(760);
   
   
-  
   readIR_map();
-
   
   random_move(); 
-
+  
   //error_catch();
-
-}
+  
+} 
 
 
 
@@ -523,6 +531,9 @@ void readIR(){
   
   
 void readIR_map(){
+  //prev_prev_sensorReading_left = prev_sensorReading_left;
+  //prev_prev_sensorReading_middle =  prev_sensorReading_middle;
+  
   prev_sensorReading_left = sensorReading_left;
   prev_sensorReading_middle = sensorReading_middle;
   prev_sensorReading_right = sensorReading_right;
@@ -564,13 +575,21 @@ void readIR_map(){
 //PID / ERROR_CATCHING 
 
 void error_catch(){
-  if (prev_sensorReading_left== sensorReading_left && prev_sensorReading_middle== sensorReading_middle && prev_sensorReading_right== sensorReading_right){
+  if (prev_sensorReading_left== sensorReading_left && prev_sensorReading_middle== sensorReading_middle && prev_sensorReading_right== sensorReading_right){  
     int rand_num = random(millis())% 2;
     if (rand_num == 1){
+      halt_until(700);
+      reverse_until();
+      halt_until(700);
       left_turn_until();
+      halt_until(700);
     }
     else{
+      halt_until(700);
+      reverse_until();
+      halt_until(700);
       right_turn_until();
+      halt_until(700);
     }
   }
 }
