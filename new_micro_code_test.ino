@@ -5,22 +5,26 @@
 //DO NOW
 //FIRST PRIORITIES
 //MAKE SO IT DOESNT HAVE ONE WALL OR NO WALL AND IT JUST GOES STRAIGHT with the last good pid motor value OR DO ONE WALL PID// still working on
-//MAKE ERROR CATCH CATCH MORE ERRORS AND NOT DO RANDOM TURNS( MAYBE do TIMER LIBRARY) //FIRST ROUGH DONE
-//MAKE PID WITH I AND D //did with d may add i //i might be good now watch for overflow
+//MAKE ERROR CATCH CATCH MORE ERRORS AND NOT DO RANDOM TURNS( MAYBE do TIMER LIBRARY) //FIRST ROUGH DONE//ADDED IF MOTOR NOT TURNING
+//MAKE PID WITH I AND D //did with d may add i //i might be good now watch for overflow // PRETTY SURE THIS IS DONE
 
 //SECONDARY PRIORITIES
-//MAKE PID ON AND OFF //LEDS on and off to detect error
+//MAKE PID ON AND OFF //LEDS on and off to detect error //LATER
 //STATE MACHINES
 //ENUM
 
 //general notes
 //LET IT HIT THE WALL TO STRAIGHTEN OUT
 //CALIBRATION PID DOESNT HELP
+int halt_delay = 298;//350,300
 
+
+unsigned long prev_encoder_tick;
 unsigned long curr_timer;
 bool error_check;
 unsigned long prev_timer = 0;
 const long error_check_interval = 12000;
+
 
 bool first_check = true;
 
@@ -28,9 +32,9 @@ bool first_check = true;
 int permReading_left;
 int permReading_middle;
 int permReading_right;
-int base_speed = 150; // 200,150,125
-double kp = 0.50;//0.50,0.25,0.30
-double kd = 0.30;
+int base_speed = 150; // 200,150,125,150
+double kp = 0.50;//0.50,0.25,0.30,0.50,0.60
+double kd = 0.40;//0.30,0.50,0.30,0.40
 double ki = 0.0001;
 double error;
 double prev_error;
@@ -191,7 +195,7 @@ void catch_tick() {
 
 void wait_until_start_hand() {
 
-  while (first_check) {
+  while (first_check){
     //readIR();
     readIR_map();
     //delay(500);
@@ -199,6 +203,10 @@ void wait_until_start_hand() {
     if (hasfrontwall()) {
       first_check = false;
       delay(500);
+      prev_sensorReading_left = sensorReading_left;
+      prev_sensorReading_middle = sensorReading_middle;
+      prev_sensorReading_right = sensorReading_right;
+      prev_encoder_tick = left_count;
     }
   }
 
@@ -244,15 +252,15 @@ void forward_until(int left_speed, int right_speed, int stop_time) {
 
 void left_turn_until() {
   unsigned long curr = left_count;//382,380,375,378,380,383,390,380,382,365
-  while ( left_count - curr < 365 ) { //380 330 ,280,290,300,310,320,330,340,350,360,380
+  while ( left_count - curr < 350 ) { //380 330 ,280,290,300,310,320,330,340,350,360,380,365,360
     left_turn();
   }
 }
 
 //use left_count
 void right_turn_until() {
-  unsigned long curr = left_count;
-  while ( left_count - curr < 335) { //320,340, 370,300,290,280,270,260,280,300,325,330
+  unsigned long curr = left_count;//335
+  while ( left_count - curr < 325 ) { //320,340, 370,300,290,280,270,260,280,300,325,330
     right_turn();
   }
 }
@@ -276,8 +284,8 @@ void reverse_turn_until() {
   //use left_count instead of right_count
   unsigned long curr_r = left_count;
 
-  if (sensorReading_left < sensorReading_right) {
-    while ( left_count - curr_l < 880) { //800,830, 860,870,790,800,810,840,860,870
+  if (sensorReading_left < sensorReading_right) {//880
+    while ( left_count - curr_l < 870) { //800,830, 860,870,790,800,810,840,860,870
       left_turn();
     }
 
@@ -297,14 +305,17 @@ void go_one_cell() {
   while (left_count - curr < 935) { // 450,600, 800,950,900,960,955,945,950,945,930,925,940
     pid_control();
     readIR_map();
-    ///*
 
-    if (hasleftwall() != true || hasrightwall() != true) {
-      motor_left = base_speed;
-      motor_right = base_speed - 10;
-      //forward(motor_left,motor_right);
-      //continue;
-    }
+    forward(motor_left, motor_right);
+  }
+      ///*
+//    prev_encoder_tick = left_count;
+//    if (hasleftwall() != true || hasrightwall() != true) {
+//      motor_left = base_speed;
+//      motor_right = base_speed - 10;
+//      //forward(motor_left,motor_right);
+//      //continue;
+//    }
     //*/
     /*
       if (abs(sensorReading_left - sensorReading_right) > 300){
@@ -316,8 +327,6 @@ void go_one_cell() {
       }
     */
     //pid_control();
-    forward(motor_left, motor_right);
-  }
 }
 
 //maybe delete this
@@ -371,8 +380,8 @@ bool hasfrontwall() {       //200
   return false;
 }
 
-bool hasleftwall() {     //220,450,430                                //350 maybe a bit too high
-  if (sensorReading_left > 450) { //100 ,500,300,250,275,400,350,310,320,343,410,420,550,500,600,500
+bool hasleftwall() {     //220,450,430,450,430,420 ,320                               //350 maybe a bit too high
+  if (sensorReading_left > 450 ) { //100 ,500,300,250,275,400,350,310,320,343,410,420,550,500,600,500
     return true;
   }
   return false;
@@ -401,11 +410,11 @@ void random_move() {
   //}
 
   if (hasleftwall() && hasrightwall() && hasfrontwall()) {
-    halt_until(700);
+    halt_until(halt_delay);
     forward_until(125, 125, 100);
-    halt_until(600);
+    halt_until(halt_delay);
     reverse_turn_until();
-    halt_until(700);
+    halt_until(halt_delay);
 
 
     //
@@ -414,21 +423,21 @@ void random_move() {
 
   else if (hasleftwall() && !hasrightwall() && hasfrontwall()) {
 
-    halt_until(700);
+    halt_until(halt_delay);
     forward_until(125, 125, 100);
-    halt_until(600);
+    halt_until(halt_delay);
     right_turn_until();
-    halt_until(700);
+    halt_until(halt_delay);
 
     return;
   }
   //this isnt running //hopefully it runs now //STILL NOT RUNNING //It WORKS NOW
   else if (hasrightwall()  && !hasleftwall() && hasfrontwall()) { //|| (hasfronwall() &&(hasrightwall - hasleftwall > 200) ){//
-    halt_until(700);
+    halt_until(halt_delay);
     forward_until(125, 125, 100);
-    halt_until(600);
+    halt_until(halt_delay);
     left_turn_until();
-    halt_until(700);
+    halt_until(halt_delay);
 
     return;
   }
@@ -440,14 +449,14 @@ void random_move() {
   else if (!hasleftwall() && !hasfrontwall() && hasrightwall()) {
     random_move = random(millis()) % 2;
     if (random_move == 1) {
-      halt_until(700);
+      halt_until(halt_delay);
       left_turn_until();
-      halt_until(700);
+      halt_until(halt_delay);
       return;
     }
     else {
       //goes straight
-      halt_until(700);
+      halt_until(halt_delay);
       return;
 
     }
@@ -457,14 +466,14 @@ void random_move() {
   else if (hasleftwall() && !hasfrontwall() && !hasrightwall() ) {
     random_move = random(millis()) % 2;
     if (random_move == 1) {
-      halt_until(700);
+      halt_until(halt_delay);
       right_turn_until();
-      halt_until(700);
+      halt_until(halt_delay);
       return;
     }
     else {
       //goes straight
-      halt_until(700);
+      halt_until(halt_delay);
       return;
     }
   }
@@ -472,20 +481,20 @@ void random_move() {
   else if (!hasleftwall() && hasfrontwall() && !hasrightwall())  {
     random_move = random(millis()) % 2;
     if (random_move == 1) {
-      halt_until(700);
+      halt_until(halt_delay);
       forward_until(125, 125, 100);
-      halt_until(600);
+      halt_until(halt_delay);
       right_turn_until();
-      halt_until(700);
+      halt_until(halt_delay);
 
       return;
     }
     else {
-      halt_until(700);
+      halt_until(halt_delay);
       forward_until(125, 125, 100);
-      halt_until(600);
+      halt_until(halt_delay);
       left_turn_until();
-      halt_until(700);
+      halt_until(halt_delay);
       return;
     }
   }
@@ -493,19 +502,19 @@ void random_move() {
   else if (!hasfrontwall && !hasleftwall && !hasrightwall) {
     random_move = random(millis()) % 2;
     if (random_move == 1) {
-      halt_until(700);
+      halt_until(halt_delay);
       right_turn_until();
-      halt_until(700);
+      halt_until(halt_delay);
       return;
     }
     if (random_move == 2) {
-      halt_until(700);
+      halt_until(halt_delay);
       return;
     }
     else {
-      halt_until(700);
+      halt_until(halt_delay);
       left_turn_until();
-      halt_until(700);
+      halt_until(halt_delay);
       return;
 
     }
@@ -540,16 +549,16 @@ void random_move() {
 
 
 void loop() {
-
-  //  readIR_map();
-  //  delay(1000);
-  //  pid_control();
+  //
+  //    readIR_map();
+  //    delay(1000);
+  // pid_control();
 
 
   //t.update();
 
   go_one_cell();
-  halt_until(760);
+  halt_until(halt_delay);//760
 
 
   readIR_map();
@@ -581,10 +590,10 @@ void readIR() {
 void readIR_map() {
   //prev_prev_sensorReading_left = prev_sensorReading_left;
   //prev_prev_sensorReading_middle =  prev_sensorReading_middle;
-
-  //  prev_sensorReading_left = sensorReading_left;
-  //  prev_sensorReading_middle = sensorReading_middle;
-  //  prev_sensorReading_right = sensorReading_right;
+  //
+  //    prev_sensorReading_left = sensorReading_left;
+  //    prev_sensorReading_middle = sensorReading_middle;
+  //    prev_sensorReading_right = sensorReading_right;
 
   sensorReading_left = analogRead(sensor_left);
   sensorReading_middle = analogRead(sensor_middle);
@@ -645,9 +654,12 @@ void error_catch() {
         halt_until(700);
       }
     }
+
+
     prev_sensorReading_left = sensorReading_left;
     prev_sensorReading_middle = sensorReading_middle;
     prev_sensorReading_right = sensorReading_right;
+    prev_encoder_tick = left_count;
   }
   //error_check = false;
 }
@@ -710,6 +722,14 @@ void pid_control() {
     }
     //end of added
   */
+
+   if (hasleftwall() != true || hasrightwall() != true) {
+     motor_left = base_speed;
+     motor_right = base_speed - 10;
+     //forward(motor_left,motor_right);
+     //continue;
+     return;
+    }
   regulateSensorL();
   regulateSensorR();
 
@@ -723,13 +743,13 @@ void pid_control() {
 
   //too close left
   if (sensorReading_left > sensorReading_right) {
-
+    //d control
     prev_error = error;
     error = abs(sensorReading_left - sensorReading_right);
     d_control = (error - prev_error) * kd;
 
     //i control
-
+    //i control
     error_buildup += error;
     i_control = error_buildup * ki;
 
@@ -743,6 +763,7 @@ void pid_control() {
   //too close right
   if (sensorReading_right > sensorReading_left) {
 
+    //d control
     prev_error = error;
     error = abs(sensorReading_left - sensorReading_right);
     d_control = (error - prev_error) * kd;
