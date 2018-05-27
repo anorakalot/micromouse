@@ -1,4 +1,4 @@
-#include "Timer.h"
+//#include "Timer.h"
 #include "Time.h"
 
 //FRONT_PROG
@@ -265,7 +265,7 @@ void forward_until(int left_speed, int right_speed, int stop_time) {
 }
 void left_turn_until() {
   unsigned long curr = left_count;//382,380,375,378,380,383,390,380,382,365
-  while ( left_count - curr < 400  ) { //380 330 ,280,290,300,310,320,330,340,350,360,380,365,360
+  while ( left_count - curr < 340  ) { //380 330 ,280,290,300,310,320,330,340,350,360,380,365,360
     left_turn();                  //350,360,380,390
   }
 }
@@ -334,7 +334,6 @@ void go_one_cell() {
       motor_right= base_speed-10;
       forward(motor_left,motor_right);
       continue;
-
     }
   */
   //pid_control();
@@ -363,7 +362,6 @@ void calibrate_pid() {
     permReading_left = analogRead(sensor_left);
     permReading_middle= analogRead(sensor_middle);
     permReading_right= analogRead(sensor_right);
-
     //map left and right
     permReading_left = map(permReading_left,993,1009,0,200);
     permR
@@ -401,14 +399,14 @@ void calibrate_pid() {
 
 //CHOICES
 bool hasfrontwall() {       //200,360
-  if (sensorReading_middle > 500 ) { //300 , 350,370,400,275,330,360
+  if (sensorReading_middle > 408 ) { //300 , 350,370,400,275,330,360,500
     return true;
   }
   return false;
 }
 
 bool hasleftwall() {     //220,450,430,450,430,420 ,320                               //350 maybe a bit too high
-  if (sensorReading_left > 420 ) { //100 ,500,300,250,275,400,350,310,320,343,410,420,550,500,600,500
+  if (sensorReading_left > 523 ) { //100 ,500,300,250,275,400,350,310,320,343,410,420,550,500,600,500,420
     return true;
   }
   return false;
@@ -416,7 +414,7 @@ bool hasleftwall() {     //220,450,430,450,430,420 ,320                         
 
 
 bool hasrightwall() {     //220,340,330.300,420,320,330
-  if (sensorReading_right >350 ) { //350 ,500,300,250,275 ,280,320,344
+  if (sensorReading_right >367 ) { //350 ,500,300,250,275 ,280,320,344,350
     return true;
   }
   return false;
@@ -592,9 +590,12 @@ void loop() {
   //delay(2000);
 //
   readIR_map();
-
-  go_one_cell();
+  delay(1000);
+//  go_one_cell();
 //  halt_until(halt_delay);//760
+
+left_turn_until();
+halt_until(500);
 
 //  readIR_map();
 //
@@ -772,7 +773,6 @@ void error_catch() {
 
 void regulateSensorL() {
   /*
-
     readIR_map();
     if (!hasleftwall || !hasrightwall){
     forward(prev_motor_left,prev_motor_right);
@@ -836,7 +836,6 @@ void regulateSensorR() {
 
 void regulateSensorL(int reading) {
   /*
-
     readIR_map();
     if (!hasleftwall || !hasrightwall){
     forward(prev_motor_left,prev_motor_right);
@@ -1051,6 +1050,3 @@ void forward(int left_speed, int right_speed) {
   analogWrite(motor_2_logic_2, right_speed);
   digitalWrite(motor_2_logic_1, LOW);
 }
-
-
-
