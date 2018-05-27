@@ -177,13 +177,12 @@ void setup() {
 
   calibrate_pid();
 
-  wait_until_start_hand();
+ wait_until_start_hand();
 
   readIR_map();
 
   prev_sensorReading_left = sensorReading_left;
   prev_sensorReading_middle = sensorReading_middle;
-  prev_sensorReading_right = sensorReading_right;
 
 }
 void catch_tick() {
@@ -265,7 +264,7 @@ void forward_until(int left_speed, int right_speed, int stop_time) {
 }
 void left_turn_until() {
   unsigned long curr = left_count;//382,380,375,378,380,383,390,380,382,365
-  while ( left_count - curr < 340  ) { //380 330 ,280,290,300,310,320,330,340,350,360,380,365,360
+  while ( left_count - curr < 175  ) { //380 330 ,280,290,300,310,320,330,340,350,360,380,365,360
     left_turn();                  //350,360,380,390
   }
 }
@@ -294,14 +293,14 @@ void reverse_turn_until() {
   unsigned long curr_r = left_count;
   //
   if (sensorReading_left < sensorReading_right) {//880
-    while ( left_count - curr_l < 930 ) { //800,830, 860,870,790,800,810,840,860,870
+    while ( left_count - curr_l < 860 ) { //800,830, 860,870,790,800,810,840,860,870
       left_turn();                  //870,910u
     }
 
   }
 
   else { //use left_count instead of right_count
-    while ( left_count - curr_r < 800) { //800,830, 860,870,790
+    while ( left_count - curr_r < 720) { //800,830, 860,870,790
       right_turn();
     }
 
@@ -399,8 +398,8 @@ void calibrate_pid() {
 
 //CHOICES
 bool hasfrontwall() {       //200,360
-  if (sensorReading_middle > 408 ) { //300 , 350,370,400,275,330,360,500
-    return true;
+  if (sensorReading_middle >360 ) { //300 , 350,370,400,275,330,360,500
+    return true;//408 
   }
   return false;
 }
@@ -593,8 +592,9 @@ void loop() {
   delay(1000);
 //  go_one_cell();
 //  halt_until(halt_delay);//760
-
-left_turn_until();
+//
+halt_until(500);
+reverse_turn_until();
 halt_until(500);
 
 //  readIR_map();
