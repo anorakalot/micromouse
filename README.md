@@ -1,2 +1,3 @@
 # micromouse
-Mircromouse Code
+Mircromouse Code,Maze Solving Robot
+
