@@ -94,27 +94,35 @@ int main(){
 		
       if (check_if_one_off == false){
         int minval;
+		pair<int, int> next_ideal_pos;
 		
         if (cellcheck.second -1  >= 0){
           minval = distmaze[cellcheck.first][cellcheck.second-1];
-		  
+		  next_ideal_pos.first = cellcheck.first;
+		  next_ideal_pos.second = cellcheck.second-1;
           }
         }
         if (cellcheck.first -1 >= 0){
           if (distmaze[cellcheck.first-1][cellcheck.second] < minval){
 			minval = distmaze[cellcheck.first-1][cellcheck.second];
+		  next_ideal_pos.first = cellcheck.first-1;
+		  next_ideal_pos.second = cellcheck.second;
           }
         }
 		
 		if (cellcheck.second + 1 <= 7){
 			if (distmaze[cellcheck.first][cellcheck.second+1] < minval) {
 				minval = distmaze[cellcheck.first][cellcheck.second+1];
+		  next_ideal_pos.first = cellcheck.first;
+		  next_ideal_pos.second = cellcheck.second+1;
 			}
 		}
 		
 		if (cellcheck.first + 1 <= 7){
 			if (distmaze[cellcheck.first + 1][cellcheck.second] < minval) {
 				minval = distmaze[cellcheck.first+1][cellcheck.second];
+		  next_ideal_pos.first = cellcheck.first+1;
+		  next_ideal_pos.second = cellcheck.second;
 			}
 		}
 		
@@ -149,7 +157,8 @@ int main(){
 		}
 		
 		
-		
+		start.first = next_ideal_pos.first;
+		start.second = next_ideal_pos.second;
 		
 
 
