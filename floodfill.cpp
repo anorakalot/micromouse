@@ -90,14 +90,18 @@ int main(){
         }
 
       if (check_if_one_off == false){
-        
-      if (cellcheck.second -1  >= 0){
-        if (distmaze[cellcheck.first][cellcheck.second] !=
-          distmaze[cellcheck.first][cellcheck.second-1]+ 1  ){
+        int minval;
+
+        if (cellcheck.second -1  >= 0){
+          minval = distmaze[cellcheck.first][cellcheck.second-1]
 
           }
         }
+        if (cellcheck.first -1 >= 0){
+          if (distmaze[cellcheck.first-1][cellcheck.second]){
 
+          }
+        }
 
       }
 
