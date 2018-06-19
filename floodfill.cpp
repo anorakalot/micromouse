@@ -1,16 +1,31 @@
+//find out how to implement wallmaze in loop
 #include <iostream>
 #include <vector>
 #include <queue>
 #include <stack>
+#include <cstdlib>
 using namespace std;
 
+// struct pair {
+//    int first;
+//    int second;
+// };
+//
+//
+//    struct pair pair1;        /* Declare pair1 of type pair */
+//    struct pair pair2;        /* Declare pair2 of type pair */
+
+
+
 int main(){
+  //struct pair goals;
   //initialize variables
   int distmaze[8][8];
   int wallmaze[8][8];
   pair<int,int> goal (3,3);
-  pair<int,int> start(8,1);
-  stack<int> checks;
+  pair<int,int> start(8,0);
+  stack<pair<int,int> > checks;
+  pair<int,int> cellcheck;
 
   //set all walls to zero
   for(int height = 0;height < 8; ++height){
@@ -23,9 +38,9 @@ int main(){
   int counter = 8;
   for(int height = 0; height < 8; ++height){
     for(int width = 0; width < 8; ++width){
-      distmaze[height][width] = counter;
+      distmaze[height][width] = abs(goal.first - height) + abs(goal.second - width);
     }
-    counter--;
+    //counter--;
   }
 
   //output the distmaze object;
@@ -36,21 +51,82 @@ int main(){
     cout << endl;
   }
 
+  checks.push(start);
+  while(start != goal){
+    while(!checks.empty()){
+      cellcheck = checks.top();
+      checks.pop();
+      bool check_if_one_off = true;
 
 
-}
+      if (cellcheck.second -1  >= 0){
+        if (distmaze[cellcheck.first][cellcheck.second] !=
+          distmaze[cellcheck.first][cellcheck.second-1]+ 1  ){
+            check_if_one_off = false;
+          }
+        }
 
-//testing
-//
-// for(int height = 0;height < 8; ++height){
-//   for(int width = 0; width < 8; ++width){
-//     distmaze[height][width] = 1;
-//   }
-// }
-//
-// for(int height = 0;height < 8; ++height){
-//   for(int width = 0; width < 8; ++width){
-//     cout << distmaze[height][width] << " ";
-//   }
-//   cout << endl;
-// }
+
+      if (cellcheck.first -1 >=0){
+        if (distmaze[cellcheck.first][cellcheck.second]!=
+          distmaze[cellcheck.first-1][cellcheck.second] + 1){
+            check_if_one_off = false;
+          }
+        }
+
+
+      if (cellcheck.second + 1 <= 7){
+        if (distmaze[cellcheck.first][cellcheck.second]!=
+          distmaze[cellcheck.first][cellcheck.second+1] + 1){
+            check_if_one_off = false;
+          }
+        }
+
+      if (cellcheck.first + 1 <= 7){
+        if (distmaze[cellcheck.first][cellcheck.second]!=
+          distmaze[cellcheck.first+1][cellcheck.second] + 1){
+            check_if_one_off = false;
+          }
+        }
+
+      if (check_if_one_off == false){
+        
+      if (cellcheck.second -1  >= 0){
+        if (distmaze[cellcheck.first][cellcheck.second] !=
+          distmaze[cellcheck.first][cellcheck.second-1]+ 1  ){
+
+          }
+        }
+
+
+      }
+
+
+
+
+              // if (distmaze[cellcheck.first][cellcheck.second] !=
+              //    distmaze[cellcheck.first + 1][cellcheck.second + 2] + 1 ){
+              //
+              // }
+            }
+            //cout << "CDCDCDCDCD" << endl;
+          }
+
+        }
+
+        //
+        // testing
+        //
+        // for(int height = 0;height < 8; ++height){
+        //   for(int width = 0; width < 8; ++width){
+        //     distmaze[height][width] = 1;
+        //   }
+        // }
+        //
+        // for(int height = 0;height < 8; ++height){
+        //   for(int width = 0; width < 8; ++width){
+        //     cout << distmaze[height][width] << " ";
+        //   }
+        //
+        //   cout << endl;
+        // }
