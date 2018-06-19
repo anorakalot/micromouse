@@ -89,21 +89,68 @@ int main(){
           }
         }
 
+		
+		
+		
       if (check_if_one_off == false){
         int minval;
-
+		
         if (cellcheck.second -1  >= 0){
-          minval = distmaze[cellcheck.first][cellcheck.second-1]
-
+          minval = distmaze[cellcheck.first][cellcheck.second-1];
+		  
           }
         }
         if (cellcheck.first -1 >= 0){
-          if (distmaze[cellcheck.first-1][cellcheck.second]){
-
+          if (distmaze[cellcheck.first-1][cellcheck.second] < minval){
+			minval = distmaze[cellcheck.first-1][cellcheck.second];
           }
         }
-
-      }
+		
+		if (cellcheck.second + 1 <= 7){
+			if (distmaze[cellcheck.first][cellcheck.second+1] < minval) {
+				minval = distmaze[cellcheck.first][cellcheck.second+1];
+			}
+		}
+		
+		if (cellcheck.first + 1 <= 7){
+			if (distmaze[cellcheck.first + 1][cellcheck.second] < minval) {
+				minval = distmaze[cellcheck.first+1][cellcheck.second];
+			}
+		}
+		
+		
+		distmaze[cellcheck.first][cellcheck.second] = minval ++;
+		
+		pair<int, int> pair_to_push;
+		
+		
+		if (cellcheck.second -1  >= 0){
+          pair_to_push.first = cellcheck.first;
+		  pair_to_push.second = cellcheck.second-1;
+		  checks.push(pair_to_push);
+        }
+				
+        if (cellcheck.first -1 >= 0){
+		  pair_to_push.first = cellcheck.first-1;
+		  pair_to_push.second = cellcheck.second;
+		  checks.push(pair_to_push);
+        }
+		
+		if (cellcheck.second + 1 <= 7){
+		  pair_to_push.first = cellcheck.first;
+		  pair_to_push.second = cellcheck.second+1;
+		  checks.push(pair_to_push);
+		}
+		
+		if (cellcheck.first + 1 <= 7){
+		  pair_to_push.first = cellcheck.first + 1;
+		  pair_to_push.second = cellcheck.second;
+		  checks.push(pair_to_push);
+		}
+		
+		
+		
+		
 
 
 
