@@ -26,6 +26,8 @@ using namespace std;
 	// int walls;
 // }
 
+
+//in each movement update walls struct at each location
 	struct walls{
 		bool hasleftwall;
 		bool hasrightwall;
@@ -89,59 +91,77 @@ int main(){
       checks.pop();
       bool check_if_one_off = true;
 
-
+	  //left
       if (cellcheck.second -1  >= 0){
+		if (wallmaze[cellcheck.first][cellcheck.second-1].leftwall != false){
         if (distmaze[cellcheck.first][cellcheck.second] !=
           distmaze[cellcheck.first][cellcheck.second-1]+ 1  ){
             check_if_one_off = false;
+			}
           }
         }
 
-
+	  //top
       if (cellcheck.first -1 >=0){
+		if (wallmaze[cellcheck.first-1][cellcheck.second].topwall !=false){
         if (distmaze[cellcheck.first][cellcheck.second]!=
           distmaze[cellcheck.first-1][cellcheck.second] + 1){
             check_if_one_off = false;
+			}
           }
         }
 
-
+	  //right
       if (cellcheck.second + 1 <= 7){
+		 if (wallmaze[cellcheck.first][cellcheck.second+1].rightwall != false){ 
         if (distmaze[cellcheck.first][cellcheck.second]!=
           distmaze[cellcheck.first][cellcheck.second+1] + 1){
             check_if_one_off = false;
+		  }
           }
         }
-
+		
+	  //bottom
       if (cellcheck.first + 1 <= 7){
-        if (distmaze[cellcheck.first][cellcheck.second]!=
+        if (wallmaze[cellcheck.first+1][cellcheck.second].bottomwall!= false){
+		if (distmaze[cellcheck.first][cellcheck.second]!=
           distmaze[cellcheck.first+1][cellcheck.second] + 1){
             check_if_one_off = false;
           }
         }
-
+	  }
 		
 		
-		
+	  	
       if (check_if_one_off == false){
-        int minval;
+        int minval=100000;
 		pair<int, int> next_ideal_pos;
 		
+		//left
         if (cellcheck.second -1  >= 0){
+		  if (wallmaze[cellcheck.first][cellcheck.second-1].leftwall!= false){
+		  if (distmaze[cellcheck.first][cellcheck.second-1] < minval){
           minval = distmaze[cellcheck.first][cellcheck.second-1];
 		  next_ideal_pos.first = cellcheck.first;
 		  next_ideal_pos.second = cellcheck.second-1;
           }
         }
+		}
+		
+		//top 
         if (cellcheck.first -1 >= 0){
+		  if (wallmaze[cellcheck.first-1][cellcheck.second].topwall!= false){
           if (distmaze[cellcheck.first-1][cellcheck.second] < minval){
 			minval = distmaze[cellcheck.first-1][cellcheck.second];
 		  next_ideal_pos.first = cellcheck.first-1;
 		  next_ideal_pos.second = cellcheck.second;
           }
         }
+		}
 		
+		//right
 		if (cellcheck.second + 1 <= 7){
+			if (wallmaze[cellcheck.first][cellcheck.second+1].rightwall!= false){
 			if (distmaze[cellcheck.first][cellcheck.second+1] < minval) {
 				minval = distmaze[cellcheck.first][cellcheck.second+1];
 		  next_ideal_pos.first = cellcheck.first;
@@ -149,11 +169,14 @@ int main(){
 			}
 		}
 		
+		//bottom 
 		if (cellcheck.first + 1 <= 7){
+			if (wallmaze[cellcheck.first+1][cellcheck.second].bottomwall!= false){
 			if (distmaze[cellcheck.first + 1][cellcheck.second] < minval) {
 				minval = distmaze[cellcheck.first+1][cellcheck.second];
 		  next_ideal_pos.first = cellcheck.first+1;
 		  next_ideal_pos.second = cellcheck.second;
+			}
 			}
 		}
 		
@@ -162,31 +185,38 @@ int main(){
 		
 		pair<int, int> pair_to_push;
 		
-		
+		//left
 		if (cellcheck.second -1  >= 0){
-          pair_to_push.first = cellcheck.first;
+          if (wallmaze[cellcheck.first][cellcheck.second-1].leftwall!= false){
+		  pair_to_push.first = cellcheck.first;
 		  pair_to_push.second = cellcheck.second-1;
 		  checks.push(pair_to_push);
         }
-				
+		}
+		//top
         if (cellcheck.first -1 >= 0){
+		if (wallmaze[cellcheck.first-1][cellcheck.second].topwall!= false){
 		  pair_to_push.first = cellcheck.first-1;
 		  pair_to_push.second = cellcheck.second;
 		  checks.push(pair_to_push);
         }
-		
+		}
+		//right 
 		if (cellcheck.second + 1 <= 7){
+		if (wallmaze[cellcheck.first][cellcheck.second+1].rightwall!= false){
 		  pair_to_push.first = cellcheck.first;
 		  pair_to_push.second = cellcheck.second+1;
 		  checks.push(pair_to_push);
 		}
-		
+		}
+		//bottom
 		if (cellcheck.first + 1 <= 7){
+		if (wallmaze[cellcheck.first+1][cellcheck.second].bottomwall!= false){
 		  pair_to_push.first = cellcheck.first + 1;
 		  pair_to_push.second = cellcheck.second;
 		  checks.push(pair_to_push);
 		}
-		
+		}
 		
 		start.first = next_ideal_pos.first;
 		start.second = next_ideal_pos.second;
