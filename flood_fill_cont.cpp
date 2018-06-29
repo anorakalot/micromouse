@@ -47,11 +47,22 @@ int main(){
   pair<int,int> cellcheck;
 
   //set all walls to zero
+  // for(int height = 0;height < 8; ++height){
+    // for(int width = 0; width < 8; ++width){
+      // wallmaze[height][width] = 0;
+    // }
+  // }
+	
   for(int height = 0;height < 8; ++height){
     for(int width = 0; width < 8; ++width){
-      wallmaze[height][width] = 0;
+      wallmaze[height][width].hasleftwall = false;
+	  wallmaze[height][width].hasrightwall = false;
+	  wallmaze[height][width].hastopwall = false;
+	  wallmaze[height][width].hasbottomwall = false;
+	  
     }
   }
+  
   
   //FIXME find way to assign each cell with distance away from center
   //Fixed this 
