@@ -1,4 +1,20 @@
+//encoder and turns
+void left_encoder_event() {
+  left_count ++;
+}
 
+
+// encoder event for the interrupt call
+void right_encoder_event() {
+  right_count ++;
+}
+void print_encoder_count() {
+
+  Serial.print("left_count");
+  Serial.println(left_count);
+  Serial.print("right_count");
+  Serial.println(right_count);
+}
 //MOTORS
 
 void reverse() {
@@ -86,187 +102,6 @@ void forward(int left_speed, int right_speed) {
   analogWrite(motor_2_logic_2, right_speed);
   digitalWrite(motor_2_logic_1, LOW);
 }
-
-//possibly change so in main loop this only runs if hasfrontwall returns true
-void random_move() {
-  int random_move;
-  readIR_map();
-  //has to turn cases
-
-  if (hasleftwall() && hasrightwall() && !hasfrontwall()) {
-    //go_one_cell();
-    return;
-  }
-  //if (abs(sensorReading_left - sensorReading_right) < 300){
-  //  return;
-  //}
-
-  if (hasleftwall() && hasrightwall() && hasfrontwall()) {
-    halt_until(halt_delay);
-    forward_until(125, 125, 100);
-    halt_until(halt_delay);
-    reverse_turn_until();
-    halt_until(halt_delay);
-
-
-    //
-    return;
-  }
-
-  else if (hasleftwall() && !hasrightwall() && hasfrontwall()) {
-
-    halt_until(halt_delay);
-    forward_until(125, 125, 100);
-    halt_until(halt_delay);
-    //right_turn_until();
-    right_with_wall();
-    halt_until(halt_delay);
-
-    return;
-  }
-  //this isnt running //hopefully it runs now //STILL NOT RUNNING //It WORKS NOW
-  else if (hasrightwall()  && !hasleftwall() && hasfrontwall()) { //|| (hasfronwall() &&(hasrightwall - hasleftwall > 200) ){//
-    halt_until(halt_delay);
-    forward_until(125, 125, 100);
-    halt_until(halt_delay);
-    //left_turn_until();
-    left_with_wall();
-    halt_until(halt_delay);
-
-    return;
-  }
-
-  //random choice cases
-
-  //
-
-  else if (!hasleftwall() && !hasfrontwall() && hasrightwall()) {
-    random_move = random(millis()) % 2;
-    if (random_move == 1) {
-      halt_until(halt_delay);
-      left_turn_until();
-      halt_until(halt_delay);
-      return;
-    }
-    else {
-      //goes straight
-      halt_until(halt_delay);
-      return;
-
-    }
-  }
-
-
-  else if (hasleftwall() && !hasfrontwall() && !hasrightwall() ) {
-    random_move = random(millis()) % 2;
-    if (random_move == 1) {
-      halt_until(halt_delay);
-      right_turn_until();
-      halt_until(halt_delay);
-      return;
-    }
-    else {
-      //goes straight
-      halt_until(halt_delay);
-      return;
-    }
-  }
-
-  else if (!hasleftwall() && hasfrontwall() && !hasrightwall())  {
-    random_move = random(millis()) % 2;
-    if (random_move == 1) {
-      halt_until(halt_delay);
-      forward_until(125, 125, 100);
-      halt_until(halt_delay);
-      //right_turn_until();
-      right_with_wall();
-      halt_until(halt_delay);
-
-      return;
-    }
-    else {
-      halt_until(halt_delay);
-      forward_until(125, 125, 100);
-      halt_until(halt_delay);
-      //left_turn_until();
-      left_with_wall();
-      halt_until(halt_delay);
-      return;
-    }
-  }
-
-  else if (!hasfrontwall && !hasleftwall && !hasrightwall) {
-    random_move = random(millis()) % 3;
-    if (random_move == 1) {
-      halt_until(halt_delay);
-      right_turn_until();
-      halt_until(halt_delay);
-      return;
-    }
-    if (random_move == 2) {
-      halt_until(halt_delay);
-      return;
-    }
-    else {
-      halt_until(halt_delay);
-      left_turn_until();
-      halt_until(halt_delay);
-      return;
-
-    }
-  }
-
-
-  //in case of errors
-  else {
-    random_move = random(millis()) % 3;
-    if (random_move == 1) {
-      halt_until(700);
-      right_turn_until();
-      halt_until(700);
-      return;
-    }
-    else if (random_move == 2) {
-      halt_until(700);
-      left_turn_until();
-      halt_until(700);
-      return;
-
-    }
-    else {
-      return;
-    }
-
-    //go_one_cell();
-    return;
-
-  }
-  return;
-
-}
-
-
-void catch_tick() {
-  if (prev_sensorReading_left == sensorReading_left && prev_sensorReading_middle == sensorReading_middle && prev_sensorReading_right == sensorReading_right) {
-    int rand_num = random(millis()) % 2;
-    if (rand_num == 1) {
-      halt_until(700);
-      reverse_until();
-      halt_until(700);
-      left_turn_until();
-      halt_until(700);
-    }
-    else {
-      halt_until(700);
-      reverse_until();
-      halt_until(700);
-      right_turn_until();
-      halt_until(700);
-    }
-  }
-
-}
-
 void left_turn_until() {//330,240,220
   unsigned long curr = left_count;//382,380,375,378,380,383,390,380,382,365
   while ( left_count - curr < 232) { //380 330 ,280,290,300,310,320,330,340,350,360,380,365,360
@@ -327,109 +162,20 @@ void reverse_turn_until() {
 
 }
 
-void go_one_cell() {
-  unsigned long curr = left_count;//935
-  while (left_count - curr < 945 ) { // 450,600, 800,950,900,960,955,945,950,945,930,925,940
-    readIR_map();
-    print_encoder_count();
-    pid_control();
 
+void forward_until(int left_speed, int right_speed, int stop_time) {
 
-    forward(motor_left, motor_right);
-  }
-  ///*
-  //    prev_encoder_tick = left_count;
-  //    if (hasleftwall() != true || hasrightwall() != true) {
-  //      motor_left = base_speed;
-  //      motor_right = base_speed - 10;
-  //      //forward(motor_left,motor_right);
-  //      //continue;
-  //    }
-  //*/
-  /*
-    if (abs(sensorReading_left - sensorReading_right) > 300){
-      motor_left = base_speed;
-      motor_right= base_speed-10;
-      forward(motor_left,motor_right);
-      continue;
-    }
-  */
-  //pid_control();
-}
-
-//maybe delete this
-void go_one_cell_no_wall() {
-  unsigned long curr = left_count;
-  while (left_count - curr < 950) { // 450,600, 800,950,900,960,955,945
-    //pid_control();
-    //forward(150,150);
-    forward(motor_left, motor_right);
-  }
-}
-
-void halt_until(int stop_time ) {
   unsigned long curr = millis();
   while (millis() - curr < stop_time) {
-    halt();
+    digitalWrite(turn_on_en_1, HIGH);
+    digitalWrite(turn_on_en_2, HIGH);
+
+    analogWrite(motor_1_logic_2, left_speed);
+    digitalWrite(motor_1_logic_1, LOW);
+    analogWrite(motor_2_logic_2, right_speed);
+    digitalWrite(motor_2_logic_1, LOW);
   }
-}//PID / ERROR_CATCHING
-
-void error_catch() {
-  curr_timer = millis();
-
-  if (curr_timer - prev_timer >= error_check_interval) {
-    prev_timer = curr_timer;
-    // if (error_check == true) {
-    if (prev_sensorReading_left == sensorReading_left && prev_sensorReading_middle == sensorReading_middle && prev_sensorReading_right == sensorReading_right) {
-      int rand_num = random(millis()) % 2;
-      if (rand_num == 1) {
-        halt_until(700);
-        reverse_until();
-        halt_until(700);
-        left_turn_until();
-        halt_until(700);
-      }
-      else {
-        halt_until(700);
-        reverse_until();
-        halt_until(700);
-        right_turn_until();
-        halt_until(700);
-      }
-    }
-
-    if (  left_count - prev_encoder_tick < 100) {
-      int rand_num = random(millis()) % 2;
-      if (rand_num == 1) {
-        halt_until(700);
-        reverse_until();
-        halt_until(700);
-        left_turn_until();
-        halt_until(700);
-      }
-      else {
-        halt_until(700);
-        reverse_until();
-        halt_until(700);
-        right_turn_until();
-        halt_until(700);
-      }
-    }
-
-    prev_sensorReading_left = sensorReading_left;
-    prev_sensorReading_middle = sensorReading_middle;
-    prev_sensorReading_right = sensorReading_right;
-    prev_encoder_tick = left_count;
-  }
-
-
 }
-//error_check = false;
-
-
-
-
-
 void regulateSensorL() {
   /*
     readIR_map();
@@ -620,36 +366,293 @@ void pid_control() {
   //( sensorReading_left - sensorReading_right)
   //(sensorReading_right - sensorReading_left)
 }
+void go_one_cell() {
+  unsigned long curr = left_count;//935
+  while (left_count - curr < 945 ) { // 450,600, 800,950,900,960,955,945,950,945,930,925,940
+    readIR_map();
+    print_encoder_count();
+    pid_control();
 
-//encoder and turns
-void left_encoder_event() {
-  left_count ++;
+
+    forward(motor_left, motor_right);
+  }
+  ///*
+  //    prev_encoder_tick = left_count;
+  //    if (hasleftwall() != true || hasrightwall() != true) {
+  //      motor_left = base_speed;
+  //      motor_right = base_speed - 10;
+  //      //forward(motor_left,motor_right);
+  //      //continue;
+  //    }
+  //*/
+  /*
+    if (abs(sensorReading_left - sensorReading_right) > 300){
+      motor_left = base_speed;
+      motor_right= base_speed-10;
+      forward(motor_left,motor_right);
+      continue;
+    }
+  */
+  //pid_control();
 }
 
-
-// encoder event for the interrupt call
-void right_encoder_event() {
-  right_count ++;
-}
-void print_encoder_count() {
-
-  Serial.print("left_count");
-  Serial.println(left_count);
-  Serial.print("right_count");
-  Serial.println(right_count);
-}
-
-
-void forward_until(int left_speed, int right_speed, int stop_time) {
-
-  unsigned long curr = millis();
-  while (millis() - curr < stop_time) {
-    digitalWrite(turn_on_en_1, HIGH);
-    digitalWrite(turn_on_en_2, HIGH);
-
-    analogWrite(motor_1_logic_2, left_speed);
-    digitalWrite(motor_1_logic_1, LOW);
-    analogWrite(motor_2_logic_2, right_speed);
-    digitalWrite(motor_2_logic_1, LOW);
+//maybe delete this
+void go_one_cell_no_wall() {
+  unsigned long curr = left_count;
+  while (left_count - curr < 950) { // 450,600, 800,950,900,960,955,945
+    //pid_control();
+    //forward(150,150);
+    forward(motor_left, motor_right);
   }
 }
+void halt_until(int stop_time ) {
+  unsigned long curr = millis();
+  while (millis() - curr < stop_time) {
+    halt();
+  }
+}//PID / ERROR_CATCHING
+
+
+//possibly change so in main loop this only runs if hasfrontwall returns true
+void random_move() {
+  int random_move;
+  readIR_map();
+  //has to turn cases
+
+  if (hasleftwall() && hasrightwall() && !hasfrontwall()) {
+    //go_one_cell();
+    return;
+  }
+  //if (abs(sensorReading_left - sensorReading_right) < 300){
+  //  return;
+  //}
+
+  if (hasleftwall() && hasrightwall() && hasfrontwall()) {
+    halt_until(halt_delay);
+    forward_until(125, 125, 100);
+    halt_until(halt_delay);
+    reverse_turn_until();
+    halt_until(halt_delay);
+
+
+    //
+    return;
+  }
+
+  else if (hasleftwall() && !hasrightwall() && hasfrontwall()) {
+
+    halt_until(halt_delay);
+    forward_until(125, 125, 100);
+    halt_until(halt_delay);
+    //right_turn_until();
+    right_with_wall();
+    halt_until(halt_delay);
+
+    return;
+  }
+  //this isnt running //hopefully it runs now //STILL NOT RUNNING //It WORKS NOW
+  else if (hasrightwall()  && !hasleftwall() && hasfrontwall()) { //|| (hasfronwall() &&(hasrightwall - hasleftwall > 200) ){//
+    halt_until(halt_delay);
+    forward_until(125, 125, 100);
+    halt_until(halt_delay);
+    //left_turn_until();
+    left_with_wall();
+    halt_until(halt_delay);
+
+    return;
+  }
+
+  //random choice cases
+
+  //
+
+  else if (!hasleftwall() && !hasfrontwall() && hasrightwall()) {
+    random_move = random(millis()) % 2;
+    if (random_move == 1) {
+      halt_until(halt_delay);
+      left_turn_until();
+      halt_until(halt_delay);
+      return;
+    }
+    else {
+      //goes straight
+      halt_until(halt_delay);
+      return;
+
+    }
+  }
+
+
+  else if (hasleftwall() && !hasfrontwall() && !hasrightwall() ) {
+    random_move = random(millis()) % 2;
+    if (random_move == 1) {
+      halt_until(halt_delay);
+      right_turn_until();
+      halt_until(halt_delay);
+      return;
+    }
+    else {
+      //goes straight
+      halt_until(halt_delay);
+      return;
+    }
+  }
+
+  else if (!hasleftwall() && hasfrontwall() && !hasrightwall())  {
+    random_move = random(millis()) % 2;
+    if (random_move == 1) {
+      halt_until(halt_delay);
+      forward_until(125, 125, 100);
+      halt_until(halt_delay);
+      //right_turn_until();
+      right_with_wall();
+      halt_until(halt_delay);
+
+      return;
+    }
+    else {
+      halt_until(halt_delay);
+      forward_until(125, 125, 100);
+      halt_until(halt_delay);
+      //left_turn_until();
+      left_with_wall();
+      halt_until(halt_delay);
+      return;
+    }
+  }
+
+  else if (!hasfrontwall && !hasleftwall && !hasrightwall) {
+    random_move = random(millis()) % 3;
+    if (random_move == 1) {
+      halt_until(halt_delay);
+      right_turn_until();
+      halt_until(halt_delay);
+      return;
+    }
+    if (random_move == 2) {
+      halt_until(halt_delay);
+      return;
+    }
+    else {
+      halt_until(halt_delay);
+      left_turn_until();
+      halt_until(halt_delay);
+      return;
+
+    }
+  }
+
+
+  //in case of errors
+  else {
+    random_move = random(millis()) % 3;
+    if (random_move == 1) {
+      halt_until(700);
+      right_turn_until();
+      halt_until(700);
+      return;
+    }
+    else if (random_move == 2) {
+      halt_until(700);
+      left_turn_until();
+      halt_until(700);
+      return;
+
+    }
+    else {
+      return;
+    }
+
+    //go_one_cell();
+    return;
+
+  }
+  return;
+
+}
+
+
+void catch_tick() {
+  if (prev_sensorReading_left == sensorReading_left && prev_sensorReading_middle == sensorReading_middle && prev_sensorReading_right == sensorReading_right) {
+    int rand_num = random(millis()) % 2;
+    if (rand_num == 1) {
+      halt_until(700);
+      reverse_until();
+      halt_until(700);
+      left_turn_until();
+      halt_until(700);
+    }
+    else {
+      halt_until(700);
+      reverse_until();
+      halt_until(700);
+      right_turn_until();
+      halt_until(700);
+    }
+  }
+
+}
+
+
+
+void error_catch() {
+  curr_timer = millis();
+
+  if (curr_timer - prev_timer >= error_check_interval) {
+    prev_timer = curr_timer;
+    // if (error_check == true) {
+    if (prev_sensorReading_left == sensorReading_left && prev_sensorReading_middle == sensorReading_middle && prev_sensorReading_right == sensorReading_right) {
+      int rand_num = random(millis()) % 2;
+      if (rand_num == 1) {
+        halt_until(700);
+        reverse_until();
+        halt_until(700);
+        left_turn_until();
+        halt_until(700);
+      }
+      else {
+        halt_until(700);
+        reverse_until();
+        halt_until(700);
+        right_turn_until();
+        halt_until(700);
+      }
+    }
+
+    if (  left_count - prev_encoder_tick < 100) {
+      int rand_num = random(millis()) % 2;
+      if (rand_num == 1) {
+        halt_until(700);
+        reverse_until();
+        halt_until(700);
+        left_turn_until();
+        halt_until(700);
+      }
+      else {
+        halt_until(700);
+        reverse_until();
+        halt_until(700);
+        right_turn_until();
+        halt_until(700);
+      }
+    }
+
+    prev_sensorReading_left = sensorReading_left;
+    prev_sensorReading_middle = sensorReading_middle;
+    prev_sensorReading_right = sensorReading_right;
+    prev_encoder_tick = left_count;
+  }
+
+
+}
+//error_check = false;
+
+
+
+
+
+
+
+
+
+

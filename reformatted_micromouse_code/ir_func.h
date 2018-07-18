@@ -1,61 +1,3 @@
-void wait_until_start_hand() {
-
-  while (first_check) {
-    //readIR();
-    readIR_map();
-    //delay(500);
-
-    if (hasfrontwall()) {
-      first_check = false;
-      delay(500);
-      prev_sensorReading_left = sensorReading_left;
-      prev_sensorReading_middle = sensorReading_middle;
-      prev_sensorReading_right = sensorReading_right;
-      prev_encoder_tick = left_count;
-      prev_timer = millis();
-    }
-  }
-
-}
-//CALIBRATION
-void calibrate_pid() {
-  /*
-    permReading_left = analogRead(sensor_left);
-    permReading_middle= analogRead(sensor_middle);
-    permReading_right= analogRead(sensor_right);
-    //map left and right
-    permReading_left = map(permReading_left,993,1009,0,200);
-    permR
-    eading_right = map(permReading_right,180,820,0,200);
-  */
-  ///*
-  permReading_left = 0;
-  permReading_middle = 0;
-  permReading_right = 0;
-  //*/
-
-  //trying to get readings to be the same
-
-  //permReading_left -= left_offset;
-
-  readIR_map();
-  unsigned long left_readings = 0;
-  unsigned long right_readings = 0;
-
-  for (int x = 0; x < 100; ++x) {
-    left_readings += sensorReading_left;
-  }
-  for (int x = 0; x < 100; ++x) {
-    right_readings += sensorReading_right;
-  }
-
-  reading_for_no_left = left_readings / 100;
-  reading_for_no_right = right_readings / 100;
-
-
-
-}
-
 //CHOICES
 bool hasfrontwall() {       //200,360
   if (sensorReading_middle > 360 ) { //300 , 350,370,400,275,330,360,500
@@ -114,6 +56,8 @@ void readIR() {
   Serial.println(sensorReading_right);
   Serial.println();
 }
+
+
 
 
 void readIR_map() {
@@ -198,4 +142,63 @@ void readIR_map() {
 
 
 }
+
+void wait_until_start_hand() {
+
+  while (first_check) {
+    //readIR();
+    readIR_map();
+    //delay(500);
+
+    if (hasfrontwall()) {
+      first_check = false;
+      delay(500);
+      prev_sensorReading_left = sensorReading_left;
+      prev_sensorReading_middle = sensorReading_middle;
+      prev_sensorReading_right = sensorReading_right;
+      prev_encoder_tick = left_count;
+      prev_timer = millis();
+    }
+  }
+
+}
+//CALIBRATION
+void calibrate_pid() {
+  /*
+    permReading_left = analogRead(sensor_left);
+    permReading_middle= analogRead(sensor_middle);
+    permReading_right= analogRead(sensor_right);
+    //map left and right
+    permReading_left = map(permReading_left,993,1009,0,200);
+    permR
+    eading_right = map(permReading_right,180,820,0,200);
+  */
+  ///*
+  permReading_left = 0;
+  permReading_middle = 0;
+  permReading_right = 0;
+  //*/
+
+  //trying to get readings to be the same
+
+  //permReading_left -= left_offset;
+
+  readIR_map();
+  unsigned long left_readings = 0;
+  unsigned long right_readings = 0;
+
+  for (int x = 0; x < 100; ++x) {
+    left_readings += sensorReading_left;
+  }
+  for (int x = 0; x < 100; ++x) {
+    right_readings += sensorReading_right;
+  }
+
+  reading_for_no_left = left_readings / 100;
+  reading_for_no_right = right_readings / 100;
+
+
+
+}
+
 
