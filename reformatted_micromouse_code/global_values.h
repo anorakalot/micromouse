@@ -51,7 +51,7 @@ int LH_ENCODER_B = 1;
 
 unsigned long left_count = 0;
 unsigned long right_count = 0;
-
+//unsigned long reverse_count = 0;
 
 
 //IRLED
@@ -86,15 +86,4 @@ int error_left;
 int error_middle;
 int error_right;
 
-
-//int val;
-
-
-//error catching
-//enum catch_states {INIT_CATCH,ON_1,OFF_1} catch_states;
-
-//void catch_init(){
-//  catch_states = INIT_CATCH;
-//}
-//Timer t;
 

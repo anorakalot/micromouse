@@ -24,31 +24,11 @@ bool hasrightwall() {     //220,340,330.300,420,320,330
 
 //IR
 void readIR() {
-  //
-  //    digitalWrite(sensor_left_power, LOW);
-  //    digitalWrite(sensor_middle_power, LOW);
-  //    digitalWrite(sensor_right_power, LOW);
-  //    delay(1);
-  //    error_left = analogRead(sensor_left);
-  //    error_middle = analogRead(sensor_middle);
-  //    error_right = analogRead(sensor_right);
-  //
-  //    digitalWrite(sensor_left_power, HIGH);
-  //    digitalWrite(sensor_middle_power, HIGH);
-  //    digitalWrite(sensor_right_power, HIGH);
-  //    delay(1);
-  //    Serial.println("ERRORS");
-  //    Serial.println(error_left);
-  //    Serial.println(error_middle);
-  //    Serial.println(error_right);
 
   sensorReading_left = analogRead(sensor_left);
   sensorReading_middle = analogRead(sensor_middle);
   sensorReading_right = analogRead(sensor_right);
 
-  //  sensorReading_left -= error_left;
-  //  sensorReading_middle -= error_middle;
-  //  sensorReading_right -= error_right;
 
   Serial.print("Sensor Reading: ");
   Serial.println(sensorReading_left);
@@ -62,25 +42,19 @@ void readIR() {
 
 void readIR_map() {
 
-  //error Reading
-  //
 
   digitalWrite(sensor_left_power, LOW);
   digitalWrite(sensor_middle_power, LOW);
   digitalWrite(sensor_right_power, LOW);
   delay(3);
-  //    //delay(1000);
-
-  //    int errors_left= 0;
-  //    int errors_middle = 0 ;
-  //    int errors_right = 0;
 
   error_left = analogRead(sensor_left);
   error_middle = analogRead(sensor_middle);
   error_right = analogRead(sensor_right);
-  error_left -= 921 ;
-  //error_left = map(error_left, left_ir_low_bound, left_ir_high_bound, 352, 860 );
-
+  
+  
+  
+  //probably not use this should probably only use this if anywhere in the calibrate ir func
   //    for(int x = 0; x < 100; ++x){
   //      error_left += analogRead(sensor_left);
   //      error_middle += analogRead(sensor_middle);
@@ -107,7 +81,7 @@ void readIR_map() {
   sensorReading_left = analogRead(sensor_left);
   sensorReading_middle = analogRead(sensor_middle);
   sensorReading_right = analogRead(sensor_right);
-  //
+  //don;y know why its not subtracting the error
   //
   //  sensorReading_left -= error_left;
   //  sensorReading_middle -= error_middle;
@@ -160,25 +134,16 @@ void wait_until_start_hand() {
       prev_timer = millis();
     }
   }
-
 }
+
+
 //CALIBRATION
 void calibrate_pid() {
-  /*
-    permReading_left = analogRead(sensor_left);
-    permReading_middle= analogRead(sensor_middle);
-    permReading_right= analogRead(sensor_right);
-    //map left and right
-    permReading_left = map(permReading_left,993,1009,0,200);
-    permR
-    eading_right = map(permReading_right,180,820,0,200);
-  */
-  ///*
+  
   permReading_left = 0;
   permReading_middle = 0;
   permReading_right = 0;
-  //*/
-
+  
   //trying to get readings to be the same
 
   //permReading_left -= left_offset;

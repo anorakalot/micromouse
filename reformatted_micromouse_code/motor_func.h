@@ -65,7 +65,6 @@ void reverse_turn() {
   digitalWrite(motor_1_logic_2, LOW);
   digitalWrite(motor_2_logic_1, LOW);
   digitalWrite(motor_2_logic_2, HIGH);
-
 }
 
 
@@ -85,7 +84,6 @@ void right_turn() {
   digitalWrite(turn_on_en_1, HIGH);
   digitalWrite(turn_on_en_2, HIGH);
 
-
   digitalWrite(motor_1_logic_2, HIGH);
   digitalWrite(motor_2_logic_1, HIGH);
   digitalWrite(motor_1_logic_1, LOW);
@@ -102,6 +100,7 @@ void forward(int left_speed, int right_speed) {
   analogWrite(motor_2_logic_2, right_speed);
   digitalWrite(motor_2_logic_1, LOW);
 }
+
 void left_turn_until() {//330,240,220
   unsigned long curr = left_count;//382,380,375,378,380,383,390,380,382,365
   while ( left_count - curr < 232) { //380 330 ,280,290,300,310,320,330,340,350,360,380,365,360
@@ -176,69 +175,39 @@ void forward_until(int left_speed, int right_speed, int stop_time) {
     digitalWrite(motor_2_logic_1, LOW);
   }
 }
+//gets sensor data from l to use for pid control function
 void regulateSensorL() {
-  /*
-    readIR_map();
-    if (!hasleftwall || !hasrightwall){
-    forward(prev_motor_left,prev_motor_right);
-    return;
-    }
-  */
-  //
-  //  digitalWrite(sensor_left_power, LOW);
-  //  error_left = analogRead(sensor_left);
-  //
-  //  digitalWrite(sensor_left_power, HIGH);
-  //
   sensorReading_left = analogRead(sensor_left);
-  //readIR();
-  // sensorReading_left -= error_left;
-
-  //readIR_map();
-  //readIR();
-  //sensorReading_left = map(sensorReading_left,993,1009,0,200);
-  //sensorReading_left = map(sensorReading_left,991,1005,0,200);
-
   sensorReading_left = map(sensorReading_left, left_ir_low_bound, left_ir_high_bound, 0, 200);
-  //sensorReading_left -= left_offset;
 
+  //permReading_left = 0 for some reason
   sensorReading_left = sensorReading_left - permReading_left;
-  if (analogRead(sensor_left) - permReading_left < 0) {
+  
+  //if (analogRead(sensor_left) - permReading_left < 0) {
+  //change top if statement to bellow statement because it
+  //shouldn't reread sensor_left
+   
+   if (sensorReading_left - perm_reading_left < 0){ 
     sensorReading_left = ~sensorReading_left + 1;
   }
-
 }
 
 void regulateSensorR() {
-  /*
-    readIR_map();
-    if (!hasleftwall || !hasrightwall){
-    forward(prev_motor_left,prev_motor_right);
-    return;
-    }
-  */
-  //sensorReading_right = analogRead(sensor_right);
-  //readIR();
-  //readIR_map();
-
-  //  digitalWrite(sensor_right_power, LOW);
-  //  error_right = analogRead(sensor_right);
-  //
-  //  digitalWrite(sensor_right_power, HIGH);
-  //
   sensorReading_right = analogRead(sensor_right);
-  //sensorReading_right -= error_right;
-  //readIR();
 
 
   sensorReading_right = map(sensorReading_right, 180, 820, 0, 200);
 
   sensorReading_right = sensorReading_right - permReading_right;
-  if (analogRead(sensor_right) - permReading_right < 0) {
+  //if (analogRead(sensor_right) - permReading_right < 0) {
+  //change top if statement to bellow statement because it
+  //shouldn't reread sensor_right
+    
+   if (sensorReading_left - perm_reading_left < 0){ 
     sensorReading_right = ~sensorReading_right + 1;
   }
 }
-
+//probably not use this
 void regulateSensorL(int reading) {
   /*
     readIR_map();
@@ -253,7 +222,7 @@ void regulateSensorL(int reading) {
     sensorReading_left = ~sensorReading_left + 1;
   }
 }
-
+//probably not use this
 void regulateSensorR(int reading) {
   /*
     readIR_map();
@@ -366,6 +335,8 @@ void pid_control() {
   //( sensorReading_left - sensorReading_right)
   //(sensorReading_right - sensorReading_left)
 }
+
+
 void go_one_cell() {
   unsigned long curr = left_count;//935
   while (left_count - curr < 945 ) { // 450,600, 800,950,900,960,955,945,950,945,930,925,940
@@ -413,6 +384,7 @@ void halt_until(int stop_time ) {
 }//PID / ERROR_CATCHING
 
 
+//does move based on sensor data
 //possibly change so in main loop this only runs if hasfrontwall returns true
 void random_move() {
   int random_move;
@@ -497,7 +469,6 @@ void random_move() {
       return;
     }
   }
-
   else if (!hasleftwall() && hasfrontwall() && !hasrightwall())  {
     random_move = random(millis()) % 2;
     if (random_move == 1) {
@@ -507,7 +478,6 @@ void random_move() {
       //right_turn_until();
       right_with_wall();
       halt_until(halt_delay);
-
       return;
     }
     else {
@@ -572,7 +542,8 @@ void random_move() {
 }
 
 
-void catch_tick() {
+
+void catch_tick() { // find out what this does
   if (prev_sensorReading_left == sensorReading_left && prev_sensorReading_middle == sensorReading_middle && prev_sensorReading_right == sensorReading_right) {
     int rand_num = random(millis()) % 2;
     if (rand_num == 1) {
