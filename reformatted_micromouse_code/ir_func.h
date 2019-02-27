@@ -1,4 +1,4 @@
-//CHOICES
+//HAS functions should be checked before every single comp
 bool hasfrontwall() {       //200,360
   if (sensorReading_middle > 360 ) { //300 , 350,370,400,275,330,360,500
     return true;//408
@@ -22,7 +22,7 @@ bool hasrightwall() {     //220,340,330.300,420,320,330
 }
 
 
-//IR
+//Reads Ir sensors but with no mapped values
 void readIR() {
 
   sensorReading_left = analogRead(sensor_left);
@@ -39,7 +39,7 @@ void readIR() {
 
 
 
-
+//Reads Ir sensors but with mapped values
 void readIR_map() {
 
 
@@ -116,7 +116,7 @@ void readIR_map() {
 
 
 }
-
+//code to show to not start until hand is shown
 void wait_until_start_hand() {
 
   while (first_check) {
@@ -147,6 +147,8 @@ void calibrate_pid() {
   //trying to get readings to be the same
 
   //permReading_left -= left_offset;
+
+  //DONT THINK THE BELOW CODE IS USED 
 
   readIR_map();
   unsigned long left_readings = 0;

@@ -15,8 +15,8 @@ void print_encoder_count() {
   Serial.print("right_count");
   Serial.println(right_count);
 }
-//MOTORS
 
+//Basic Motor Functions
 void reverse() {
   digitalWrite(turn_on_en_1, HIGH);
   digitalWrite(turn_on_en_2, HIGH);
@@ -101,6 +101,7 @@ void forward(int left_speed, int right_speed) {
   digitalWrite(motor_2_logic_1, LOW);
 }
 
+//Encoder turn functions 
 void left_turn_until() {//330,240,220
   unsigned long curr = left_count;//382,380,375,378,380,383,390,380,382,365
   while ( left_count - curr < 232) { //380 330 ,280,290,300,310,320,330,340,350,360,380,365,360
@@ -161,7 +162,7 @@ void reverse_turn_until() {
 
 }
 
-
+//only uses this forward until function for certain special times when going forward
 void forward_until(int left_speed, int right_speed, int stop_time) {
 
   unsigned long curr = millis();
@@ -175,7 +176,9 @@ void forward_until(int left_speed, int right_speed, int stop_time) {
     digitalWrite(motor_2_logic_1, LOW);
   }
 }
+
 //gets sensor data from l to use for pid control function
+//all it does is take the sensors reading and if its less than 0 make it plus one
 void regulateSensorL() {
   sensorReading_left = analogRead(sensor_left);
   sensorReading_left = map(sensorReading_left, left_ir_low_bound, left_ir_high_bound, 0, 200);
@@ -207,37 +210,7 @@ void regulateSensorR() {
     sensorReading_right = ~sensorReading_right + 1;
   }
 }
-//probably not use this
-void regulateSensorL(int reading) {
-  /*
-    readIR_map();
-    if (!hasleftwall || !hasrightwall){
-    forward(prev_motor_left,prev_motor_right);
-    return;
-    }
-  */
-  sensorReading_left = map(reading, left_ir_low_bound, left_ir_high_bound, 0, 200);
-  sensorReading_left = sensorReading_left - permReading_left;
-  if (analogRead(sensor_left) - permReading_left < 0) {
-    sensorReading_left = ~sensorReading_left + 1;
-  }
-}
-//probably not use this
-void regulateSensorR(int reading) {
-  /*
-    readIR_map();
-    if (!hasleftwall || !hasrightwall){
-    forward(prev_motor_left,prev_motor_right);
-    return;
-    }
-  */
 
-  sensorReading_right = map(reading, 180, 820, 0, 200);
-  sensorReading_right = sensorReading_right - permReading_right;
-  if (analogRead(sensor_right) - permReading_right < 0) {
-    sensorReading_right = ~sensorReading_right + 1;
-  }
-}
 
 
 
@@ -255,30 +228,9 @@ void pid_control() {
   */
   readIR_map();
 
-  //    if (hasleftwall() != true || hasrightwall() != true) {
-  //      if (hasleftwall() != true && hasrightwall() == true) {
-  //        regulateSensorL(reading_for_no_left);
-  //        regulateSensorR();
-  //      }
-  //      if (hasleftwall() == true && hasrightwall() != true) {
-  //        regulateSensorL();
-  //        regulateSensorR(reading_for_no_right);
-  //      }
-  //      else {
-  //        regulateSensorL(reading_for_no_left);
-  //        regulateSensorR(reading_for_no_right);
-  //      }
-  //    }
-  //
-  //
-  //    else {
-  //      regulateSensorL();
-  //      regulateSensorR();
-  //    }
-  //
 
-
-
+  //goes off motor values that are good enough for short times goind blind
+  //ends the pid control function here
   if (hasleftwall() != true || hasrightwall() != true) {
     motor_left = base_speed;
     motor_right = base_speed - 20;
@@ -291,7 +243,7 @@ void pid_control() {
 
 
   reset_error ++;
-
+  //resets reset error which is used for i part of pid  which takes in error from previous cycles
   if (reset_error > 1000) {
     reset_error = 0;
     error_buildup = 0;
@@ -332,8 +284,6 @@ void pid_control() {
     motor_right = base_speed;
     return;
   }
-  //( sensorReading_left - sensorReading_right)
-  //(sensorReading_right - sensorReading_left)
 }
 
 
@@ -367,15 +317,6 @@ void go_one_cell() {
   //pid_control();
 }
 
-//maybe delete this
-void go_one_cell_no_wall() {
-  unsigned long curr = left_count;
-  while (left_count - curr < 950) { // 450,600, 800,950,900,960,955,945
-    //pid_control();
-    //forward(150,150);
-    forward(motor_left, motor_right);
-  }
-}
 void halt_until(int stop_time ) {
   unsigned long curr = millis();
   while (millis() - curr < stop_time) {
@@ -565,7 +506,9 @@ void catch_tick() { // find out what this does
 }
 
 
-
+//this only happens I think when the sensor readings are the same for multiple cycles 
+//which usually indicates the mouse is stuch somehow
+//should not need if new mouse is done right
 void error_catch() {
   curr_timer = millis();
 

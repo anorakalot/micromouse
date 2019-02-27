@@ -1,4 +1,5 @@
 //#include "Timer.h"
+//need time 
 #include "Time.h"
 #include "global_values.h"
 #include "ir_func.h"
@@ -22,6 +23,7 @@ void setup() {
   //if need to check ir readings from serial monitor
   //Serial.begin(9600);
 
+  //sensor pins
   Serial.begin(9600);
   pinMode(sensor_left, INPUT);
   pinMode(sensor_middle, INPUT);
@@ -36,7 +38,7 @@ void setup() {
 
   digitalWrite(sensor_right_power, HIGH);
 
-  //motors
+  //motor pins
   // pinMode(turn_on_en_input,INPUT);
   pinMode(turn_on_en_1, OUTPUT);
   pinMode(turn_on_en_2, OUTPUT);
