@@ -215,17 +215,6 @@ void regulateSensorR() {
 
 
 void pid_control() {
-  //if no wall on either side
-  //TRY TO FIX IF NO WALL ON EITHER SIDE DO DEFAULT VALUES for motor
-  /*
-    readIR_map();
-    if ((sensorReading_left - sensorReading_right > 200) || (sensorReading_right- sensorReading_left > 200)){
-      motor_left = base_speed;
-      motor_right= base_speed-10;
-      return;
-    }
-    //end of added
-  */
   readIR_map();
 
 
@@ -244,7 +233,7 @@ void pid_control() {
 
   reset_error ++;
   //resets reset error which is used for i part of pid  which takes in error from previous cycles
-  if (reset_error > 1000) {
+  if (reset_error > 10000) {
     reset_error = 0;
     error_buildup = 0;
   }
@@ -503,7 +492,7 @@ void random_move() {
 }
 
 
-
+/*
 void catch_tick() { // find out what this does
   if (prev_sensorReading_left == sensorReading_left && prev_sensorReading_middle == sensorReading_middle && prev_sensorReading_right == sensorReading_right) {
     int rand_num = random(millis()) % 2;
@@ -522,9 +511,8 @@ void catch_tick() { // find out what this does
       halt_until(700);
     }
   }
-
 }
-
+*/
 
 //this only happens I think when the sensor readings are the same for multiple cycles 
 //which usually indicates the mouse is stuch somehow

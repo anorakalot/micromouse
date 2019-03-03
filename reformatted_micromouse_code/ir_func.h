@@ -74,14 +74,15 @@ void readIR_map() {
   digitalWrite(sensor_middle_power, HIGH);
 
   digitalWrite(sensor_right_power, HIGH);
-  delay(3);
+  delay(10);
 
 
 
   sensorReading_left = analogRead(sensor_left);
   sensorReading_middle = analogRead(sensor_middle);
   sensorReading_right = analogRead(sensor_right);
-  //don;y know why its not subtracting the error
+  
+  //don't know why its not subtracting the error
   //
   //  sensorReading_left -= error_left;
   //  sensorReading_middle -= error_middle;
@@ -148,21 +149,6 @@ void calibrate_pid() {
 
   //permReading_left -= left_offset;
 
-  //DONT THINK THE BELOW CODE IS USED 
-
-  readIR_map();
-  unsigned long left_readings = 0;
-  unsigned long right_readings = 0;
-
-  for (int x = 0; x < 100; ++x) {
-    left_readings += sensorReading_left;
-  }
-  for (int x = 0; x < 100; ++x) {
-    right_readings += sensorReading_right;
-  }
-
-  reading_for_no_left = left_readings / 100;
-  reading_for_no_right = right_readings / 100;
 
 
 

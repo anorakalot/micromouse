@@ -80,8 +80,6 @@ int prev_sensorReading_right;
 int prev_sensorReading_middle;
 int prev_sensorReading_left;
 
-int reading_for_no_left;
-int reading_for_no_right;
 
 int error_left;
 int error_middle;
