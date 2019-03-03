@@ -20,6 +20,7 @@ double kd = 0.40;//0.30,0.50,0.30,0.40
 double ki = 0.0001;
 double error;
 double prev_error;
+double p_control;
 double d_control;
 
 unsigned long error_buildup;

@@ -190,7 +190,7 @@ void regulateSensorL() {
   //change top if statement to bellow statement because it
   //shouldn't reread sensor_left
    
-   if (sensorReading_left - perm_reading_left < 0){ 
+   if (sensorReading_left - permReading_left < 0){ 
     sensorReading_left = ~sensorReading_left + 1;
   }
 }
@@ -206,7 +206,7 @@ void regulateSensorR() {
   //change top if statement to bellow statement because it
   //shouldn't reread sensor_right
     
-   if (sensorReading_left - perm_reading_left < 0){ 
+   if (sensorReading_right - permReading_right < 0){ 
     sensorReading_right = ~sensorReading_right + 1;
   }
 }
@@ -251,36 +251,56 @@ void pid_control() {
 
   //too close left
   if (sensorReading_left > sensorReading_right) {
-    //d control
-    prev_error = error;
+    //error value
     error = abs(sensorReading_left - sensorReading_right);
-    d_control = (error - prev_error) * kd;
 
-    //i control
+    //p control 
+    p_control = error * kp;
+
+
     //i control
     error_buildup += error;
     i_control = error_buildup * ki;
 
-    //forward(base_speed,base_speed - (( sensorReading_left - sensorReading_right) * kp));
+    
+    //d control
+    prev_error = error;
+    d_control = (error - prev_error) * kd;
+
+    
+    //maybe try instead of making motor left and right base_speed - pid values 
+    //try motor_l + pid_values and motor_r - pid values
+      
     motor_left = base_speed;
-    motor_right = base_speed - (( sensorReading_left - sensorReading_right) * kp + d_control + i_control); //+d_control);
+    motor_right = base_speed - (p_control + i_control + d_control); 
     return;
   }
 
   //too close right
   if (sensorReading_right > sensorReading_left) {
 
-    //d control
-    prev_error = error;
+    //error value
     error = abs(sensorReading_left - sensorReading_right);
-    d_control = (error - prev_error) * kd;
+    
+
+    //p control 
+    p_control = error * kp;
 
     //i control
     error_buildup += error;
     i_control = error_buildup * ki;
 
-    //forward(base_speed - ((sensorReading_right - sensorReading_left) * kp),base_speed);
-    motor_left = base_speed - ((sensorReading_right - sensorReading_left) * kp + d_control + i_control); //+ d_control);
+
+    //d control
+    prev_error = error;
+    d_control = (error - prev_error) * kd;
+
+
+
+    //maybe try instead of making motor left and right base_speed - pid values 
+    //try motor_l - pid_values and motor_r + pid values
+      
+    motor_left = base_speed - (p_control + i_control + d_control); 
     motor_right = base_speed;
     return;
   }
