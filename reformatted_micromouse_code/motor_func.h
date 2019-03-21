@@ -186,15 +186,14 @@ void regulateSensorL() {
   //permReading_left = 0 for some reason
   sensorReading_left = sensorReading_left - permReading_left;
   
-  //if (analogRead(sensor_left) - permReading_left < 0) {
-  //change top if statement to bellow statement because it
-  //shouldn't reread sensor_left
    
    if (sensorReading_left - permReading_left < 0){ 
     sensorReading_left = ~sensorReading_left + 1;
   }
 }
 
+//gets sensor data from r to use for pid control function
+//all it does is take the sensors reading and if its less than 0 make it plus one
 void regulateSensorR() {
   sensorReading_right = analogRead(sensor_right);
 
@@ -202,9 +201,7 @@ void regulateSensorR() {
   sensorReading_right = map(sensorReading_right, 180, 820, 0, 200);
 
   sensorReading_right = sensorReading_right - permReading_right;
-  //if (analogRead(sensor_right) - permReading_right < 0) {
-  //change top if statement to bellow statement because it
-  //shouldn't reread sensor_right
+
     
    if (sensorReading_right - permReading_right < 0){ 
     sensorReading_right = ~sensorReading_right + 1;
@@ -223,8 +220,6 @@ void pid_control() {
   if (hasleftwall() != true || hasrightwall() != true) {
     motor_left = base_speed;
     motor_right = base_speed - 20;
-    //forward(motor_left,motor_right);
-    //continue;
     return;
   }
   regulateSensorL();
@@ -306,24 +301,6 @@ void go_one_cell() {
 
     forward(motor_left, motor_right);
   }
-  ///*
-  //    prev_encoder_tick = left_count;
-  //    if (hasleftwall() != true || hasrightwall() != true) {
-  //      motor_left = base_speed;
-  //      motor_right = base_speed - 10;
-  //      //forward(motor_left,motor_right);
-  //      //continue;
-  //    }
-  //*/
-  /*
-    if (abs(sensorReading_left - sensorReading_right) > 300){
-      motor_left = base_speed;
-      motor_right= base_speed-10;
-      forward(motor_left,motor_right);
-      continue;
-    }
-  */
-  //pid_control();
 }
 
 void halt_until(int stop_time ) {
@@ -492,27 +469,7 @@ void random_move() {
 }
 
 
-/*
-void catch_tick() { // find out what this does
-  if (prev_sensorReading_left == sensorReading_left && prev_sensorReading_middle == sensorReading_middle && prev_sensorReading_right == sensorReading_right) {
-    int rand_num = random(millis()) % 2;
-    if (rand_num == 1) {
-      halt_until(700);
-      reverse_until();
-      halt_until(700);
-      left_turn_until();
-      halt_until(700);
-    }
-    else {
-      halt_until(700);
-      reverse_until();
-      halt_until(700);
-      right_turn_until();
-      halt_until(700);
-    }
-  }
-}
-*/
+
 
 //this only happens I think when the sensor readings are the same for multiple cycles 
 //which usually indicates the mouse is stuch somehow

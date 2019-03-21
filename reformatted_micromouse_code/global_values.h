@@ -1,3 +1,6 @@
+#include <Wire.h>
+#include <L3G.h>
+
 int halt_delay = 300;//350,300
 
 
@@ -29,26 +32,27 @@ double reset_error = 0;
 double motor_left = 125;
 double motor_right = 125;
 
+//may not need these
 int left_ir_low_bound = 995;
 int left_ir_high_bound = 1009;
 
 //Motor
-int motor_1_logic_1 = 3;
-int motor_1_logic_2 = 4;
+int motor_1_logic_1 = 20;
+int motor_1_logic_2 = 21;
 
 int motor_2_logic_1 = 5;
-int motor_2_logic_2 = 10;
+int motor_2_logic_2 = 6;
 
-int turn_on_en_1 = 22;
-int turn_on_en_2 = 23;
+int turn_on_en_1 = 12;
+int turn_on_en_2 = 13;
 
 
 //encoder
-int RH_ENCODER_A = 20;
-int RH_ENCODER_B = 21;
+int RH_ENCODER_A = 9;
+int RH_ENCODER_B = 8;
 
-int LH_ENCODER_A = 0;
-int LH_ENCODER_B = 1;
+int LH_ENCODER_A = 10;
+int LH_ENCODER_B = 11;
 
 unsigned long left_count = 0;
 unsigned long right_count = 0;
@@ -61,19 +65,35 @@ int left_offset = 20; // last value was 15 , 5 , 30, 10
 //LEFT
 int sensor_left = A2;
 int sensorReading_left;
-int sensor_left_power = 2;
+int sensor_left_power = 0;
 
 
 //MIDDLE
-int sensor_middle = A4 ;
+int sensor_middle = A1 ;
 int sensorReading_middle;
-int sensor_middle_power = 7;
+int sensor_middle_power = 1;
 
 
 //RIGHT
-int sensor_right = A1;
+int sensor_right = A0;
 int sensorReading_right;
-int sensor_right_power = 12;
+int sensor_right_power = 2;
+
+
+//45_DEGREE_LEFT
+int sensor_45_left = A9;
+int sensorReading_45_left;
+int sensor_45_left_power = 4;
+
+
+
+//45_DEGREE_RIGHT
+int sensor_45_right = A8;
+int sensorReading_45_right;
+int sensor_45_right_power = 3;
+
+
+
 
 //prev led values
 int prev_sensorReading_right;
@@ -84,5 +104,16 @@ int prev_sensorReading_left;
 int error_left;
 int error_middle;
 int error_right;
+
+
+
+//gryo values
+L3G gyro;
+int gryo_dps; //degrees per second
+int gryo_raw_data;
+int gryo_sum;
+int gryo_reset_limit = 1000;
+
+int gryo_raw_dps_conversion_factor;
 
 

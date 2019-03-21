@@ -28,13 +28,24 @@ void readIR() {
   sensorReading_left = analogRead(sensor_left);
   sensorReading_middle = analogRead(sensor_middle);
   sensorReading_right = analogRead(sensor_right);
-
+  sensorReading_45_left = analogRead(sensor_45_left);
+  sensorReading_45_right = analogRead(sensor_45_right);
+  
 
   Serial.print("Sensor Reading: ");
-  Serial.println(sensorReading_left);
-  Serial.println(sensorReading_middle);
+//  Serial.print( "LEFT : ");
+//  Serial.println(sensorReading_left);
+//  Serial.print( "MIDDLE : ");
+//  Serial.println(sensorReading_middle);
+  Serial.print( "RIGHT : ");
   Serial.println(sensorReading_right);
-  Serial.println();
+//  Serial.print( "45_LEFT : ");
+// Serial.println(sensorReading_45_left);
+  
+  //Serial.print( "45_RIGHT : ");
+  //sSerial.println(sensorReading_45_right);
+  //*/
+  //Serial.println();
 }
 
 
