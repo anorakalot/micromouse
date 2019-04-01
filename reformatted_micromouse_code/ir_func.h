@@ -1,3 +1,5 @@
+
+
 //HAS functions should be checked before every single comp
 bool hasfrontwall() {       //200,360
   if (sensorReading_middle > 360 ) { //300 , 350,370,400,275,330,360,500
@@ -25,25 +27,47 @@ bool hasrightwall() {     //220,340,330.300,420,320,330
 //Reads Ir sensors but with no mapped values
 void readIR() {
 
+  digitalWrite(sensor_left_power,HIGH);
+  digitalWrite(sensor_right_power,HIGH);
+  digitalWrite(sensor_middle_power,HIGH);
+  
+  digitalWrite(sensor_45_right_power,LOW);
+  digitalWrite(sensor_45_left_power,LOW);
+
+
+
+  delay(200);
   sensorReading_left = analogRead(sensor_left);
   sensorReading_middle = analogRead(sensor_middle);
   sensorReading_right = analogRead(sensor_right);
+
+  
+  digitalWrite(sensor_left_power,LOW);
+  digitalWrite(sensor_right_power,LOW);
+  digitalWrite(sensor_middle_power,LOW);
+  
+  digitalWrite(sensor_45_right_power,HIGH);
+  digitalWrite(sensor_45_left_power,HIGH);
+
+  delay(200);
   sensorReading_45_left = analogRead(sensor_45_left);
   sensorReading_45_right = analogRead(sensor_45_right);
   
 
   Serial.print("Sensor Reading: ");
-//  Serial.print( "LEFT : ");
-//  Serial.println(sensorReading_left);
-//  Serial.print( "MIDDLE : ");
-//  Serial.println(sensorReading_middle);
+  Serial.print( "LEFT : ");
+  Serial.println(sensorReading_left);
+  Serial.print( "MIDDLE : ");
+  Serial.println(sensorReading_middle);
   Serial.print( "RIGHT : ");
   Serial.println(sensorReading_right);
-//  Serial.print( "45_LEFT : ");
-// Serial.println(sensorReading_45_left);
+
   
-  //Serial.print( "45_RIGHT : ");
-  //sSerial.println(sensorReading_45_right);
+  Serial.print( "45_LEFT : ");
+ Serial.println(sensorReading_45_left);
+  
+  Serial.print( "45_RIGHT : ");
+  Serial.println(sensorReading_45_right);
   //*/
   //Serial.println();
 }

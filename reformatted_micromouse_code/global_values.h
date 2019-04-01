@@ -1,5 +1,3 @@
-#include <Wire.h>
-#include <L3G.h>
 
 int halt_delay = 300;//350,300
 
@@ -104,7 +102,6 @@ int prev_sensorReading_left;
 int error_left;
 int error_middle;
 int error_right;
-
 
 
 //gryo values

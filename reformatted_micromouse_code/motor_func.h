@@ -1,3 +1,5 @@
+
+
 //encoder and turns
 void left_encoder_event() {
   left_count ++;
@@ -180,10 +182,12 @@ void forward_until(int left_speed, int right_speed, int stop_time) {
 //gets sensor data from l to use for pid control function
 //all it does is take the sensors reading and if its less than 0 make it plus one
 void regulateSensorL() {
-  sensorReading_left = analogRead(sensor_left);
-  sensorReading_left = map(sensorReading_left, left_ir_low_bound, left_ir_high_bound, 0, 200);
+  readIR();
+  //sensorReading_left = analogRead(sensor_left);
+  //sensorReading_left = map(sensorReading_left, left_ir_low_bound, left_ir_high_bound, 0, 200);
 
   //permReading_left = 0 for some reason
+  
   sensorReading_left = sensorReading_left - permReading_left;
   
    
@@ -195,10 +199,10 @@ void regulateSensorL() {
 //gets sensor data from r to use for pid control function
 //all it does is take the sensors reading and if its less than 0 make it plus one
 void regulateSensorR() {
-  sensorReading_right = analogRead(sensor_right);
-
-
-  sensorReading_right = map(sensorReading_right, 180, 820, 0, 200);
+  //sensorReading_right = analogRead(sensor_right);
+  readIR();
+  
+  //sensorReading_right = map(sensorReading_right, 180, 820, 0, 200);
 
   sensorReading_right = sensorReading_right - permReading_right;
 
@@ -212,7 +216,7 @@ void regulateSensorR() {
 
 
 void pid_control() {
-  readIR_map();
+  readIR();
 
 
   //goes off motor values that are good enough for short times goind blind
@@ -418,7 +422,7 @@ void random_move() {
     }
   }
 
-  else if (!hasfrontwall && !hasleftwall && !hasrightwall) {
+  else if (!hasfrontwall() && !hasleftwall() && !hasrightwall()) {
     random_move = random(millis()) % 3;
     if (random_move == 1) {
       halt_until(halt_delay);

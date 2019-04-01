@@ -9,7 +9,9 @@
 
 
 //#include "Timer.h"
-//need time 
+//need time
+#include <Wire.h>
+#include <L3G.h>
 #include "Time.h"
 #include "global_values.h"
 #include "ir_func.h"
@@ -23,7 +25,8 @@
 
 //sets up all the new functions
 void setup() {
-  //Serial.begin(9600);
+  Serial.begin(9600);
+  
   ///*
   //interrups set up for turns 
   attachInterrupt(digitalPinToInterrupt(LH_ENCODER_A), left_encoder_event, CHANGE);
@@ -32,9 +35,7 @@ void setup() {
   attachInterrupt(digitalPinToInterrupt(RH_ENCODER_A), right_encoder_event, CHANGE);
   attachInterrupt(digitalPinToInterrupt(RH_ENCODER_B), right_encoder_event, CHANGE);
 
-//  Serial.begin(9600);
-
-  Serial.begin(9600);
+  
 
 
   //if need to check ir readings from serial monitor
@@ -84,6 +85,8 @@ void setup() {
 
 
 //gryo setup
+//REMEMBER TO SETUP GRYO 
+//PROBABLY THE REASON WHY THE GRYO ISN'T WORKING
 setup_gryo();
 
 /*
@@ -113,9 +116,11 @@ void loop() {
 */
 
 //forward();
-//readIR();
+readIR();
+delay(1000);
 //Serial.println("hello");
-read_angle();
+
+//read_angle();
 
 }
 

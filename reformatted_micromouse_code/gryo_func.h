@@ -11,11 +11,12 @@ void setup_gryo(){
 
   gyro.enableDefault();
 }
-
+/*
 void read_angle(){
   gyro.read();
   gryo_raw_data = ((int)gryo.g.z);
   gryo_dps = (gryo_raw_data * gryo_raw_dps_conv_factor) / 1000;
+ 
   
   
   //Serial.print("G ");
@@ -30,3 +31,4 @@ void read_angle(){
   
   delay(100);
 }
+//*/
