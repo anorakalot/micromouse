@@ -3,20 +3,20 @@
  * MAKE THIS IN STATE MACHINES
  * DO PID OFF ONE WALL
  * DO PID OFF ENCODERS
+ * DO GYRO ANGLES
+ * test motor functions work properly
  */
 
 
-
-
-//#include "Timer.h"
-//need time
 #include <Wire.h>
 #include <L3G.h>
-#include "Time.h"
 #include "global_values.h"
+#include "gyro_func.h"
+//#include "Timer.h"
+//need time
+#include "Time.h"
 #include "ir_func.h"
 #include "motor_func.h"
-#include "gryo_func.h"
 
 
 
@@ -84,21 +84,22 @@ void setup() {
 
 
 
-//gryo setup
-//REMEMBER TO SETUP GRYO 
-//PROBABLY THE REASON WHY THE GRYO ISN'T WORKING
-setup_gryo();
+//gyro setup
+//REMEMBER TO SETUP gyro 
+//PROBABLY THE REASON WHY THE gyro ISN'T WORKING
+//setup_gyro();
 
-/*
-  calibrate_pid();
+///*
+//  calibrate_pid();
 
   wait_until_start_hand();
 
-  readIR_map();
+  //readIR_map();
 
-  prev_sensorReading_left = sensorReading_left;
-  prev_sensorReading_middle = sensorReading_middle;
-*/
+  //not needed 
+  //prev_sensorReading_left = sensorReading_left;
+  //prev_sensorReading_middle = sensorReading_middle;
+//*/
 }
 
 
@@ -116,8 +117,11 @@ void loop() {
 */
 
 //forward();
-readIR();
-delay(1000);
+//left_tunrn();
+//right_turn();
+//reverse();
+//readIR();
+//delay(1000);
 //Serial.println("hello");
 
 //read_angle();

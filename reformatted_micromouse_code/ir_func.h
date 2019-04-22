@@ -64,7 +64,7 @@ void readIR() {
 
   
   Serial.print( "45_LEFT : ");
- Serial.println(sensorReading_45_left);
+  Serial.println(sensorReading_45_left);
   
   Serial.print( "45_RIGHT : ");
   Serial.println(sensorReading_45_right);
@@ -157,7 +157,7 @@ void wait_until_start_hand() {
 
   while (first_check) {
     //readIR();
-    readIR_map();
+    //readIR_map();
     //delay(500);
 
     if (hasfrontwall()) {
@@ -189,4 +189,85 @@ void calibrate_pid() {
 
 }
 
+
+void read_one_ir(int sensor_power, int sensorReading, int sensor, int error_val){
+        digitalWrite(sensor_power,HIGH);
+        sensorReading = analogRead(sensor);
+        sensorReading -= error_val;
+        digitalWrite(sensor_power,LOW);
+  
+
+  
+}
+  
+enum IR_STATES {IR_INIT, LEFT_SENSOR,RIGHT_SENSOR,MIDDLE_SENSOR,LEFT_45_SENSOR,RIGHT_45_SENSOR} ir_state; 
+
+void ir_state_machine(){
+    switch(ir_state){ // transitions
+      case IR_INIT:
+        ir_state = LEFT_SENSOR;
+        break;
+       case LEFT_SENSOR:
+        ir_state = MIDDLE_SENSOR;
+        break;
+       case MIDDLE_SENSOR:
+        ir_state = RIGHT_SENSOR;
+        break;
+       case RIGHT_SENSOR:
+        ir_state = LEFT_45_SENSOR;
+        break;
+       case LEFT_45_SENSOR:
+        ir_state = RIGHT_45_SENSOR;
+        break;
+       case RIGHT_45_SENSOR:
+        ir_state = LEFT_SENSOR; 
+        break;
+       default:
+        ir_state = LEFT_SENSOR;
+        break;
+       
+    }
+    //maybe put in for left sensor onwards 
+    //turn off power in next state
+    switch(ir_state){ // actions
+      case IR_INIT:
+        digitalWrite(sensor_left_power,LOW);
+        digitalWrite(sensor_right_power,LOW);
+        digitalWrite(sensor_middle_power,LOW);
+  
+        digitalWrite(sensor_45_right_power,LOW);
+        digitalWrite(sensor_45_left_power,LOW);
+
+        error_left = analogRead(sensor_left);
+        error_middle = analogRead(sensor_middle);
+        error_right = analogRead(sensor_right);
+        error_45_left = analogRead(sensor_45_left);
+        error_45_right = analogRead(sensor_45_right);
+       
+        break; 
+       case LEFT_SENSOR:
+
+        read_one_ir(sensor_left_power, sensorReading_left, sensor_left, error_left);
+        break;
+
+       case MIDDLE_SENSOR:
+        read_one_ir(sensor_middle_power, sensorReading_middle, sensor_middle, error_middle);
+         break;
+       case RIGHT_SENSOR:
+        read_one_ir(sensor_right_power, sensorReading_right, sensor_right, error_right);
+       
+        break;
+       case LEFT_45_SENSOR:
+        read_one_ir(sensor_45_left_power, sensorReading_45_left, sensor_45_left, error_45_left);
+       
+        break;
+       case RIGHT_45_SENSOR:
+        read_one_ir(sensor_45_right_power, sensorReading_45_right, sensor_45_right,error_45_right);
+        break;
+        
+    }
+
+
+
+}
 

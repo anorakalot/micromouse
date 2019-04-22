@@ -23,12 +23,12 @@ void reverse() {
   digitalWrite(turn_on_en_1, HIGH);
   digitalWrite(turn_on_en_2, HIGH);
 
-  digitalWrite(motor_1_logic_1, HIGH);
-  digitalWrite(motor_1_logic_2, LOW);
-
+  digitalWrite(motor_1_logic_2, HIGH);
   digitalWrite(motor_2_logic_1, HIGH);
+  digitalWrite(motor_1_logic_1, LOW);
   digitalWrite(motor_2_logic_2, LOW);
-
+  
+ 
 }
 
 
@@ -36,8 +36,8 @@ void forward() {
   digitalWrite(turn_on_en_1, HIGH);
   digitalWrite(turn_on_en_2, HIGH);
 
-  digitalWrite(motor_1_logic_1, LOW);
-  digitalWrite(motor_1_logic_2, HIGH);
+  digitalWrite(motor_1_logic_1, HIGH);
+  digitalWrite(motor_1_logic_2, LOW);
 
   digitalWrite(motor_2_logic_1, LOW);
   digitalWrite(motor_2_logic_2, HIGH);
@@ -63,8 +63,9 @@ void reverse_turn() {
   digitalWrite(turn_on_en_1, HIGH);
   digitalWrite(turn_on_en_2, HIGH);
 
-  digitalWrite(motor_1_logic_1, HIGH);
-  digitalWrite(motor_1_logic_2, LOW);
+  digitalWrite(motor_1_logic_1, LOW);
+  digitalWrite(motor_1_logic_2, HIGH);
+
   digitalWrite(motor_2_logic_1, LOW);
   digitalWrite(motor_2_logic_2, HIGH);
 }
@@ -74,11 +75,12 @@ void left_turn() {
   digitalWrite(turn_on_en_1, HIGH);
   digitalWrite(turn_on_en_2, HIGH);
 
+  digitalWrite(motor_1_logic_1, LOW);
+  digitalWrite(motor_1_logic_2, HIGH);
 
-  digitalWrite(motor_1_logic_1, HIGH);
-  digitalWrite(motor_1_logic_2, LOW);
   digitalWrite(motor_2_logic_1, LOW);
   digitalWrite(motor_2_logic_2, HIGH);
+
 }
 
 
@@ -86,10 +88,13 @@ void right_turn() {
   digitalWrite(turn_on_en_1, HIGH);
   digitalWrite(turn_on_en_2, HIGH);
 
-  digitalWrite(motor_1_logic_2, HIGH);
+
+  digitalWrite(motor_1_logic_1, HIGH);
+  digitalWrite(motor_1_logic_2, LOW);
   digitalWrite(motor_2_logic_1, HIGH);
-  digitalWrite(motor_1_logic_1, LOW);
   digitalWrite(motor_2_logic_2, LOW);
+  
+  
 }
 
 
@@ -97,8 +102,8 @@ void forward(int left_speed, int right_speed) {
   digitalWrite(turn_on_en_1, HIGH);
   digitalWrite(turn_on_en_2, HIGH);
 
-  analogWrite(motor_1_logic_2, left_speed);
-  digitalWrite(motor_1_logic_1, LOW);
+  analogWrite(motor_1_logic_2,LOW );
+  digitalWrite(motor_1_logic_1,left_speed);
   analogWrite(motor_2_logic_2, right_speed);
   digitalWrite(motor_2_logic_1, LOW);
 }
@@ -169,26 +174,26 @@ void forward_until(int left_speed, int right_speed, int stop_time) {
 
   unsigned long curr = millis();
   while (millis() - curr < stop_time) {
-    digitalWrite(turn_on_en_1, HIGH);
-    digitalWrite(turn_on_en_2, HIGH);
+  digitalWrite(turn_on_en_1, HIGH);
+  digitalWrite(turn_on_en_2, HIGH);
 
-    analogWrite(motor_1_logic_2, left_speed);
-    digitalWrite(motor_1_logic_1, LOW);
-    analogWrite(motor_2_logic_2, right_speed);
-    digitalWrite(motor_2_logic_1, LOW);
+  analogWrite(motor_1_logic_2,LOW );
+  digitalWrite(motor_1_logic_1,left_speed);
+  analogWrite(motor_2_logic_2, right_speed);
+  digitalWrite(motor_2_logic_1, LOW);
   }
 }
 
 //gets sensor data from l to use for pid control function
 //all it does is take the sensors reading and if its less than 0 make it plus one
 void regulateSensorL() {
-  readIR();
+  //readIR();
   //sensorReading_left = analogRead(sensor_left);
   //sensorReading_left = map(sensorReading_left, left_ir_low_bound, left_ir_high_bound, 0, 200);
 
   //permReading_left = 0 for some reason
   
-  sensorReading_left = sensorReading_left - permReading_left;
+  //sensorReading_left = sensorReading_left - permReading_left;
   
    
    if (sensorReading_left - permReading_left < 0){ 
@@ -200,11 +205,11 @@ void regulateSensorL() {
 //all it does is take the sensors reading and if its less than 0 make it plus one
 void regulateSensorR() {
   //sensorReading_right = analogRead(sensor_right);
-  readIR();
+  //readIR();
   
   //sensorReading_right = map(sensorReading_right, 180, 820, 0, 200);
 
-  sensorReading_right = sensorReading_right - permReading_right;
+  //sensorReading_right = sensorReading_right - permReading_right;
 
     
    if (sensorReading_right - permReading_right < 0){ 
@@ -216,7 +221,7 @@ void regulateSensorR() {
 
 
 void pid_control() {
-  readIR();
+  //readIR();
 
 
   //goes off motor values that are good enough for short times goind blind
@@ -530,8 +535,33 @@ void error_catch() {
 }
 //error_check = false;
 
+enum MOTOR_STATES{ } motor_state;
 
 
+void motor_tick(){
+  switch(motor_state){//transitions
+    
+  }
+  switch(motor_state){//actions
+    
+  }
+  
+}
+
+
+
+enum PID_STATES{ } pid_state;
+
+
+void pid_tick(){
+  switch(pid_state){//transitions
+    
+  }
+  switch(pid_state){//actions
+    
+  }
+  
+}
 
 
 

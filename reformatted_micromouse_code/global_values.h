@@ -102,15 +102,17 @@ int prev_sensorReading_left;
 int error_left;
 int error_middle;
 int error_right;
+int error_45_left;
+int error_45_right;
 
-
-//gryo values
+//gryo values 
+//I PUT GRYO VARIABLES IN GRYO_FUNC DUE TO ERRORS
 L3G gyro;
-int gryo_dps; //degrees per second
-int gryo_raw_data;
-int gryo_sum;
-int gryo_reset_limit = 1000;
-
-int gryo_raw_dps_conversion_factor;
+int gyro_dps; //degrees per second
+int gyro_raw_data;
+signed long gyro_sum = 0;
+signed long gyro_angle = 0;
+int gyro_raw_dps_conversion_factor = 8.75;
+int gyro_reset_limit = 1000;
 
 
