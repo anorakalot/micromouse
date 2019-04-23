@@ -101,8 +101,27 @@ void setup() {
   //prev_sensorReading_middle = sensorReading_middle;
 //*/
 }
+ 
 
-
+//EXAMPLE CODE
+//void motor_init(){
+//  motor_state = MOTOR_START;  
+//}
+//
+//void motor_task(){
+//  motor_init();
+//  for(;;){
+//    motor_tick();
+//    vTaskDelay(10); 
+//  }
+//}
+//void StartSecPulse_2(unsigned portBASE_TYPE Priority)
+//{
+//  xTaskCreate(motor_task,(signed portCHAR *)"motor_task",configMINIMAL_STACK_SIZE,NULL,Priority,NULL);
+//}
+//
+//StartSecPulse_2();
+//vTaskStartScheduler();
 
 void loop() {
 //main sequence 
@@ -114,7 +133,7 @@ void loop() {
   readIR_map();
   random_move();
   error_catch();
-*/
+*/ 
 
 //forward();
 //left_tunrn();

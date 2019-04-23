@@ -223,7 +223,7 @@ void ir_state_machine(){
         ir_state = LEFT_SENSOR; 
         break;
        default:
-        ir_state = LEFT_SENSOR;
+        ir_state = IR_INIT;
         break;
        
     }
@@ -255,11 +255,9 @@ void ir_state_machine(){
          break;
        case RIGHT_SENSOR:
         read_one_ir(sensor_right_power, sensorReading_right, sensor_right, error_right);
-       
         break;
        case LEFT_45_SENSOR:
         read_one_ir(sensor_45_left_power, sensorReading_45_left, sensor_45_left, error_45_left);
-       
         break;
        case RIGHT_45_SENSOR:
         read_one_ir(sensor_45_right_power, sensorReading_45_right, sensor_45_right,error_45_right);

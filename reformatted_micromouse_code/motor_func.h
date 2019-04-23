@@ -218,19 +218,26 @@ void regulateSensorR() {
 }
 
 
+void pid_control_one_wall() {
+  
+}
 
+void pid_control_no_walls() {
 
-void pid_control() {
+  
+}
+
+void pid_control_two_walls() {
   //readIR();
 
 
   //goes off motor values that are good enough for short times goind blind
   //ends the pid control function here
-  if (hasleftwall() != true || hasrightwall() != true) {
-    motor_left = base_speed;
-    motor_right = base_speed - 20;
-    return;
-  }
+//  if (hasleftwall() != true || hasrightwall() != true) {
+//    motor_left = base_speed;
+//    motor_right = base_speed - 20;
+//    return;
+//  }
   regulateSensorL();
   regulateSensorR();
 
@@ -305,7 +312,7 @@ void go_one_cell() {
   while (left_count - curr < 945 ) { // 450,600, 800,950,900,960,955,945,950,945,930,925,940
     readIR_map();
     print_encoder_count();
-    pid_control();
+    pid_control_two_walls();
 
 
     forward(motor_left, motor_right);
@@ -550,15 +557,96 @@ void motor_tick(){
 
 
 
-enum PID_STATES{ } pid_state;
+enum PID_STATES{PID_INIT, PID_TWO_WALLS,PID_ONE_WALL,PID_NO_WALLS } pid_state;
 
 
 void pid_tick(){
   switch(pid_state){//transitions
-    
+    case PID_INIT:
+      if (hasleftwall() == true && hasrightwall() == true){
+        pid_state = PID_TWO_WALLS;
+      }
+      else if (hasleftwall() == true && hasrightwall() == false){
+        pid_state = PID_ONE_WALL;
+      }
+      else if (hasleftwall() == false && hasrightwall() == true){
+        pid_state = PID_ONE_WALL;
+      }
+      else if (hasleftwall() == false && hasrightwall() == false){
+        pid_state = PID_NO_WALLS;
+      }
+      else{
+        pid_state = PID_TWO_WALLS;
+      }
+      break;
+     case PID_TWO_WALLS:
+      if (hasleftwall() == true && hasrightwall() == true){
+        pid_state = PID_TWO_WALLS;
+      }
+      else if (hasleftwall() == true && hasrightwall() == false){
+        pid_state = PID_ONE_WALL;
+      }
+      else if (hasleftwall() == false && hasrightwall() == true){
+        pid_state = PID_ONE_WALL;
+      }
+      else if (hasleftwall() == false && hasrightwall() == false){
+        pid_state = PID_NO_WALLS;
+      }
+      else{
+        pid_state = PID_TWO_WALLS;
+      }
+      break;
+     case PID_ONE_WALL:
+      if (hasleftwall() == true && hasrightwall() == true){
+        pid_state = PID_TWO_WALLS;
+      }
+      else if (hasleftwall() == true && hasrightwall() == false){
+        pid_state = PID_ONE_WALL;
+      }
+      else if (hasleftwall() == false && hasrightwall() == true){
+        pid_state = PID_ONE_WALL;
+      }
+      else if (hasleftwall() == false && hasrightwall() == false){
+        pid_state = PID_NO_WALLS;
+      }
+      else{
+        pid_state = PID_TWO_WALLS;
+      }
+      break;
+     case PID_NO_WALLS:
+      if (hasleftwall() == true && hasrightwall() == true){
+        pid_state = PID_TWO_WALLS;
+      }
+      else if (hasleftwall() == true && hasrightwall() == false){
+        pid_state = PID_ONE_WALL;
+      }
+      else if (hasleftwall() == false && hasrightwall() == true){
+        pid_state = PID_ONE_WALL;
+      }
+      else if (hasleftwall() == false && hasrightwall() == false){
+        pid_state = PID_NO_WALLS;
+      }
+      else{
+        pid_state = PID_TWO_WALLS;
+      }
+      break;
+     default:
+      pid_state = PID_INIT;
+      break; 
   }
   switch(pid_state){//actions
-    
+    case PID_INIT:
+      break;
+    case PID_TWO_WALLS:
+      pid_control_two_walls();
+      break;
+    case PID_ONE_WALL:
+      pid_control_one_wall();
+      break;
+    case PID_NO_WALLS:
+      pid_control_no_walls();
+      break;
+     
   }
   
 }
