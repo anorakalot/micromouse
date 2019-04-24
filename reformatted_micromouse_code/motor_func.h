@@ -170,7 +170,7 @@ void reverse_turn_until() {
 }
 
 //only uses this forward until function for certain special times when going forward
-void forward_until(int left_speed, int right_speed, int stop_time) {
+void forward_until(int left_speed, int right_speed, unsigned long stop_time) {
 
   unsigned long curr = millis();
   while (millis() - curr < stop_time) {
@@ -310,16 +310,18 @@ void pid_control_two_walls() {
 void go_one_cell() {
   unsigned long curr = left_count;//935
   while (left_count - curr < 945 ) { // 450,600, 800,950,900,960,955,945,950,945,930,925,940
-    readIR_map();
+    //readIR_map();
     print_encoder_count();
-    pid_control_two_walls();
-
+    //pid_control_two_walls();
+    //IF PID IS DONE IN A STATE MACHINE I WONT NEED PID IN THIS FUNCTION 
+    //HAVING IN STATE MACHINES COULD MEAN I COULD HAVE BETTER READ RESULTS
+    //NEED TO MAKE SURE THIS DOESN'T MESS UP CONTROL GOING FORWARD
 
     forward(motor_left, motor_right);
   }
 }
 
-void halt_until(int stop_time ) {
+void halt_until(unsigned long stop_time ) {
   unsigned long curr = millis();
   while (millis() - curr < stop_time) {
     halt();
@@ -541,26 +543,49 @@ void error_catch() {
 
 }
 //error_check = false;
-
-enum MOTOR_STATES{ } motor_state;
+//MIGHT PUT FLOODFILL INTO THIS STATE MACHINE AS WELL
+enum MOTOR_STATES{MOTOR_INIT,GO_ONE_CELL,RANDOM_MOVE } motor_state;
 
 
 void motor_tick(){
+  
   switch(motor_state){//transitions
-    
+    case MOTOR_INIT:
+      motor_state = GO_ONE_CELL;
+      break;
+    case GO_ONE_CELL:
+      motor_state = RANDOM_MOVE;
+      break;
+    case RANDOM_MOVE:
+      motor_state = GO_ONE_CELL;
+      break;
+    default:
+      motor_state = GO_ONE_CELL;
+      break;
   }
   switch(motor_state){//actions
+    case MOTOR_INIT:
+      break;
+    case GO_ONE_CELL:
+      go_one_cell_happening = 1;
+      go_one_cell();
+      break;
+    case RANDOM_MOVE:
+      go_one_cell_happening = 0;
+      random_move();
+      break;
     
   }
   
 }
 
-
+//IF ERROR HAPPENS WITH THIS MIGHT JUST GO AND HAVE THE DIFFERENT PID'S IN ONE FUNCTION INSTEAD
 
 enum PID_STATES{PID_INIT, PID_TWO_WALLS,PID_ONE_WALL,PID_NO_WALLS } pid_state;
 
 
 void pid_tick(){
+  if (go_one_cell_happening){
   switch(pid_state){//transitions
     case PID_INIT:
       if (hasleftwall() == true && hasrightwall() == true){
@@ -647,10 +672,38 @@ void pid_tick(){
       pid_control_no_walls();
       break;
      
+    }
+  }
+}
+
+
+
+enum FLOODFILL_STATES{ } floodfill_state;
+
+
+void floodfill_tick(){
+  switch(floodfill_state){//transitions
+    
+  }
+  switch(floodfill_state){//actions
+    
   }
   
 }
 
+//ERROR CATCH 
+enum ERROR_CATCH_STATES{ } error_catch_state;
+
+
+void error_catch_tick(){
+  switch(error_catch_state){//transitions
+    
+  }
+  switch(error_catch_state){//actions
+    
+  }
+  
+}
 
 
 

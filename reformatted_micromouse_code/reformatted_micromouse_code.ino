@@ -1,10 +1,23 @@
+//#include <Arduino_FreeRTOS.h>
+
+//#include <FreeStack.h>
+//#include <MinimumSerial.h>
+//#include <SdFat.h>
+//#include <SdFatConfig.h>
+//#include <SdFatUtil.h>
+
+//#include <basic_io_avr.h>
+//#include <FreeRTOS_AVR.h>
+
+//#include <basic_io_arm.h>
+//#include <FreeRTOS_ARM.h>
+
 /*
  * TO DO LIST
  * MAKE THIS IN STATE MACHINES
  * DO PID OFF ONE WALL
  * DO PID OFF ENCODERS
  * DO GYRO ANGLES
- * test motor functions work properly
  */
 
 
@@ -92,6 +105,8 @@ void setup() {
 ///*
 //  calibrate_pid();
 
+//MIGHT HAVE TO PUT THIS IN A STATE MACHINE
+//PROBABLY IR_FUNC STATE MACHINE
   wait_until_start_hand();
 
   //readIR_map();
