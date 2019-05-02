@@ -217,18 +217,25 @@ void regulateSensorR() {
   }
 }
 
-
+//in the meantime this will go off good base values
+//MAKE THIS LATER INTO TAKE AVERAGE FOR ONE SIDE AND USE THAT PID
 void pid_control_one_wall() {
-  
-}
 
+    motor_left = base_speed;
+    motor_right = base_speed - 20;
+    return;
+}
+//in the meantime this will go off good base values
+//MAKE THIS LATER INTO ENCODER PID
 void pid_control_no_walls() {
+    motor_left = base_speed;
+    motor_right = base_speed - 20;
+    return;
 
   
 }
-
 void pid_control_two_walls() {
-  //readIR();
+  readIR();
 
 
   //goes off motor values that are good enough for short times goind blind
@@ -238,6 +245,7 @@ void pid_control_two_walls() {
 //    motor_right = base_speed - 20;
 //    return;
 //  }
+  
   regulateSensorL();
   regulateSensorR();
 
@@ -305,18 +313,40 @@ void pid_control_two_walls() {
     return;
   }
 }
+void pid_control(){
+  readIR();
+    if (hasleftwall() == true && hasrightwall() == true){
+        pid_control_two_walls();
+      }
+      else if (hasleftwall() == true && hasrightwall() == false){
+        pid_control_one_wall();
+      }
+      else if (hasleftwall() == false && hasrightwall() == true){
+       pid_control_one_wall();
+      
+      }
+      else if (hasleftwall() == false && hasrightwall() == false){
+        pid_control_no_walls();
+      
+         }
+      else{
+        pid_control_two_walls();
+      }
+}
+
 
 
 void go_one_cell() {
   unsigned long curr = left_count;//935
   while (left_count - curr < 945 ) { // 450,600, 800,950,900,960,955,945,950,945,930,925,940
-    //readIR_map();
+    readIR();
     print_encoder_count();
     //pid_control_two_walls();
     //IF PID IS DONE IN A STATE MACHINE I WONT NEED PID IN THIS FUNCTION 
     //HAVING IN STATE MACHINES COULD MEAN I COULD HAVE BETTER READ RESULTS
     //NEED TO MAKE SURE THIS DOESN'T MESS UP CONTROL GOING FORWARD
-
+    pid_control();
+    
     forward(motor_left, motor_right);
   }
 }
@@ -546,7 +576,9 @@ void error_catch() {
 //MIGHT PUT FLOODFILL INTO THIS STATE MACHINE AS WELL
 enum MOTOR_STATES{MOTOR_INIT,GO_ONE_CELL,RANDOM_MOVE } motor_state;
 
-
+void motor_init(){
+  motor_state = MOTOR_INIT;
+}
 void motor_tick(){
   
   switch(motor_state){//transitions
@@ -582,7 +614,9 @@ void motor_tick(){
 //IF ERROR HAPPENS WITH THIS MIGHT JUST GO AND HAVE THE DIFFERENT PID'S IN ONE FUNCTION INSTEAD
 
 enum PID_STATES{PID_INIT, PID_TWO_WALLS,PID_ONE_WALL,PID_NO_WALLS } pid_state;
-
+void pid_init(){
+  pid_state = PID_INIT;
+}
 
 void pid_tick(){
   if (go_one_cell_happening){
@@ -678,29 +712,41 @@ void pid_tick(){
 
 
 
-enum FLOODFILL_STATES{ } floodfill_state;
-
+enum FLOODFILL_STATES{FLOODFILL_INIT} floodfill_state;
+void floodfill_init(){
+  floodfill_state = FLOODFILL_INIT;
+}
 
 void floodfill_tick(){
   switch(floodfill_state){//transitions
-    
+    case FLOODFILL_INIT:
+      break;
+    default:
+      break;
   }
   switch(floodfill_state){//actions
-    
+    case FLOODFILL_INIT:
+      break;
   }
   
 }
 
 //ERROR CATCH 
-enum ERROR_CATCH_STATES{ } error_catch_state;
+enum ERROR_CATCH_STATES{ERROR_CATCH_INIT } error_catch_state;
 
-
+void error_catch_init(){
+  error_catch_state = ERROR_CATCH_INIT;
+}
 void error_catch_tick(){
   switch(error_catch_state){//transitions
-    
+    case ERROR_CATCH_INIT:
+      break;
+    default:
+      break;
   }
   switch(error_catch_state){//actions
-    
+    case ERROR_CATCH_INIT:
+      break;
   }
   
 }

@@ -45,7 +45,9 @@ void read_angle(){
 
 enum GYRO_STATES {GYRO_INIT, GYRO_READ_ANGLE} gyro_state;
 
-
+void gyro_init(){
+  gyro_state = GYRO_INIT;
+}
 void gyro_tick(){
    switch(gyro_state){
       case GYRO_INIT:

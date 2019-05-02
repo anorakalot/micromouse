@@ -91,6 +91,12 @@ int sensorReading_45_right;
 int sensor_45_right_power = 3;
 
 
+//Strings for printing in ir_tick
+String left_side_string = "LEFT:"; 
+String middle_side_string = "MIDDLE:"; 
+String right_side_string = "RIGHT:"; 
+String left_45_side_string = "45_LEFT:"; 
+String right_45_side_string = "45_RIGHT:"; 
 
 
 //prev led values
@@ -118,4 +124,20 @@ int gyro_reset_limit = 1000;
 
 
 bool go_one_cell_happening = 0;
+
+//timer variable
+Timer t;
+
+//floodfill variables
+struct cell{
+  bool top_wall;
+  bool left_wall;
+  bool right_wall;
+  bool bottom_wall;
+};
+int maze [16][16];
+cell stack[10];
+//save maze_center pos as a array with 2 pos first y second x
+int maze_center [2];
+int mouse_pos [1][1];
 

@@ -1,24 +1,27 @@
-//#include <Arduino_FreeRTOS.h>
-
-//#include <FreeStack.h>
-//#include <MinimumSerial.h>
-//#include <SdFat.h>
-//#include <SdFatConfig.h>
-//#include <SdFatUtil.h>
-
 //#include <basic_io_avr.h>
 //#include <FreeRTOS_AVR.h>
 
 //#include <basic_io_arm.h>
 //#include <FreeRTOS_ARM.h>
 
+
 /*
  * TO DO LIST
- * MAKE THIS IN STATE MACHINES
+ * MAKE THIS IN STATE MACHINES // DO ONLY MOTOR /FLOODFILL IN STATE MACHInes and GYRO
  * DO PID OFF ONE WALL
- * DO PID OFF ENCODERS
- * DO GYRO ANGLES
+ * DO PID OFF ENCODERS for no walls
+ * PORBABLY MAKE MOTOR_LEFT AND MOTOR_RIGHT SPEED VARIABLES
+ * THEN DO SPEED + or -  the p i d control variables
+ * DO GYRO ANGLES and CALL DURING TURN_UNTIL FUNCTIONS
+ * GET FLOODFILL WORKING
+ * GO BACK TO LOOP 
+ * TRY TO GET FREERTOS WORKING
  */
+#include "Timer.h"
+//#include <NewPing.h>
+#include "Time.h"
+ 
+ 
 
 
 #include <Wire.h>
@@ -27,7 +30,7 @@
 #include "gyro_func.h"
 //#include "Timer.h"
 //need time
-#include "Time.h"
+//#include "Time.h"
 #include "ir_func.h"
 #include "motor_func.h"
 
@@ -96,7 +99,18 @@ void setup() {
   digitalWrite(turn_on_en_2, LOW);
 
 
+  gyro_init();
+  gyro_tick();//sets up gyro read function
+  //ir_init();
+  //motor_init();
+  //floodfill_init();
+  
 
+  //t.every(1000,ir_tick);
+  //t.every(1000,gyro_tick); 
+  //t.every(8,motor_tick);
+  //t.every(1000,floodfill_tick;
+  
 //gyro setup
 //REMEMBER TO SETUP gyro 
 //PROBABLY THE REASON WHY THE gyro ISN'T WORKING
@@ -107,7 +121,8 @@ void setup() {
 
 //MIGHT HAVE TO PUT THIS IN A STATE MACHINE
 //PROBABLY IR_FUNC STATE MACHINE
-  wait_until_start_hand();
+
+ //wait_until_start_hand();
 
   //readIR_map();
 
@@ -115,10 +130,44 @@ void setup() {
   //prev_sensorReading_left = sensorReading_left;
   //prev_sensorReading_middle = sensorReading_middle;
 //*/
+
+
 }
  
 
-//EXAMPLE CODE
+
+
+void loop() {
+//main sequence 
+ /* 
+  //readIR_map();
+  readIR();
+  go_one_cell();
+  halt_until(400);
+  //readIR_map();
+  readIR();
+  random_move();
+  error_catch();
+*/ 
+
+//forward();
+//left_tunrn();
+//right_turn();
+//reverse();
+//readIR();
+//delay(1000);
+//Serial.println("hello");
+
+//read_angle();
+//t.update();
+//delay(1000);
+//readIR();
+//Serial.println("HELLOOOO");
+}
+
+
+
+//EXAMPLE CODE FOR FREERTOS IF THAT EVER STARTS TO WORK
 //void motor_init(){
 //  motor_state = MOTOR_START;  
 //}
@@ -137,36 +186,5 @@ void setup() {
 //
 //StartSecPulse_2();
 //vTaskStartScheduler();
-
-void loop() {
-//main sequence 
- 
- /* 
-  readIR_map();
-  go_one_cell();
-  halt_until(400);
-  readIR_map();
-  random_move();
-  error_catch();
-*/ 
-
-//forward();
-//left_tunrn();
-//right_turn();
-//reverse();
-//readIR();
-//delay(1000);
-//Serial.println("hello");
-
-//read_angle();
-
-}
-
-
-
-
-
-
-
 
 
