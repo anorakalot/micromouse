@@ -43,7 +43,7 @@ void read_angle(){
 //*/
 
 
-enum GYRO_STATES {GYRO_INIT, GYRO_READ_ANGLE} gyro_state;
+enum GYRO_STATES {GYRO_INIT,GYRO_START, GYRO_READ_ANGLE} gyro_state;
 
 void gyro_init(){
   gyro_state = GYRO_INIT;
@@ -51,6 +51,9 @@ void gyro_init(){
 void gyro_tick(){
    switch(gyro_state){
       case GYRO_INIT:
+        gyro_state = GYRO_START;
+        break;
+      case GYRO_START:
         gyro_state = GYRO_READ_ANGLE;
         break;
        case GYRO_READ_ANGLE:
@@ -64,16 +67,13 @@ void gyro_tick(){
    }
    switch(gyro_state){
       case GYRO_INIT:
+        break;
+      case GYRO_START:
         setup_gyro();
         break;
-
       case GYRO_READ_ANGLE:
         read_angle();
         break;
    }
-
-
-
-
 }
 

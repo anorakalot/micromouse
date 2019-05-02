@@ -36,7 +36,7 @@ void readIR() {
 
 
 
-  delay(200);
+  delay(50);
   sensorReading_left = analogRead(sensor_left);
   sensorReading_middle = analogRead(sensor_middle);
   sensorReading_right = analogRead(sensor_right);
@@ -49,9 +49,16 @@ void readIR() {
   digitalWrite(sensor_45_right_power,HIGH);
   digitalWrite(sensor_45_left_power,HIGH);
 
-  delay(200);
+  delay(50);
   sensorReading_45_left = analogRead(sensor_45_left);
   sensorReading_45_right = analogRead(sensor_45_right);
+  
+  digitalWrite(sensor_left_power,LOW);
+  digitalWrite(sensor_right_power,LOW);
+  digitalWrite(sensor_middle_power,LOW);
+  
+  digitalWrite(sensor_45_right_power,LOW);
+  digitalWrite(sensor_45_left_power,LOW);
   
 
   Serial.print("Sensor Reading: ");
@@ -173,31 +180,16 @@ void wait_until_start_hand() {
 }
 
 
-//CALIBRATION
-void calibrate_pid() {
-  
-  permReading_left = 0;
-  permReading_middle = 0;
-  permReading_right = 0;
-  
-  //trying to get readings to be the same
-
-  //permReading_left -= left_offset;
-
-
-
-
-}
 
 void ir_start_func(){
-  
+  for(int x = 0; x < 10; ++x){
         digitalWrite(sensor_left_power,LOW);
         digitalWrite(sensor_right_power,LOW);
         digitalWrite(sensor_middle_power,LOW);
   
         digitalWrite(sensor_45_right_power,LOW);
         digitalWrite(sensor_45_left_power,LOW);
-        
+        delay(90);
         error_left = analogRead(sensor_left);
         error_middle = analogRead(sensor_middle);
         error_right = analogRead(sensor_right);
@@ -208,6 +200,7 @@ void ir_start_func(){
         Serial.println(error_left);
         Serial.println(error_middle);
         Serial.println(error_right);
+  }
 }
 
 //try having more of a delay between digital write high and analog reading the sensor
@@ -230,8 +223,9 @@ void read_one_ir(int sensor_power, int sensorReading, int sensor, int error_val,
   
 }
 
-
-
+//just use readIR for now
+//making into a state machine could just overcomplicate things
+/*
 enum IR_STATES {IR_INIT,IR_START, LEFT_SENSOR,RIGHT_SENSOR,MIDDLE_SENSOR,LEFT_45_SENSOR,RIGHT_45_SENSOR} ir_state; 
 
 void ir_init(){
@@ -296,4 +290,5 @@ void ir_tick(){
 
 
 }
+*/
 

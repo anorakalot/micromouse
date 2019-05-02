@@ -126,7 +126,7 @@ int gyro_reset_limit = 1000;
 bool go_one_cell_happening = 0;
 
 //timer variable
-Timer t;
+//Timer t;
 
 //floodfill variables
 struct cell{

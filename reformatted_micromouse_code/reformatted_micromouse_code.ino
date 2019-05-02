@@ -17,9 +17,9 @@
  * GO BACK TO LOOP 
  * TRY TO GET FREERTOS WORKING
  */
-#include "Timer.h"
-//#include <NewPing.h>
-#include "Time.h"
+//#include "Timer.h"
+////#include <NewPing.h>
+//#include "Time.h"
  
  
 
@@ -101,6 +101,9 @@ void setup() {
 
   gyro_init();
   gyro_tick();//sets up gyro read function
+  motor_init();
+  ir_start_func();
+  //wait_until_start_hand();
   //ir_init();
   //motor_init();
   //floodfill_init();
@@ -122,7 +125,7 @@ void setup() {
 //MIGHT HAVE TO PUT THIS IN A STATE MACHINE
 //PROBABLY IR_FUNC STATE MACHINE
 
- //wait_until_start_hand();
+
 
   //readIR_map();
 
@@ -142,16 +145,18 @@ void loop() {
  /* 
   //readIR_map();
   readIR();
-  go_one_cell();
-  halt_until(400);
+  //go_one_cell();
+  //halt_until(400);
+  motor_tick();
   //readIR_map();
   readIR();
-  random_move();
+  //random_move();
+  readIR();
   error_catch();
 */ 
 
 //forward();
-//left_tunrn();
+//left_turn();
 //right_turn();
 //reverse();
 //readIR();

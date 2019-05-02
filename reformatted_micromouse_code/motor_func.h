@@ -93,8 +93,6 @@ void right_turn() {
   digitalWrite(motor_1_logic_2, LOW);
   digitalWrite(motor_2_logic_1, HIGH);
   digitalWrite(motor_2_logic_2, LOW);
-  
-  
 }
 
 
@@ -137,8 +135,6 @@ void right_with_wall() {
   }                 //330
 }
 
-
-
 void reverse_until() {
   unsigned long curr_l = left_count;
   //use left_count instead of right_count
@@ -146,7 +142,6 @@ void reverse_until() {
     reverse();
   }
 }
-
 
 void reverse_turn_until() {
   unsigned long curr_l = left_count;
@@ -157,16 +152,12 @@ void reverse_turn_until() {
     while ( left_count - curr_l < 860 ) { //800,830, 860,870,790,800,810,840,860,870
       left_turn();                  //870,910u
     }
-
   }
-
   else { //use left_count instead of right_count
     while ( left_count - curr_r < 720) { //800,830, 860,870,790
       right_turn();
     }
-
   }
-
 }
 
 //only uses this forward until function for certain special times when going forward
@@ -196,7 +187,8 @@ void regulateSensorL() {
   //sensorReading_left = sensorReading_left - permReading_left;
   
    
-   if (sensorReading_left - permReading_left < 0){ 
+   //if (sensorReading_left - permReading_left < 0){ 
+  if (sensorReading_45_left < 0){
     sensorReading_left = ~sensorReading_left + 1;
   }
 }
@@ -212,7 +204,8 @@ void regulateSensorR() {
   //sensorReading_right = sensorReading_right - permReading_right;
 
     
-   if (sensorReading_right - permReading_right < 0){ 
+   //if (sensorReading_right - permReading_right < 0){ 
+  if (sensorReading_45_left < 0){  
     sensorReading_right = ~sensorReading_right + 1;
   }
 }
@@ -225,6 +218,7 @@ void pid_control_one_wall() {
     motor_right = base_speed - 20;
     return;
 }
+
 //in the meantime this will go off good base values
 //MAKE THIS LATER INTO ENCODER PID
 void pid_control_no_walls() {
@@ -234,6 +228,7 @@ void pid_control_no_walls() {
 
   
 }
+
 void pid_control_two_walls() {
   readIR();
 
@@ -313,6 +308,8 @@ void pid_control_two_walls() {
     return;
   }
 }
+
+//chooses which pid to do
 void pid_control(){
   readIR();
     if (hasleftwall() == true && hasrightwall() == true){
@@ -356,14 +353,13 @@ void halt_until(unsigned long stop_time ) {
   while (millis() - curr < stop_time) {
     halt();
   }
-}//PID / ERROR_CATCHING
+}
 
-
-//does move based on sensor data
-//possibly change so in main loop this only runs if hasfrontwall returns true
+//does random move based on sensor data
 void random_move() {
   int random_move;
-  readIR_map();
+  //readIR_map();
+  readIR();
   //has to turn cases
 
   if (hasleftwall() && hasrightwall() && !hasfrontwall()) {
@@ -569,9 +565,8 @@ void error_catch() {
     prev_sensorReading_right = sensorReading_right;
     prev_encoder_tick = left_count;
   }
-
-
 }
+
 //error_check = false;
 //MIGHT PUT FLOODFILL INTO THIS STATE MACHINE AS WELL
 enum MOTOR_STATES{MOTOR_INIT,GO_ONE_CELL,RANDOM_MOVE } motor_state;
@@ -599,11 +594,12 @@ void motor_tick(){
     case MOTOR_INIT:
       break;
     case GO_ONE_CELL:
-      go_one_cell_happening = 1;
-      go_one_cell();
+      //go_one_cell_happening = 1;
+      go_one_cell();//this call pid inside of it
+      halt_until(400);
       break;
     case RANDOM_MOVE:
-      go_one_cell_happening = 0;
+      //go_one_cell_happening = 0;
       random_move();
       break;
     
@@ -612,7 +608,8 @@ void motor_tick(){
 }
 
 //IF ERROR HAPPENS WITH THIS MIGHT JUST GO AND HAVE THE DIFFERENT PID'S IN ONE FUNCTION INSTEAD
-
+//do this with just 3 functions again that are called while going one cell
+/*
 enum PID_STATES{PID_INIT, PID_TWO_WALLS,PID_ONE_WALL,PID_NO_WALLS } pid_state;
 void pid_init(){
   pid_state = PID_INIT;
@@ -709,7 +706,7 @@ void pid_tick(){
     }
   }
 }
-
+*/
 
 
 enum FLOODFILL_STATES{FLOODFILL_INIT} floodfill_state;
@@ -731,6 +728,8 @@ void floodfill_tick(){
   
 }
 
+//just call the function instead
+/*
 //ERROR CATCH 
 enum ERROR_CATCH_STATES{ERROR_CATCH_INIT } error_catch_state;
 
@@ -750,7 +749,7 @@ void error_catch_tick(){
   }
   
 }
-
+*/
 
 
 
