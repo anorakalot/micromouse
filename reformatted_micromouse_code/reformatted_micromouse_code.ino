@@ -39,7 +39,7 @@
 
 
 
-//sets up all the new functions
+//sets up all the functions and variables
 void setup() {
   Serial.begin(9600);
   
@@ -104,35 +104,18 @@ void setup() {
   motor_init();
   ir_start_func();
   //wait_until_start_hand();
-  //ir_init();
-  //motor_init();
-  //floodfill_init();
+  
   
 
-  //t.every(1000,ir_tick);
-  //t.every(1000,gyro_tick); 
-  //t.every(8,motor_tick);
-  //t.every(1000,floodfill_tick;
   
 //gyro setup
 //REMEMBER TO SETUP gyro 
 //PROBABLY THE REASON WHY THE gyro ISN'T WORKING
 //setup_gyro();
 
-///*
-//  calibrate_pid();
-
-//MIGHT HAVE TO PUT THIS IN A STATE MACHINE
-//PROBABLY IR_FUNC STATE MACHINE
 
 
 
-  //readIR_map();
-
-  //not needed 
-  //prev_sensorReading_left = sensorReading_left;
-  //prev_sensorReading_middle = sensorReading_middle;
-//*/
 
 
 }
@@ -145,12 +128,11 @@ void loop() {
  /* 
   //readIR_map();
   readIR();
-  //go_one_cell();
-  //halt_until(400);
-  motor_tick();
-  //readIR_map();
+  
+  motor_tick();//does go_one_cell
+  
   readIR();
-  //random_move();
+  motor_tick(); // does random_move
   readIR();
   error_catch();
 */ 
