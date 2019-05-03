@@ -19,8 +19,8 @@ void setup_gyro(){
 void read_angle(){
   gyro.read();
   gyro_raw_data = ((int)gyro.g.z);
-  gyro_dps = (gyro_raw_data * gyro_raw_dps_conversion_factor) / 1000;
-  gyro_sum += (gyro_dps /100);
+  gyro_dps = (gyro_raw_data * gyro_raw_dps_conversion_factor) / 1000; //divided by 1000 because if not it's in mdps
+  gyro_sum += (gyro_dps /100); // divided / multipled by 0.01 because thats the sampling period of 10 ms delay
   gyro_angle = gyro_sum; 
   
   
@@ -38,7 +38,7 @@ void read_angle(){
   Serial.println(gyro_angle);
   
   
-  delay(100);
+  delay(10);
 }
 //*/
 

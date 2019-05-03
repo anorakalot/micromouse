@@ -139,7 +139,7 @@ void loop() {
   readIR();
   error_catch();
 */ 
-
+gyro_tick();
 //forward();
 //left_turn();
 //right_turn();
