@@ -709,7 +709,7 @@ void pid_tick(){
 */
 
 
-enum FLOODFILL_STATES{FLOODFILL_INIT} floodfill_state;
+enum FLOODFILL_STATES{FLOODFILL_INIT,FLOODFILL_START} floodfill_state;
 void floodfill_init(){
   floodfill_state = FLOODFILL_INIT;
 }
@@ -718,11 +718,20 @@ void floodfill_tick(){
   switch(floodfill_state){//transitions
     case FLOODFILL_INIT:
       break;
+    case FLOODFILL_START:
+      break;
     default:
       break;
   }
   switch(floodfill_state){//actions
     case FLOODFILL_INIT:
+      break;
+     case FLOODFILL_START:
+      goal_coord.y_pos = 4;
+      goal_coord.x_pos = 4;
+
+      mouse_pos.y_pos = 8;
+      mouse_pos.x_pos = 0;
       break;
   }
   

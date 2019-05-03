@@ -125,19 +125,41 @@ int gyro_reset_limit = 1000;
 
 bool go_one_cell_happening = 0;
 
+
 //timer variable
 //Timer t;
 
+//FLOODFILL VARIABLES
+struct pair{
+  int y_pos;
+  int x_pos;
+};
+
 //floodfill variables
 struct cell{
-  bool top_wall;
   bool left_wall;
   bool right_wall;
+  bool top_wall;
   bool bottom_wall;
+  int value;
+  pair coord;
 };
-int maze [16][16];
-cell stack[10];
-//save maze_center pos as a array with 2 pos first y second x
-int maze_center [2];
-int mouse_pos [1][1];
+
+//typedef struct Cell cell;
+//stack pair checks;
+struct pair goal_coord;
+
+//pair <int,int> goal_coord(4,4);
+struct pair mouse_pos;
+
+//pair <int,int> mouse_pos (8,0);
+
+const int maze_x_length = 9;
+const int maze_y_length = 9;
+int index_x_max = 8;
+int index_y_max = 8;
+
+struct cell maze[maze_y_length][maze_x_length];
+
+
 
