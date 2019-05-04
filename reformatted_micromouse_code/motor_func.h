@@ -14,8 +14,10 @@ void print_encoder_count() {
 
   Serial.print("left_count");
   Serial.println(left_count);
+  Serial.println();
   Serial.print("right_count");
   Serial.println(right_count);
+  Serial.println();
 }
 
 //Basic Motor Functions
@@ -273,22 +275,70 @@ void regulateSensorR() {
   }
 }
 
+//TEST THE ENCODER PID 
 //in the meantime this will go off good base values
 //MAKE THIS LATER INTO TAKE AVERAGE FOR ONE SIDE AND USE THAT PID
 void pid_control_one_wall() {
+  curr_left_count = left_count;
+  curr_right_count = right_count;
+ 
+  reset_error_enc ++;
+  if (reset_error_enc > 10000){
+    reset_error_enc = 0;
+    error_buildup_enc = 0;
+  }
+  
+  error_enc = abs(curr_left_count - curr_right_count);  
+  p_control_enc = error_enc * kp_enc;
 
-    motor_left = base_speed;
-    motor_right = base_speed - 20;
-    return;
+  error_buildup_enc += error_enc;
+  i_control_enc = error_buildup_enc * ki_enc;
+
+  
+
+  d_control_enc = abs(error_enc-prev_error_enc) * kd_enc;
+
+ if (curr_left_count > curr_right_count){
+   motor_left = base_speed;
+   motor_right -= (p_control + i_control + d_control); 
+  }
+ else if (curr_left_count < curr_right_count){
+   motor_left -= (p_control + i_control + d_control);
+   motor_right = base_speed;
+  }
 }
 
+//TEST THE ENCODER PID 
 //in the meantime this will go off good base values
 //MAKE THIS LATER INTO ENCODER PID
 void pid_control_no_walls() {
-    motor_left = base_speed;
-    motor_right = base_speed - 20;
-    return;
+  curr_left_count = left_count;
+  curr_right_count = right_count;
+ 
+  reset_error_enc ++;
+  if (reset_error_enc > 10000){
+    reset_error_enc = 0;
+    error_buildup_enc = 0;
+  }
+  
+  error_enc = abs(curr_left_count - curr_right_count);  
+  p_control_enc = error_enc * kp_enc;
 
+  error_buildup_enc += error_enc;
+  i_control_enc = error_buildup_enc * ki_enc;
+
+  
+
+  d_control_enc = abs(error_enc-prev_error_enc) * kd_enc;
+
+ if (curr_left_count > curr_right_count){
+   motor_left = base_speed;
+   motor_right -= (p_control + i_control + d_control); 
+  }
+ else if (curr_left_count < curr_right_count){
+   motor_left -= (p_control + i_control + d_control);
+   motor_right = base_speed;
+  }
   
 }
 
@@ -330,8 +380,8 @@ void pid_control_two_walls() {
 
     
     //d control
-    prev_error = error;
-    d_control = (error - prev_error) * kd;
+    
+    d_control = abs(error - prev_error) * kd;
 
     
     //maybe try instead of making motor left and right base_speed - pid values 
@@ -339,6 +389,7 @@ void pid_control_two_walls() {
       
     motor_left = base_speed;
     motor_right = base_speed - (p_control + i_control + d_control); 
+    prev_error = error;
     return;
   }
 
@@ -358,8 +409,8 @@ void pid_control_two_walls() {
 
 
     //d control
-    prev_error = error;
-    d_control = (error - prev_error) * kd;
+    
+    d_control = abs(error - prev_error) * kd;
 
 
 
@@ -368,6 +419,7 @@ void pid_control_two_walls() {
       
     motor_left = base_speed - (p_control + i_control + d_control); 
     motor_right = base_speed;
+    prev_error = error;
     return;
   }
 }
@@ -429,9 +481,6 @@ void random_move() {
     //go_one_cell();
     return;
   }
-  //if (abs(sensorReading_left - sensorReading_right) < 300){
-  //  return;
-  //}
 
   if (hasleftwall() && hasrightwall() && hasfrontwall()) {
     halt_until(halt_delay);
@@ -441,7 +490,6 @@ void random_move() {
     halt_until(halt_delay);
 
 
-    //
     return;
   }
 
@@ -456,7 +504,7 @@ void random_move() {
 
     return;
   }
-  //this isnt running //hopefully it runs now //STILL NOT RUNNING //It WORKS NOW
+
   else if (hasrightwall()  && !hasleftwall() && hasfrontwall()) { //|| (hasfronwall() &&(hasrightwall - hasleftwall > 200) ){//
     halt_until(halt_delay);
     forward_until(125, 125, 100);
@@ -533,7 +581,7 @@ void random_move() {
       halt_until(halt_delay);
       return;
     }
-    if (random_move == 2) {
+    else if (random_move == 2) {
       halt_until(halt_delay);
       return;
     }
@@ -569,8 +617,8 @@ void random_move() {
 
     //go_one_cell();
     return;
-
   }
+  
   return;
 
 }

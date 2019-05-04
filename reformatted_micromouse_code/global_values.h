@@ -11,28 +11,56 @@ const long error_check_interval = 8000;//12000
 
 bool first_check = true;
 
-//GLOBAL for pid
-int permReading_left;
-int permReading_middle;
-int permReading_right;
+
+
+//GLOBAL FOR PID
+
+//probably wont use these 
+//int permReading_left;
+//int permReading_middle;
+//int permReading_right;
+
+
 int base_speed = 150; // 200,150,125,150
 double kp = 0.50;//0.50,0.25,0.30,0.50,0.60
 double kd = 0.40;//0.30,0.50,0.30,0.40
 double ki = 0.0001;
-double error;
-double prev_error;
-double p_control;
-double d_control;
+double error = 0;
+double prev_error = 0;
+double p_control = 0;
+double d_control = 0;
+double i_control = 0;
 
 unsigned long error_buildup;
-double i_control;
+
 double reset_error = 0;
+
+///////////////////////////////////
 double motor_left = 125;
 double motor_right = 125;
 
+///////////////////////////////////
+
+unsigned long curr_left_count;
+unsigned long curr_right_count;
+
+double kp_enc = 0.0050;//0.50
+double kd_enc = 0.040;//0.30
+double ki_enc = 0.0001;
+double error_enc = 0;
+double prev_error_enc = 0;
+double p_control_enc = 0;
+double d_control_enc = 0;
+double i_control_enc = 0;
+
+unsigned long error_buildup_enc;
+
+double reset_error_enc = 0;
+
+
 //may not need these
-int left_ir_low_bound = 995;
-int left_ir_high_bound = 1009;
+//int left_ir_low_bound = 995;
+//int left_ir_high_bound = 1009;
 
 //Motor
 int motor_1_logic_1 = 20;
@@ -131,7 +159,7 @@ int gyro_reset_limit = 1000;
 
 
 
-bool go_one_cell_happening = 0;
+//bool go_one_cell_happening = 0;
 
 
 //timer variable

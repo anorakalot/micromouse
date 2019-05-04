@@ -147,9 +147,7 @@ void loop() {
 
 
 forward();
-//delay(1000);
-//halt_until(1000);
-//print_encoder_count();
+print_encoder_count();
 //left_turn();
 //gyro_tick();
 
