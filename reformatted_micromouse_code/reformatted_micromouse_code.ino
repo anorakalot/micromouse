@@ -22,7 +22,7 @@
 
 //floodfill libraries
 #include <stack>
-#include <utility>
+
 #include <cmath>
  
 
@@ -104,8 +104,10 @@ void setup() {
 
   gyro_init();
   gyro_tick();//sets up gyro read function
-  motor_init();
-  ir_start_func();
+  motor_init();//sets up motor tick state
+  
+  //ir_start_func(); // DONT USE THIS THE ERRORS IN READ IR SEEM BETTER
+  
   //wait_until_start_hand();
   
   
@@ -138,16 +140,18 @@ void loop() {
   motor_tick(); // does random_move
   readIR();
   error_catch();
-*/ 
-gyro_tick();
+*/
+
+
+//gyro_tick();
 //forward();
 //left_turn();
 //right_turn();
 //reverse();
-//readIR();
-//delay(1000);
+readIR();
+//delay(10);
 //Serial.println("hello");
-
+//delay(1000);
 //read_angle();
 //t.update();
 //delay(1000);

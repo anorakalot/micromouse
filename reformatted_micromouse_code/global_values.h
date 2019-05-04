@@ -111,6 +111,14 @@ int error_right;
 int error_45_left;
 int error_45_right;
 
+int error_left_sum;
+int error_middle_sum;
+int error_right_sum;
+int error_45_left_sum;
+int error_45_right_sum;
+
+
+
 //gryo values 
 //I PUT GRYO VARIABLES IN GRYO_FUNC DUE TO ERRORS
 L3G gyro;
