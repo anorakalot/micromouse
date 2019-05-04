@@ -95,6 +95,30 @@ void right_turn() {
   digitalWrite(motor_2_logic_2, LOW);
 }
 
+void left_turn(int turn_speed) {
+  digitalWrite(turn_on_en_1, HIGH);
+  digitalWrite(turn_on_en_2, HIGH);
+
+  digitalWrite(motor_1_logic_1, LOW);
+  analogWrite(motor_1_logic_2, turn_speed);
+
+  digitalWrite(motor_2_logic_1, LOW);
+  analogWrite(motor_2_logic_2, turn_speed);
+
+}
+
+
+void right_turn(int turn_speed) {
+  digitalWrite(turn_on_en_1, HIGH);
+  digitalWrite(turn_on_en_2, HIGH);
+
+  
+  digitalWrite(motor_1_logic_1, turn_speed);
+  digitalWrite(motor_1_logic_2, LOW);
+  digitalWrite(motor_2_logic_1, turn_speed);
+  digitalWrite(motor_2_logic_2, LOW);
+}
+
 
 void forward(int left_speed, int right_speed) {
   digitalWrite(turn_on_en_1, HIGH);
@@ -106,44 +130,74 @@ void forward(int left_speed, int right_speed) {
   digitalWrite(motor_2_logic_1, LOW);
 }
 
-//Encoder turn functions 
+////Encoder turn functions 
+//void left_turn_until() {//330,240,220
+//  unsigned long curr = left_count;//382,380,375,378,380,383,390,380,382,365
+//  while ( left_count - curr < 232) { //380 330 ,280,290,300,310,320,330,340,350,360,380,365,360
+//    left_turn();                  //350,360,380,390
+//  }
+//}
+
+//GYROSCOPE turn functions 
 void left_turn_until() {//330,240,220
-  unsigned long curr = left_count;//382,380,375,378,380,383,390,380,382,365
-  while ( left_count - curr < 232) { //380 330 ,280,290,300,310,320,330,340,350,360,380,365,360
+  gyro_angle = 0;
+  gyro_sum = 0;
+  while ( gyro_angle  < 150) { //380 330 ,280,290,300,310,320,330,340,350,360,380,365,360
+    gyro_tick();
     left_turn();                  //350,360,380,390
   }
 }
-void left_with_wall() {//330,240,340
-  unsigned long curr = left_count;//382,380,375,378,380,383,390,380,382,365
-  while ( left_count - curr < 356  ) { //380 330 ,280,290,300,310,320,330,340,350,360,380,365,360
-    left_turn();                  //350,360,380,390
-  }               //318
-}
+////PROBABLY DELETE THESE WITH WALL FUNC
+//void left_with_wall() {//330,240,340
+//  unsigned long curr = left_count;//382,380,375,378,380,383,390,380,382,365
+//  while ( left_count - curr < 356  ) { //380 330 ,280,290,300,310,320,330,340,350,360,380,365,360
+//    left_turn();                  //350,360,380,390
+//  }               //318
+//}
 
-//use left_count
-void right_turn_until() {
-  unsigned long curr = left_count;//335,243 
-  while ( left_count - curr < 265) { //320,340, 370,300,290,280,270,260,280,300,325,330
-    right_turn();               //325,335
-  }                 //330,264,270,275
-}
+////use left_count
+//void right_turn_until() {
+//  unsigned long curr = left_count;//335,243 
+//  while ( left_count - curr < 265) { //320,340, 370,300,290,280,270,260,280,300,325,330
+//    right_turn();               //325,335
+//  }                 //330,264,270,275
+//}
 
-void right_with_wall() {
-  unsigned long curr = left_count;//335
-  while ( left_count - curr <310  ) { //320,340, 370,300,290,280,270,260,280,300,325,330
-    right_turn();               //325,335
-  }                 //330
-}
-
-void reverse_until() {
-  unsigned long curr_l = left_count;
-  //use left_count instead of right_count
-  while ( left_count - curr_l < 100) { //800,830, 860,870,790,800,810,840,860,870
-    reverse();
+void right_turn_until() {//330,240,220
+  gyro_angle = 0;
+  gyro_sum = 0;
+  while ( abs(gyro_angle)  < 150) { //380 330 ,280,290,300,310,320,330,340,350,360,380,365,360
+    gyro_tick();
+    right_turn();                  //350,360,380,390
   }
 }
 
-void reverse_turn_until() {
+
+////PROBABLY DELETE THESE WITH WALL FUNC
+//void right_with_wall() {
+//  unsigned long curr = left_count;//335
+//  while ( left_count - curr <310  ) { //320,340, 370,300,290,280,270,260,280,300,325,330
+//    right_turn();               //325,335
+//  }                 //330
+//}
+//
+//void reverse_until() {
+//  unsigned long curr_l = left_count;
+//  //use left_count instead of right_count
+//  while ( left_count - curr_l < 100) { //800,830, 860,870,790,800,810,840,860,870
+//    reverse();
+//  }
+//}
+void reverse_until() {//330,240,220
+  gyro_angle = 0;
+  gyro_sum = 0;
+  while ( gyro_angle  < 140) { //380 330 ,280,290,300,310,320,330,340,350,360,380,365,360
+    gyro_tick();
+    left_turn();                  //350,360,380,390
+  }
+}
+/*
+  void reverse_turn_until() {
   unsigned long curr_l = left_count;
   //use left_count instead of right_count
   unsigned long curr_r = left_count;
@@ -157,6 +211,15 @@ void reverse_turn_until() {
     while ( left_count - curr_r < 720) { //800,830, 860,870,790
       right_turn();
     }
+  }
+}
+*/
+void reverse_turn_until() {//330,240,220
+  gyro_angle = 0;
+  gyro_sum = 0;
+  while ( gyro_angle  < 350) { //380 330 ,280,290,300,310,320,330,340,350,360,380,365,360
+    gyro_tick();
+    left_turn();                  //350,360,380,390
   }
 }
 
@@ -189,7 +252,7 @@ void regulateSensorL() {
    
    //if (sensorReading_left - permReading_left < 0){ 
   if (sensorReading_45_left < 0){
-    sensorReading_left = ~sensorReading_left + 1;
+    sensorReading_45_left = ~sensorReading_45_left + 1;
   }
 }
 
@@ -205,8 +268,8 @@ void regulateSensorR() {
 
     
    //if (sensorReading_right - permReading_right < 0){ 
-  if (sensorReading_45_left < 0){  
-    sensorReading_right = ~sensorReading_right + 1;
+  if (sensorReading_45_right < 0){  
+    sensorReading_45_right = ~sensorReading_45_right + 1;
   }
 }
 
@@ -387,8 +450,8 @@ void random_move() {
     halt_until(halt_delay);
     forward_until(125, 125, 100);
     halt_until(halt_delay);
-    //right_turn_until();
-    right_with_wall();
+    right_turn_until();
+    //right_with_wall();
     halt_until(halt_delay);
 
     return;
@@ -398,8 +461,8 @@ void random_move() {
     halt_until(halt_delay);
     forward_until(125, 125, 100);
     halt_until(halt_delay);
-    //left_turn_until();
-    left_with_wall();
+    left_turn_until();
+    //left_with_wall();
     halt_until(halt_delay);
 
     return;
@@ -446,8 +509,8 @@ void random_move() {
       halt_until(halt_delay);
       forward_until(125, 125, 100);
       halt_until(halt_delay);
-      //right_turn_until();
-      right_with_wall();
+      right_turn_until();
+      //right_with_wall();
       halt_until(halt_delay);
       return;
     }
@@ -455,8 +518,8 @@ void random_move() {
       halt_until(halt_delay);
       forward_until(125, 125, 100);
       halt_until(halt_delay);
-      //left_turn_until();
-      left_with_wall();
+      left_turn_until();
+      //left_with_wall();
       halt_until(halt_delay);
       return;
     }

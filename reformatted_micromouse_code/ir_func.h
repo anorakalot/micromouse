@@ -1,23 +1,23 @@
 
 
 //HAS functions should be checked before every single comp
-bool hasfrontwall() {       //200,360
-  if (sensorReading_middle > 360 ) { //300 , 350,370,400,275,330,360,500
+bool hasfrontwall() {       
+  if (sensorReading_middle > 150 ) { 
     return true;//408
   }
   return false;
 }
 
-bool hasleftwall() {     //220,450,430,450,430,420 ,320                               //350 maybe a bit too high
-  if (sensorReading_left > 525 ) { //100 ,500,300,250,275,400,350,310,320,343,410,420,550,500,600,500,420
+bool hasleftwall() {     
+  if (sensorReading_left > 120 ) { //
     return true;
   }
   return false;
 }
 
 
-bool hasrightwall() {     //220,340,330.300,420,320,330
-  if (sensorReading_right > 367 ) { //350 ,500,300,250,275 ,280,320,344,350
+bool hasrightwall() {     
+  if (sensorReading_right > 120 ) { //
     return true;
   }
   return false;
@@ -127,7 +127,7 @@ void readIR() {
 void wait_until_start_hand() {
 
   while (first_check) {
-    //readIR();
+    readIR();
     //readIR_map();
     //delay(500);
 
@@ -144,7 +144,7 @@ void wait_until_start_hand() {
 }
 
 
-
+/*
 void ir_start_func(){
   digitalWrite(sensor_left_power,LOW);
   digitalWrite(sensor_right_power,LOW);
@@ -191,7 +191,7 @@ void ir_start_func(){
   
   
 }
-
+*/
 /*
 //try having more of a delay between digital write high and analog reading the sensor
 //putting digital write high power in previous state action 

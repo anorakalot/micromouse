@@ -111,11 +111,11 @@ int error_right;
 int error_45_left;
 int error_45_right;
 
-int error_left_sum;
-int error_middle_sum;
-int error_right_sum;
-int error_45_left_sum;
-int error_45_right_sum;
+//int error_left_sum;
+//int error_middle_sum;
+//int error_right_sum;
+//int error_45_left_sum;
+//int error_45_right_sum;
 
 
 

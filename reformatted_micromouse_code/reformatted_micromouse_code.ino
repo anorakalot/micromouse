@@ -108,7 +108,7 @@ void setup() {
   
   //ir_start_func(); // DONT USE THIS THE ERRORS IN READ IR SEEM BETTER
   
-  //wait_until_start_hand();
+  wait_until_start_hand();
   
   
 
@@ -143,12 +143,19 @@ void loop() {
 */
 
 
-//gyro_tick();
 //forward();
 //left_turn();
+//gyro_tick();
+
+
+halt_until(halt_delay);
+//left_turn_until(); //good
+//right_turn_until(); // good
+reverse_turn_until(); // good
+halt_until(halt_delay);
 //right_turn();
 //reverse();
-readIR();
+//readIR();
 //delay(10);
 //Serial.println("hello");
 //delay(1000);
@@ -157,6 +164,7 @@ readIR();
 //delay(1000);
 //readIR();
 //Serial.println("HELLOOOO");
+//return;
 }
 
 
