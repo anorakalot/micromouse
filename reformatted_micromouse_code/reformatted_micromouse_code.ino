@@ -111,7 +111,7 @@ void setup() {
   
   //ir_start_func(); // DONT USE THIS THE ERRORS IN READ IR SEEM BETTER
   
-  wait_until_start_hand();
+  //wait_until_start_hand();
   
   
 
@@ -145,13 +145,16 @@ void loop() {
   error_catch();
 //*/
 
-//forward();
-go_one_cell();
-//delay(300);
+forward(base_speed,base_speed+25);
+//go_one_cell();
+delay(300);
 halt_until(halt_delay);
 delay(1000);
+
+
 //forward();
-//delay(1000);
+//  readIR();
+//  delay(900);
 //halt_until(1000);
 //print_encoder_count();
 //left_turn();

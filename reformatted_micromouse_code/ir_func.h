@@ -36,15 +36,15 @@ void readIR() {
   error_left = analogRead(sensor_left);
   error_middle = analogRead(sensor_middle);
   error_right = analogRead(sensor_right);
-  error_45_left = analogRead(sensor_45_left);
-  error_45_right = analogRead(sensor_45_right);
+//  error_45_left = analogRead(sensor_45_left);
+//  error_45_right = analogRead(sensor_45_right);
 
   digitalWrite(sensor_left_power,HIGH);
   digitalWrite(sensor_right_power,HIGH);
   digitalWrite(sensor_middle_power,HIGH);
   
-  digitalWrite(sensor_45_right_power,LOW);
-  digitalWrite(sensor_45_left_power,LOW);
+//  digitalWrite(sensor_45_right_power,LOW);
+//  digitalWrite(sensor_45_left_power,LOW);
 
 
 
@@ -54,24 +54,24 @@ void readIR() {
   sensorReading_right = analogRead(sensor_right);
 
   
+//  digitalWrite(sensor_left_power,LOW);
+//  digitalWrite(sensor_right_power,LOW);
+//  digitalWrite(sensor_middle_power,LOW);
+//  
+//  digitalWrite(sensor_45_right_power,HIGH);
+//  digitalWrite(sensor_45_left_power,HIGH);
+//
+//  delay(50);
+//  sensorReading_45_left = analogRead(sensor_45_left);
+//  sensorReading_45_right = analogRead(sensor_45_right);
+//  
   digitalWrite(sensor_left_power,LOW);
   digitalWrite(sensor_right_power,LOW);
   digitalWrite(sensor_middle_power,LOW);
   
-  digitalWrite(sensor_45_right_power,HIGH);
-  digitalWrite(sensor_45_left_power,HIGH);
-
-  delay(50);
-  sensorReading_45_left = analogRead(sensor_45_left);
-  sensorReading_45_right = analogRead(sensor_45_right);
-  
-  digitalWrite(sensor_left_power,LOW);
-  digitalWrite(sensor_right_power,LOW);
-  digitalWrite(sensor_middle_power,LOW);
-  
-  digitalWrite(sensor_45_right_power,LOW);
-  digitalWrite(sensor_45_left_power,LOW);
-  
+//  digitalWrite(sensor_45_right_power,LOW);
+//  digitalWrite(sensor_45_left_power,LOW);
+//  
 
   Serial.print("Sensor Reading without Minus Errors: ");
   Serial.print( "LEFT : ");
@@ -82,34 +82,41 @@ void readIR() {
   Serial.println(sensorReading_right);
 
   
-  Serial.print( "45_LEFT : ");
-  Serial.println(sensorReading_45_left);
-  
-  Serial.print( "45_RIGHT : ");
-  Serial.println(sensorReading_45_right);
+//  Serial.print( "45_LEFT : ");
+//  Serial.println(sensorReading_45_left);
+//  
+//  Serial.print( "45_RIGHT : ");
+//  Serial.println(sensorReading_45_right);
 
   sensorReading_left -= error_left;
   sensorReading_middle -= error_middle;
   sensorReading_right -= error_right;
-  sensorReading_45_left -= error_45_left;
-  sensorReading_45_right -= error_45_right;
+//  sensorReading_45_left -= error_45_left;
+//  sensorReading_45_right -= error_45_right;
 
-
-  Serial.print("Sensor Reading with Minus Errors: ");
+  //map(value, fromLow, fromHigh, toLow, toHigh)
+  
+//  sensorReading_45_left = map(sensorReading_45_left, 50, 600, 0, 200);
+//  sensorReading_45_right = map(sensorReading_45_right, 60, , 0, 200);
+                                            //20
+  sensorReading_left = map(sensorReading_left,18 , 380, 0, 300);
+  sensorReading_right = map(sensorReading_right,32 , 550, 0, 300);
+                                              //38
+  Serial.println("Sensor Reading with Minus Errors: ");
   Serial.print( "LEFT : ");
   Serial.println(sensorReading_left);
   Serial.print( "MIDDLE : ");
   Serial.println(sensorReading_middle);
   Serial.print( "RIGHT : ");
   Serial.println(sensorReading_right);
-
-  sensorReading_45_right -= 20;
-  Serial.print( "45_LEFT : ");
-  Serial.println(sensorReading_45_left);
   
-  Serial.print( "45_RIGHT : ");
-  Serial.println(sensorReading_45_right);
- 
+  //sensorReading_45_right -= 20;
+//  Serial.print( "45_LEFT : ");
+//  Serial.println(sensorReading_45_left);
+//  
+//  Serial.print( "45_RIGHT : ");
+//  Serial.println(sensorReading_45_right);
+// 
 //  Serial.println("ERRORS");
 //  Serial.println(error_left);
 //  Serial.println(error_middle);

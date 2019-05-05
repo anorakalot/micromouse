@@ -122,12 +122,12 @@ void right_turn(int turn_speed) {
 }
 
 
-void forward(int left_speed, int right_speed) {
+void forward(double left_speed, double right_speed) {
   digitalWrite(turn_on_en_1, HIGH);
   digitalWrite(turn_on_en_2, HIGH);
 
-  analogWrite(motor_1_logic_2,LOW );
-  digitalWrite(motor_1_logic_1,left_speed);
+  digitalWrite(motor_1_logic_2,LOW );
+  analogWrite(motor_1_logic_1,left_speed);
   analogWrite(motor_2_logic_2, right_speed);
   digitalWrite(motor_2_logic_1, LOW);
 }
@@ -242,6 +242,7 @@ void forward_until(int left_speed, int right_speed, unsigned long stop_time) {
 
 //gets sensor data from l to use for pid control function
 //all it does is take the sensors reading and if its less than 0 make it plus one
+//EITHER MAP IN THIS FUNC OR IN READIR
 void regulateSensorL() {
   //readIR();
   //sensorReading_left = analogRead(sensor_left);
@@ -253,15 +254,19 @@ void regulateSensorL() {
   
    
    //if (sensorReading_left - permReading_left < 0){ 
-  if (sensorReading_45_left < 0){
-    sensorReading_45_left = ~sensorReading_45_left + 1;
+//  if (sensorReading_45_left < 0){
+//    sensorReading_45_left = ~sensorReading_45_left + 1;
+//  }
+
+   if (sensorReading_left < 0){
+    sensorReading_left = ~sensorReading_left + 1;
   }
-  
   
 }
 
 //gets sensor data from r to use for pid control function
 //all it does is take the sensors reading and if its less than 0 make it plus one
+//EITHER MAP IN THIS FUNC OR IN READIR
 void regulateSensorR() {
   //sensorReading_right = analogRead(sensor_right);
   //readIR();
@@ -269,11 +274,15 @@ void regulateSensorR() {
   //sensorReading_right = map(sensorReading_right, 180, 820, 0, 200);
 
   //sensorReading_right = sensorReading_right - permReading_right;
-
+  
+  
     
    //if (sensorReading_right - permReading_right < 0){ 
-  if (sensorReading_45_right < 0){  
-    sensorReading_45_right = ~sensorReading_45_right + 1;
+//  if (sensorReading_45_right < 0){  
+//    sensorReading_45_right = ~sensorReading_45_right + 1;
+//  }
+  if (sensorReading_right < 0){  
+    sensorReading_right = ~sensorReading_right + 1;
   }
 }
 
@@ -368,9 +377,11 @@ void pid_control_two_walls() {
   }
 
   //too close left
-  if (sensorReading_45_left > sensorReading_45_right) {
+  //if (sensorReading_45_left > sensorReading_45_right) {
+  if (sensorReading_left > sensorReading_right) {
     //error value
-    error = abs(sensorReading_45_left - sensorReading_45_right);
+    //error = abs(sensorReading_45_left - sensorReading_45_right);
+    error = abs(sensorReading_left - sensorReading_right);
 
     //p control 
     p_control = error * kp;
@@ -389,17 +400,23 @@ void pid_control_two_walls() {
     //maybe try instead of making motor left and right base_speed - pid values 
     //try motor_l + pid_values and motor_r - pid values
       
-    motor_left = base_speed;
+    motor_left = base_speed + (p_control);
     motor_right = base_speed - (p_control); //+ i_control + d_control); 
+//    motor_left += (p_control + d_control);
+//    motor_right -= (p_control + d_control);
+
+//    
     prev_error = error;
     return;
   }
 
   //too close right
-  if (sensorReading_45_right > sensorReading_45_left) {
+//  if (sensorReading_45_right > sensorReading_45_left) {
+  if (sensorReading_right > sensorReading_left) {
 
     //error value
-    error = abs(sensorReading_45_left - sensorReading_45_right);
+    //error = abs(sensorReading_45_left - sensorReading_45_right);
+    error = abs(sensorReading_left - sensorReading_right);
     
 
     //p control 
@@ -420,7 +437,9 @@ void pid_control_two_walls() {
     //try motor_l - pid_values and motor_r + pid values
       
     motor_left = base_speed - (p_control); //+ i_control + d_control); 
-    motor_right = base_speed;
+    motor_right = base_speed + (p_control);
+//    motor_left -= (p_control + d_control);
+//    motor_right += (p_control + d_control);
     prev_error = error;
     return;
   }
@@ -448,6 +467,7 @@ void pid_control(){
 //      else{
 //        pid_control_two_walls();
 //      }
+//  pid_control_two_walls();
   pid_control_two_walls();
   return;
 }
@@ -458,7 +478,7 @@ void go_one_cell() {
   unsigned long curr = left_count;//935
   while (left_count - curr < 945 ) { // 450,600, 800,950,900,960,955,945,950,945,930,925,940
     readIR();
-    //print_encoder_count();
+    print_encoder_count();
     //pid_control_two_walls();
     //IF PID IS DONE IN A STATE MACHINE I WONT NEED PID IN THIS FUNCTION 
     //HAVING IN STATE MACHINES COULD MEAN I COULD HAVE BETTER READ RESULTS
