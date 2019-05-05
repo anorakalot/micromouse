@@ -143,10 +143,14 @@ void loop() {
   motor_tick(); // does random_move
   readIR();
   error_catch();
-*/
+//*/
 
-
-forward();
+//forward();
+go_one_cell();
+//delay(300);
+halt_until(halt_delay);
+delay(1000);
+//forward();
 //delay(1000);
 //halt_until(1000);
 //print_encoder_count();

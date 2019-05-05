@@ -103,7 +103,7 @@ void readIR() {
   Serial.print( "RIGHT : ");
   Serial.println(sensorReading_right);
 
-  
+  sensorReading_45_right -= 20;
   Serial.print( "45_LEFT : ");
   Serial.println(sensorReading_45_left);
   
@@ -134,6 +134,7 @@ void wait_until_start_hand() {
     if (hasfrontwall()) {
       first_check = false;
       delay(500);
+      Serial.println(sensorReading_middle);
       prev_sensorReading_left = sensorReading_left;
       prev_sensorReading_middle = sensorReading_middle;
       prev_sensorReading_right = sensorReading_right;

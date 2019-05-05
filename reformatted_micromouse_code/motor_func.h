@@ -256,6 +256,8 @@ void regulateSensorL() {
   if (sensorReading_45_left < 0){
     sensorReading_45_left = ~sensorReading_45_left + 1;
   }
+  
+  
 }
 
 //gets sensor data from r to use for pid control function
@@ -366,9 +368,9 @@ void pid_control_two_walls() {
   }
 
   //too close left
-  if (sensorReading_left > sensorReading_right) {
+  if (sensorReading_45_left > sensorReading_45_right) {
     //error value
-    error = abs(sensorReading_left - sensorReading_right);
+    error = abs(sensorReading_45_left - sensorReading_45_right);
 
     //p control 
     p_control = error * kp;
@@ -388,16 +390,16 @@ void pid_control_two_walls() {
     //try motor_l + pid_values and motor_r - pid values
       
     motor_left = base_speed;
-    motor_right = base_speed - (p_control + i_control + d_control); 
+    motor_right = base_speed - (p_control); //+ i_control + d_control); 
     prev_error = error;
     return;
   }
 
   //too close right
-  if (sensorReading_right > sensorReading_left) {
+  if (sensorReading_45_right > sensorReading_45_left) {
 
     //error value
-    error = abs(sensorReading_left - sensorReading_right);
+    error = abs(sensorReading_45_left - sensorReading_45_right);
     
 
     //p control 
@@ -417,7 +419,7 @@ void pid_control_two_walls() {
     //maybe try instead of making motor left and right base_speed - pid values 
     //try motor_l - pid_values and motor_r + pid values
       
-    motor_left = base_speed - (p_control + i_control + d_control); 
+    motor_left = base_speed - (p_control); //+ i_control + d_control); 
     motor_right = base_speed;
     prev_error = error;
     return;
@@ -427,23 +429,27 @@ void pid_control_two_walls() {
 //chooses which pid to do
 void pid_control(){
   readIR();
-    if (hasleftwall() == true && hasrightwall() == true){
-        pid_control_two_walls();
-      }
-      else if (hasleftwall() == true && hasrightwall() == false){
-        pid_control_one_wall();
-      }
-      else if (hasleftwall() == false && hasrightwall() == true){
-       pid_control_one_wall();
-      
-      }
-      else if (hasleftwall() == false && hasrightwall() == false){
-        pid_control_no_walls();
-      
-         }
-      else{
-        pid_control_two_walls();
-      }
+//    
+//     
+//     if (hasleftwall() == true && hasrightwall() == true){
+//        pid_control_two_walls();
+//      }
+//      else if (hasleftwall() == true && hasrightwall() == false){
+//        pid_control_one_wall();
+//      }
+//      else if (hasleftwall() == false && hasrightwall() == true){
+//       pid_control_one_wall();
+//      
+//      }
+//      else if (hasleftwall() == false && hasrightwall() == false){
+//        pid_control_no_walls();
+//      
+//         }
+//      else{
+//        pid_control_two_walls();
+//      }
+  pid_control_two_walls();
+  return;
 }
 
 
@@ -452,7 +458,7 @@ void go_one_cell() {
   unsigned long curr = left_count;//935
   while (left_count - curr < 945 ) { // 450,600, 800,950,900,960,955,945,950,945,930,925,940
     readIR();
-    print_encoder_count();
+    //print_encoder_count();
     //pid_control_two_walls();
     //IF PID IS DONE IN A STATE MACHINE I WONT NEED PID IN THIS FUNCTION 
     //HAVING IN STATE MACHINES COULD MEAN I COULD HAVE BETTER READ RESULTS
@@ -706,7 +712,7 @@ void motor_tick(){
       break;
     case GO_ONE_CELL:
       //go_one_cell_happening = 1;
-      go_one_cell();//this call pid inside of it
+      go_one_cell();//this calls pid inside of it
       halt_until(400);
       break;
     case RANDOM_MOVE:
