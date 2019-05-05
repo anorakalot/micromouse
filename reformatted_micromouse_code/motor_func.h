@@ -302,10 +302,10 @@ void pid_control_one_wall() {
 
  if (curr_left_count > curr_right_count){
    motor_left = base_speed;
-   motor_right -= (p_control + i_control + d_control); 
+   motor_right = (base_speed -  (p_control + i_control + d_control));
   }
  else if (curr_left_count < curr_right_count){
-   motor_left -= (p_control + i_control + d_control);
+   motor_left = (base_speed -  (p_control + i_control + d_control));
    motor_right = base_speed;
   }
 }
@@ -335,10 +335,10 @@ void pid_control_no_walls() {
 
  if (curr_left_count > curr_right_count){
    motor_left = base_speed;
-   motor_right -= (p_control + i_control + d_control); 
+   motor_right = (base_speed  - (p_control + i_control + d_control)); 
   }
  else if (curr_left_count < curr_right_count){
-   motor_left -= (p_control + i_control + d_control);
+   motor_left = (base_speed -  (p_control + i_control + d_control));
    motor_right = base_speed;
   }
   
