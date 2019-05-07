@@ -111,7 +111,7 @@ void setup() {
   
   //ir_start_func(); // DONT USE THIS THE ERRORS IN READ IR SEEM BETTER
   
-  //wait_until_start_hand();
+  wait_until_start_hand();
   
   
 
@@ -133,24 +133,23 @@ void setup() {
 
 void loop() {
 //main sequence 
- /* 
   //readIR_map();
-  readIR();
-  
-  motor_tick();//does go_one_cell
-  
-  readIR();
-  motor_tick(); // does random_move
-  readIR();
-  error_catch();
-//*/
+//  readIR();
+//  
+//  motor_tick();//does go_one_cell
+//  
+//  readIR();
+//  motor_tick(); // does random_move
+//  readIR();
+//  error_catch();
 
-forward(base_speed,base_speed+25);
+
+////forward(base_speed,base_speed);
 //go_one_cell();
-delay(300);
-halt_until(halt_delay);
-delay(1000);
-
+//
+//halt_until(halt_delay);
+//delay(1000);
+//
 
 //forward();
 //  readIR();
@@ -158,14 +157,16 @@ delay(1000);
 //halt_until(1000);
 //print_encoder_count();
 //left_turn();
-//gyro_tick();
-
-
-//halt_until(halt_delay);
-////left_turn_until(); //good
-////right_turn_until(); // good
-//reverse_turn_until(); // good
-//halt_until(halt_delay);
+////gyro_tick();
+//
+//
+halt_until(halt_delay);
+left_turn_until(); //good
+halt_until(halt_delay);
+right_turn_until(); // good 
+halt_until(halt_delay);
+reverse_turn_until(); // good
+halt_until(halt_delay);
 
 
 

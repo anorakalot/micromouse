@@ -141,10 +141,10 @@ void forward(double left_speed, double right_speed) {
 //}
 
 //GYROSCOPE turn functions 
-void left_turn_until() {//330,240,220
+void left_turn_until() {
   gyro_angle = 0;
   gyro_sum = 0;
-  while ( gyro_angle  < 150) { //380 330 ,280,290,300,310,320,330,340,350,360,380,365,360
+  while (  abs(gyro_angle)  <130 ) { //150, 175,120,110
     gyro_tick();
     left_turn();                  //350,360,380,390
   }
@@ -168,7 +168,7 @@ void left_turn_until() {//330,240,220
 void right_turn_until() {//330,240,220
   gyro_angle = 0;
   gyro_sum = 0;
-  while ( abs(gyro_angle)  < 150) { //380 330 ,280,290,300,310,320,330,340,350,360,380,365,360
+  while ( abs(gyro_angle)  <130) { //150,175,120,110 
     gyro_tick();
     right_turn();                  //350,360,380,390
   }
@@ -183,21 +183,21 @@ void right_turn_until() {//330,240,220
 //  }                 //330
 //}
 //
-//void reverse_until() {
-//  unsigned long curr_l = left_count;
-//  //use left_count instead of right_count
-//  while ( left_count - curr_l < 100) { //800,830, 860,870,790,800,810,840,860,870
-//    reverse();
-//  }
-//}
-void reverse_until() {//330,240,220
-  gyro_angle = 0;
-  gyro_sum = 0;
-  while ( gyro_angle  < 140) { //380 330 ,280,290,300,310,320,330,340,350,360,380,365,360
-    gyro_tick();
-    left_turn();                  //350,360,380,390
+void reverse_until() {
+  unsigned long curr_l = left_count;
+  //use left_count instead of right_count
+  while ( left_count - curr_l < 100) { //800,830, 860,870,790,800,810,840,860,870
+    reverse();
   }
 }
+//void reverse_until() {//330,240,220
+//  gyro_angle = 0;
+//  gyro_sum = 0;
+//  while ( gyro_angle  < 140) { //380 330 ,280,290,300,310,320,330,340,350,360,380,365,360
+//    gyro_tick();
+//    left_turn();                  //350,360,380,390
+//  }
+//}
 /*
   void reverse_turn_until() {
   unsigned long curr_l = left_count;
@@ -219,9 +219,9 @@ void reverse_until() {//330,240,220
 void reverse_turn_until() {//330,240,220
   gyro_angle = 0;
   gyro_sum = 0;
-  while ( gyro_angle  < 350) { //380 330 ,280,290,300,310,320,330,340,350,360,380,365,360
+  while ( abs(gyro_angle)  <305 ) { //350,330,305
     gyro_tick();
-    left_turn();                  //350,360,380,390
+    right_turn();                  //350,360,380,390
   }
 }
 
@@ -233,8 +233,8 @@ void forward_until(int left_speed, int right_speed, unsigned long stop_time) {
   digitalWrite(turn_on_en_1, HIGH);
   digitalWrite(turn_on_en_2, HIGH);
 
-  analogWrite(motor_1_logic_2,LOW );
-  digitalWrite(motor_1_logic_1,left_speed);
+  digitalWrite(motor_1_logic_2,LOW );
+  analogWrite(motor_1_logic_1,left_speed);
   analogWrite(motor_2_logic_2, right_speed);
   digitalWrite(motor_2_logic_1, LOW);
   }
@@ -310,12 +310,12 @@ void pid_control_one_wall() {
   d_control_enc = abs(error_enc-prev_error_enc) * kd_enc;
 
  if (curr_left_count > curr_right_count){
-   motor_left = base_speed;
+   motor_left = base_speed +  (p_control + i_control + d_control);
    motor_right = (base_speed -  (p_control + i_control + d_control));
   }
  else if (curr_left_count < curr_right_count){
    motor_left = (base_speed -  (p_control + i_control + d_control));
-   motor_right = base_speed;
+   motor_right = base_speed +  (p_control + i_control + d_control);
   }
 }
 
@@ -343,12 +343,12 @@ void pid_control_no_walls() {
   d_control_enc = abs(error_enc-prev_error_enc) * kd_enc;
 
  if (curr_left_count > curr_right_count){
-   motor_left = base_speed;
-   motor_right = (base_speed  - (p_control + i_control + d_control)); 
+   motor_left = base_speed +  (p_control);// + i_control + d_control);
+   motor_right = base_speed  - (p_control);// + i_control + d_control)); 
   }
  else if (curr_left_count < curr_right_count){
-   motor_left = (base_speed -  (p_control + i_control + d_control));
-   motor_right = base_speed;
+   motor_left = base_speed -  (p_control) ;//+ i_control + d_control));
+   motor_right = base_speed +  (p_control) ;//+ i_control + d_control);
   }
   
 }
@@ -357,14 +357,6 @@ void pid_control_two_walls() {
   readIR();
 
 
-  //goes off motor values that are good enough for short times goind blind
-  //ends the pid control function here
-//  if (hasleftwall() != true || hasrightwall() != true) {
-//    motor_left = base_speed;
-//    motor_right = base_speed - 20;
-//    return;
-//  }
-  
   regulateSensorL();
   regulateSensorR();
 
@@ -375,10 +367,6 @@ void pid_control_two_walls() {
     reset_error = 0;
     error_buildup = 0;
   }
-
-  //too close left
-  //if (sensorReading_45_left > sensorReading_45_right) {
-  if (sensorReading_left > sensorReading_right) {
     //error value
     //error = abs(sensorReading_45_left - sensorReading_45_right);
     error = abs(sensorReading_left - sensorReading_right);
@@ -397,11 +385,16 @@ void pid_control_two_walls() {
     d_control = abs(error - prev_error) * kd;
 
     
+
+  //too close left
+  if (sensorReading_45_left > sensorReading_45_right) {
+//  if (sensorReading_left > sensorReading_right) {
+
     //maybe try instead of making motor left and right base_speed - pid values 
     //try motor_l + pid_values and motor_r - pid values
       
-    motor_left = base_speed + (p_control);
-    motor_right = base_speed - (p_control); //+ i_control + d_control); 
+    motor_left = base_speed; //+ (p_control);
+    motor_right = base_speed - (p_control);//+ i_control + d_control); 
 //    motor_left += (p_control + d_control);
 //    motor_right -= (p_control + d_control);
 
@@ -411,38 +404,23 @@ void pid_control_two_walls() {
   }
 
   //too close right
-//  if (sensorReading_45_right > sensorReading_45_left) {
-  if (sensorReading_right > sensorReading_left) {
+  if (sensorReading_45_right > sensorReading_45_left) {
+//  else if (sensorReading_right > sensorReading_left) {
 
-    //error value
-    //error = abs(sensorReading_45_left - sensorReading_45_right);
-    error = abs(sensorReading_left - sensorReading_right);
     
-
-    //p control 
-    p_control = error * kp;
-
-    //i control
-    error_buildup += error;
-    i_control = error_buildup * ki;
-
-
-    //d control
-    
-    d_control = abs(error - prev_error) * kd;
-
 
 
     //maybe try instead of making motor left and right base_speed - pid values 
     //try motor_l - pid_values and motor_r + pid values
       
     motor_left = base_speed - (p_control); //+ i_control + d_control); 
-    motor_right = base_speed + (p_control);
+    motor_right = base_speed; //+ (p_control);
 //    motor_left -= (p_control + d_control);
 //    motor_right += (p_control + d_control);
     prev_error = error;
     return;
   }
+
 }
 
 //chooses which pid to do
@@ -468,7 +446,9 @@ void pid_control(){
 //        pid_control_two_walls();
 //      }
 //  pid_control_two_walls();
+
   pid_control_two_walls();
+  //pid_control_no_walls();
   return;
 }
 
