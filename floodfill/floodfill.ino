@@ -20,12 +20,15 @@ struct pair{
 
 //floodfill variables
 struct cell{
+  //1 means there is a wall
+  //0 means there is no wall
   bool left_wall;
   bool right_wall;
   bool top_wall;
   bool bottom_wall;
   int value;
-  pair coord;
+  //probably won't need coord since its kept track of in other pairs
+  //pair coord;
   //this bool is so the mouse doesn't go to places it already has been
   //implement into algorithm later after 
   bool visited;
@@ -48,14 +51,26 @@ struct pair cell_check;
 struct pair neighbor_to_push;
 //pair <int,int> mouse_pos (8,0);
 
-const int maze_x_length = 16;
-const int maze_y_length = 16;
-int index_x_max = 15;
-int index_y_max = 15;
+//this is for real maze
+//const int maze_x_length = 16;
+//const int maze_y_length = 16;
+//int index_x_max = 15;
+//int index_y_max = 15;
+
+//this is for testings
+const int maze_x_length = 10;
+const int maze_y_length = 10;
+int index_x_max = 9;
+int index_y_max = 9;
+
 
 struct cell maze[maze_y_length][maze_x_length];
 
-
+// 0 for going left
+//1 for going to the top
+//2 for going to the right
+//3 for going to the bottom
+int orientation;
 
                                                                                           //FLOODFILL_MOVE_TO_NEXT_SPACE        
 enum FLOODFILL_STATES{FLOODFILL_INIT,FLOODFILL_START,FLOODFILL_POS_CHECK,FLOODFILL_STACK_CHECK,FLOODFILL_MOVE_TO_NEXT_SPACE,FLOODFILL_END} floodfill_state;
@@ -100,6 +115,8 @@ void floodfill_tick(){
       floodfill_state = FLOODFILL_POS_CHECK;
       break;
     case FLOODFILL_END:
+      //keep it in end state 
+      floodfill_state = FLOODFILL_END;
       break;
     default:
       break;
@@ -108,10 +125,10 @@ void floodfill_tick(){
     case FLOODFILL_INIT:
       break;
      case FLOODFILL_START:
-      goal_coord.y_pos = 4;
-      goal_coord.x_pos = 4;
+      goal_coord.y_pos = 0;
+      goal_coord.x_pos = 9;
 
-      mouse_pos.y_pos = 8;
+      mouse_pos.y_pos = 9;
       mouse_pos.x_pos = 0;
 
       for (int x = 0; x < maze_x_length; ++x){
@@ -120,6 +137,13 @@ void floodfill_tick(){
           maze[y][x].value = abs(goal_coord.y_pos - y) + abs(goal_coord.x_pos - x);
         }
       }
+      maze[mouse_pos.x_pos].[mouse_pos.y_pos].left_wall = 1;
+      maze[mouse_pos.x_pos].[mouse_pos.y_pos].right_wall = 1;
+      maze[mouse_pos.x_pos].[mouse_pos.y_pos].top_wall = 0;
+      maze[mouse_pos.x_pos].[mouse_pos.y_pos].bottom_wall = 1;
+
+
+      orientation = 1;
       //checks.push(mouse_pos);
       //checks.push(mouse_pos);
       break;
@@ -129,24 +153,75 @@ void floodfill_tick(){
       cell_check = checks.pop(); // pretty sure this gets and removes from top of stack 
       //if pop doesn't do both does things do checks.peek and the line after do checks.pop
 
+     
+
       
-      //if left wall is open
-      if (hasleftwall() == false){
-        //if cell_check is not 1 greater 
-        if (maze[cell_check.y_pos][cell_check.x_pos].value  != maze[cell_check.y_pos][cell_check.x_pos-1].value +1  ){
-          if (min_val == -10){
-             min_val = maze[cell_check.y_pos][cell_check.x_pos-1].value;
-          }
-          else{
-            if (maze[cell_check.y_pos][cell_check.x_pos-1].value < min_val){
-              min_val = maze[cell_check.y_pos][cell_check.x_pos-1].value;
-            }
-          }
-          neighbor_to_push.y_pos = cell_check.y_pos;
-          neighbor_to_push.x_pos = cell_check.x_pos - 1;
-          checks.push(neighbor_to_push);
-        }
-      }
+//      //if left wall is open
+//      if (hasleftwall() == false){
+//        //       maze[cell_check.y_pos][cell_check.x_pos].leftwall = 0;
+//        //if cell_check is not 1 greater 
+//        if (maze[cell_check.y_pos][cell_check.x_pos].value  != maze[cell_check.y_pos][cell_check.x_pos-1].value +1  ){
+//          if (min_val == -10){
+//             min_val = maze[cell_check.y_pos][cell_check.x_pos-1].value;
+//          }
+//          else{
+//            if (maze[cell_check.y_pos][cell_check.x_pos-1].value < min_val){
+//              min_val = maze[cell_check.y_pos][cell_check.x_pos-1].value;
+//            }
+//          }
+//          neighbor_to_push.y_pos = cell_check.y_pos;
+//          neighbor_to_push.x_pos = cell_check.x_pos - 1;
+//          checks.push(neighbor_to_push);
+//        }
+//      }
+
+//      if (hasleftwall() == true){
+//        maze[cell_check.y_pos][cell_check.x_pos].leftwall = 1;        
+//      }
+
+//      //if right wall is open
+//      if (hasrightwall() == false){
+//         maze[cell_check.y_pos][cell_check.x_pos].right_wall = 0;
+//        //if cell_check is not 1 greater 
+//        if (maze[cell_check.y_pos][cell_check.x_pos].value  != maze[cell_check.y_pos][cell_check.x_pos+1].value +1  ){
+//          if (min_val == -10){
+//             min_val = maze[cell_check.y_pos][cell_check.x_pos+1].value;
+//          }
+//          else{
+//            if (maze[cell_check.y_pos][cell_check.x_pos-1].value < min_val){
+//              min_val = maze[cell_check.y_pos][cell_check.x_pos+1].value;
+//            }
+//          }
+//          neighbor_to_push.y_pos = cell_check.y_pos;
+//          neighbor_to_push.x_pos = cell_check.x_pos + 1;
+//          checks.push(neighbor_to_push);
+//        }
+//      }
+//
+//
+//      if (hasrightwall() == true){
+//        maze[cell_check.y_pos][cell_check.x_pos].rightwall = 1;        
+//      }
+//           
+//      //if right wall is open
+//      if (hasfrontwall() == false){
+//        //if cell_check is not 1 greater 
+//        if (maze[cell_check.y_pos][cell_check.x_pos].value  != maze[cell_check.y_pos][cell_check.x_pos+1].value +1  ){
+//          if (min_val == -10){
+//             min_val = maze[cell_check.y_pos][cell_check.x_pos+1].value;
+//          }
+//          else{
+//            if (maze[cell_check.y_pos][cell_check.x_pos-1].value < min_val){
+//              min_val = maze[cell_check.y_pos][cell_check.x_pos+1].value;
+//            }
+//          }
+//          neighbor_to_push.y_pos = cell_check.y_pos;
+//          neighbor_to_push.x_pos = cell_check.x_pos + 1;
+//          checks.push(neighbor_to_push);
+//        }
+//      }
+//      
+
       
       break;
     case FLOODFILL_END:

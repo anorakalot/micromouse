@@ -9,3 +9,8 @@ Push open neighbors onto the stack
 }
 }
 Advance to next ideal cell 
+
+
+
+ 
+
