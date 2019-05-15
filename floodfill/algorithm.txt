@@ -1,0 +1,11 @@
+
+While mouse pos != maze center{
+Push the mouse pos cell onto the stack
+While the stack is not empty {
+current cell = stack.pop()
+If (current cell value isnt 1 greater than minimum surrounding){
+Set current cell to 1+= minval
+Push open neighbors onto the stack
+}
+}
+Advance to next ideal cell 

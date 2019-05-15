@@ -26,6 +26,9 @@ struct cell{
   bool bottom_wall;
   int value;
   pair coord;
+  //this bool is so the mouse doesn't go to places it already has been
+  //implement into algorithm later after 
+  bool visited;
 };
 
 int min_val;
@@ -42,6 +45,7 @@ struct pair goal_coord;
 struct pair mouse_pos;
 
 struct pair cell_check;
+struct pair neighbor_to_push;
 //pair <int,int> mouse_pos (8,0);
 
 const int maze_x_length = 16;
@@ -53,8 +57,8 @@ struct cell maze[maze_y_length][maze_x_length];
 
 
 
-
-enum FLOODFILL_STATES{FLOODFILL_INIT,FLOODFILL_START,FLOODFILL_POS_CHECK,FLOODFILL_STACK_CHECK,FLOODFILL_END} floodfill_state;
+                                                                                          //FLOODFILL_MOVE_TO_NEXT_SPACE        
+enum FLOODFILL_STATES{FLOODFILL_INIT,FLOODFILL_START,FLOODFILL_POS_CHECK,FLOODFILL_STACK_CHECK,FLOODFILL_MOVE_TO_NEXT_SPACE,FLOODFILL_END} floodfill_state;
 void floodfill_init(){
   floodfill_state = FLOODFILL_INIT;
 }
@@ -76,18 +80,25 @@ void floodfill_tick(){
         //SHOULD PUSH STARTING MOUSE_POS IN FLOODFILL_START INSTEAD SO IT DOESN'T KEEP HAPPENING
         //NEVERMIND THIS NEEDS TO HAPPEN EACH TIME BECAUSE OF HOW IT POPS THE CELL TO CHECK FROM THE CHECKS STACK
         //NEVERMIND TO ABOVE NEVERMIND BECAUSE THE ALGORITHM SAYS DIFFERENTLY
-        //checks.push(mouse_pos);
+        //NEVERMIND TO ABOVE NEVERMIND BECAUSE DOING IT ON PAPER SAYS DIFFERENTLY
+        checks.push(mouse_pos);
+        //set minval to -10 so if it stays -10 then we know the cellcheck was correct at first;
+        min_val = -10;
       }
       break;
     case FLOODFILL_STACK_CHECK:
       if (checks.count() != 0){
          floodfill_state = FLOODFILL_STACK_CHECK;
+         //floodfill_state = FLOODFILL_MOVE_TO_NEXT_SPACE;
       }
       else {
-        floodfill_state = FLOODFILL_POS_CHECK;
+        floodfill_state = FLOODFILL_MOVE_TO_NEXT_SPACE;
+        //floodfill_state = FLOODFILL_POS_CHECK;
       }
       break;
-     
+    case FLOODFILL_MOVE_TO_NEXT_SPACE:
+      floodfill_state = FLOODFILL_POS_CHECK;
+      break;
     case FLOODFILL_END:
       break;
     default:
@@ -109,7 +120,7 @@ void floodfill_tick(){
           maze[y][x].value = abs(goal_coord.y_pos - y) + abs(goal_coord.x_pos - x);
         }
       }
-      checks.push(mouse_pos);
+      //checks.push(mouse_pos);
       //checks.push(mouse_pos);
       break;
     case FLOODFILL_POS_CHECK:
@@ -117,10 +128,23 @@ void floodfill_tick(){
     case FLOODFILL_STACK_CHECK:
       cell_check = checks.pop(); // pretty sure this gets and removes from top of stack 
       //if pop doesn't do both does things do checks.peek and the line after do checks.pop
+
       
+      //if left wall is open
       if (hasleftwall() == false){
-        if ((maze[cell_check.y_pos][cell_check.x_pos].value + 1 == maze[y][x-1].value  ){
-          
+        //if cell_check is not 1 greater 
+        if (maze[cell_check.y_pos][cell_check.x_pos].value  != maze[cell_check.y_pos][cell_check.x_pos-1].value +1  ){
+          if (min_val == -10){
+             min_val = maze[cell_check.y_pos][cell_check.x_pos-1].value;
+          }
+          else{
+            if (maze[cell_check.y_pos][cell_check.x_pos-1].value < min_val){
+              min_val = maze[cell_check.y_pos][cell_check.x_pos-1].value;
+            }
+          }
+          neighbor_to_push.y_pos = cell_check.y_pos;
+          neighbor_to_push.x_pos = cell_check.x_pos - 1;
+          checks.push(neighbor_to_push);
         }
       }
       
