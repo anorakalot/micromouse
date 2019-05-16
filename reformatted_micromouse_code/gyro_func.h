@@ -22,7 +22,9 @@ void read_angle(){
   gyro_dps = (gyro_raw_data * gyro_raw_dps_conversion_factor) / 1000; //divided by 1000 because if not it's in mdps
   gyro_sum += (gyro_dps /50); // divided / multipled by 0.01 because thats the sampling period of 10 ms delay
   gyro_angle = gyro_sum; 
-  
+
+  //accerlerometer reading
+  accel_raw_data = ((int)gyro.a.z);
   
   //Serial.print("G ");
   //Serial.print("X: ");

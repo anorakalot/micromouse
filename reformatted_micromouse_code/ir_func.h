@@ -24,6 +24,22 @@ bool hasrightwall() {
 }
 
 
+bool has_45_left_wall(){
+  if (sensorReading_45_left > 120 ) { //
+    return true;
+  }
+  return false;
+}
+
+
+bool has_45_right_wall(){
+  if (sensorReading_45_right > 120 ) { //
+    return true;
+  }
+  return false;
+}
+
+
 //Reads Ir sensors but with no mapped values
 void readIR() {
   digitalWrite(sensor_left_power,LOW);

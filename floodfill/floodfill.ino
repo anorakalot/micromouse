@@ -152,8 +152,12 @@ void floodfill_tick(){
     case FLOODFILL_STACK_CHECK:
       cell_check = checks.pop(); // pretty sure this gets and removes from top of stack 
       //if pop doesn't do both does things do checks.peek and the line after do checks.pop
-
-     
+      
+      //need to checks and update the walls
+      
+      if (orientation == 1){
+        
+      }
 
       
 //      //if left wall is open

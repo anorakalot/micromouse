@@ -1,3 +1,4 @@
+
 //#include <basic_io_avr.h>
 //#include <FreeRTOS_AVR.h>
 
@@ -7,10 +8,14 @@
 /*
  * TO DO LIST
  * MAKE THIS IN STATE MACHINES // DO ONLY MOTOR /FLOODFILL IN STATE MACHINES AND GYRO
- * DO PID OFF ONE WALL
- * DO PID OFF ENCODERS for no walls
+ * DO PID OFF ONE WALL // use different middle ir's
+ * DO PID OFF ENCODERS/GYRO for no walls
  * PORBABLY MAKE MOTOR_LEFT AND MOTOR_RIGHT SPEED VARIABLES
  * THEN DO SPEED + or -  the p i d control variables
+ * PROBABLY JUST DO BASE_SPEED + or - for MOTOR_LEFT AND MOTOR_RIGHT
+ * DO SELF CORRECTION WHENEVER IT REACHES A FRONT WALL 
+ * DO SELF CORRECTION WITH SIDE WALLS AS WELL
+ * SO GYRO WITH ACCELEROMETER SENSOR FUSION
  * GET FLOODFILL WORKING
  * TRY TO GET FREERTOS WORKING 
  */
@@ -29,9 +34,11 @@
 #include <cmath>
  
 
-
 #include <Wire.h>
-#include <L3G.h>
+#include <LSM6.h>
+
+//#include <Wire.h>
+//#include <L3G.h>
 #include "global_values.h"
 #include "gyro_func.h"
 //#include "Timer.h"
@@ -162,11 +169,11 @@ void loop() {
 //
 halt_until(halt_delay);
 left_turn_until(); //good
-halt_until(halt_delay);
-right_turn_until(); // good 
-halt_until(halt_delay);
-reverse_turn_until(); // good
-halt_until(halt_delay);
+//halt_until(halt_delay);
+//right_turn_until(); // good 
+//halt_until(halt_delay);
+//reverse_turn_until(); // good
+//halt_until(halt_delay);
 
 
 

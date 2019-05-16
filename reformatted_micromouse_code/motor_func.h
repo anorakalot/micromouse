@@ -393,7 +393,7 @@ void pid_control_two_walls() {
     //maybe try instead of making motor left and right base_speed - pid values 
     //try motor_l + pid_values and motor_r - pid values
       
-    motor_left = base_speed; //+ (p_control);
+    motor_left = base_speed + (p_control);
     motor_right = base_speed - (p_control);//+ i_control + d_control); 
 //    motor_left += (p_control + d_control);
 //    motor_right -= (p_control + d_control);
@@ -414,7 +414,7 @@ void pid_control_two_walls() {
     //try motor_l - pid_values and motor_r + pid values
       
     motor_left = base_speed - (p_control); //+ i_control + d_control); 
-    motor_right = base_speed; //+ (p_control);
+    motor_right = base_speed +  (p_control);
 //    motor_left -= (p_control + d_control);
 //    motor_right += (p_control + d_control);
     prev_error = error;
@@ -426,29 +426,29 @@ void pid_control_two_walls() {
 //chooses which pid to do
 void pid_control(){
   readIR();
-//    
-//     
-//     if (hasleftwall() == true && hasrightwall() == true){
-//        pid_control_two_walls();
-//      }
-//      else if (hasleftwall() == true && hasrightwall() == false){
-//        pid_control_one_wall();
-//      }
-//      else if (hasleftwall() == false && hasrightwall() == true){
-//       pid_control_one_wall();
-//      
-//      }
-//      else if (hasleftwall() == false && hasrightwall() == false){
-//        pid_control_no_walls();
-//      
-//         }
-//      else{
-//        pid_control_two_walls();
-//      }
+    
+     
+     if (has_45_left_wall() == true && has_45_right_wall() == true){
+        pid_control_two_walls();
+      }
+      else if (has_45_left_wall() == true &&  has_45_right_wall() == false){
+        pid_control_one_wall();
+      }
+      else if (has_45_left_wall() == false && has_45_right_wall() == true){
+       pid_control_one_wall();
+      
+      }
+      else if (has_45_left_wall() && has_45_right_wall() == false){
+        pid_control_no_walls();
+      
+         }
+      else{
+        pid_control_two_walls();
+      }
 //  pid_control_two_walls();
-
-  pid_control_two_walls();
-  //pid_control_no_walls();
+//
+//  pid_control_two_walls();
+//  //pid_control_no_walls();
   return;
 }
 
@@ -632,61 +632,61 @@ void random_move() {
 
 
 
-//this only happens I think when the sensor readings are the same for multiple cycles 
-//which usually indicates the mouse is stuch somehow
-//should not need if new mouse is done right
-void error_catch() {
-  curr_timer = millis();
-
-  if (curr_timer - prev_timer >= error_check_interval) {
-    prev_timer = curr_timer;
-    // if (error_check == true) {
-    if (prev_sensorReading_left == sensorReading_left && prev_sensorReading_middle == sensorReading_middle && prev_sensorReading_right == sensorReading_right) {
-      int rand_num = random(millis()) % 2;
-      if (rand_num == 1) {
-        halt_until(700);
-        reverse_until();
-        halt_until(700);
-        left_turn_until();
-        halt_until(700);
-      }
-      else {
-        halt_until(700);
-        reverse_until();
-        halt_until(700);
-        right_turn_until();
-        halt_until(700);
-      }
-    }
-
-    if (  left_count - prev_encoder_tick < 100) {
-      int rand_num = random(millis()) % 2;
-      if (rand_num == 1) {
-        halt_until(700);
-        reverse_until();
-        halt_until(700);
-        left_turn_until();
-        halt_until(700);
-      }
-      else {
-        halt_until(700);
-        reverse_until();
-        halt_until(700);
-        right_turn_until();
-        halt_until(700);
-      }
-    }
-
-    prev_sensorReading_left = sensorReading_left;
-    prev_sensorReading_middle = sensorReading_middle;
-    prev_sensorReading_right = sensorReading_right;
-    prev_encoder_tick = left_count;
-  }
-}
+////this only happens I think when the sensor readings are the same for multiple cycles 
+////which usually indicates the mouse is stuch somehow
+////should not need if new mouse is done right
+//void error_catch() {
+//  curr_timer = millis();
+//
+//  if (curr_timer - prev_timer >= error_check_interval) {
+//    prev_timer = curr_timer;
+//    // if (error_check == true) {
+//    if (prev_sensorReading_left == sensorReading_left && prev_sensorReading_middle == sensorReading_middle && prev_sensorReading_right == sensorReading_right) {
+//      int rand_num = random(millis()) % 2;
+//      if (rand_num == 1) {
+//        halt_until(700);
+//        reverse_until();
+//        halt_until(700);
+//        left_turn_until();
+//        halt_until(700);
+//      }
+//      else {
+//        halt_until(700);
+//        reverse_until();
+//        halt_until(700);
+//        right_turn_until();
+//        halt_until(700);
+//      }
+//    }
+//
+//    if (  left_count - prev_encoder_tick < 100) {
+//      int rand_num = random(millis()) % 2;
+//      if (rand_num == 1) {
+//        halt_until(700);
+//        reverse_until();
+//        halt_until(700);
+//        left_turn_until();
+//        halt_until(700);
+//      }
+//      else {
+//        halt_until(700);
+//        reverse_until();
+//        halt_until(700);
+//        right_turn_until();
+//        halt_until(700);
+//      }
+//    }
+//
+//    prev_sensorReading_left = sensorReading_left;
+//    prev_sensorReading_middle = sensorReading_middle;
+//    prev_sensorReading_right = sensorReading_right;
+//    prev_encoder_tick = left_count;
+//  }
+//}
 
 //error_check = false;
 //MIGHT PUT FLOODFILL INTO THIS STATE MACHINE AS WELL
-enum MOTOR_STATES{MOTOR_INIT,GO_ONE_CELL,RANDOM_MOVE } motor_state;
+enum MOTOR_STATES{MOTOR_INIT,GO_ONE_CELL,CORRECT_MOUSE,RANDOM_MOVE } motor_state;
 
 void motor_init(){
   motor_state = MOTOR_INIT;
@@ -698,7 +698,17 @@ void motor_tick(){
       motor_state = GO_ONE_CELL;
       break;
     case GO_ONE_CELL:
-      motor_state = RANDOM_MOVE;
+      //motor_state = RANDOM_MOVE;
+      //motor_state = CORRECT_MOUSE;
+      if (hasfrontwall() == true){
+       motor_state = CORRECT_MOUSE; 
+      }
+      else{
+        motor_state = RANDOM_MOVE;
+      }
+      break;
+    case CORRECT_MOUSE:
+      
       break;
     case RANDOM_MOVE:
       motor_state = GO_ONE_CELL;
@@ -714,6 +724,9 @@ void motor_tick(){
       //go_one_cell_happening = 1;
       go_one_cell();//this calls pid inside of it
       halt_until(400);
+      break;
+    case CORRECT_MOUSE:
+      
       break;
     case RANDOM_MOVE:
       //go_one_cell_happening = 0;
@@ -879,5 +892,14 @@ void error_catch_tick(){
 
 
 
+//correct mouse if theirs a front wall in front
+//should replace bumping into walls in random_move function
+void correct_mouse(){
+   if (hasfrontwall() != true){
+    return;
+   }
+   //while(re
+   
+}
 
 

@@ -99,6 +99,10 @@ int sensor_middle = A1 ;
 int sensorReading_middle;
 int sensor_middle_power = 1;
 
+//MIDDLE
+int sensor_middle_right = A3 ;
+int sensorReading_middle_right;
+int sensor_middle_power_right = 7;
 
 //RIGHT
 int sensor_right = A0;
@@ -149,7 +153,7 @@ int error_45_right;
 
 //gryo values 
 //I PUT GRYO VARIABLES IN GRYO_FUNC DUE TO ERRORS
-L3G gyro;
+LSM6 gyro;
 int gyro_dps; //degrees per second
 int gyro_raw_data;
 signed long gyro_sum = 0;
@@ -157,6 +161,7 @@ signed long gyro_angle = 0;
 int gyro_raw_dps_conversion_factor = 8.75;
 int gyro_reset_limit = 1000;
 
+int accel_raw_data;
 
 
 //bool go_one_cell_happening = 0;
