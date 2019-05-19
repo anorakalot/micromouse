@@ -39,9 +39,18 @@ bool has_45_right_wall(){
   return false;
 }
 
+void testIR(){
+  digitalWrite(sensor_left_power,HIGH);
+  sensorReading_left = analogRead(sensor_left);
+  Serial.println("SensorReading");
+  Serial.println(sensorReading_left);
 
+  delay(2000);
+  
+}
 //Reads Ir sensors but with no mapped values
 void readIR() {
+
   digitalWrite(sensor_left_power,LOW);
   digitalWrite(sensor_right_power,LOW);
   digitalWrite(sensor_middle_power,LOW);

@@ -151,6 +151,8 @@ void loop() {
 //  error_catch();
 
 
+testIR();//tests single led (this is before soldering
+
 ////forward(base_speed,base_speed);
 //go_one_cell();
 //
@@ -167,8 +169,8 @@ void loop() {
 ////gyro_tick();
 //
 //
-halt_until(halt_delay);
-left_turn_until(); //good
+//halt_until(halt_delay);
+//left_turn_until(); //good
 //halt_until(halt_delay);
 //right_turn_until(); // good 
 //halt_until(halt_delay);
