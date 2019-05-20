@@ -2,8 +2,8 @@
 
 //HAS functions should be checked before every single comp
 bool hasfrontwall() {       
-  if (sensorReading_middle > 150 ) { 
-    return true;//408
+  if (sensorReading_middle >80  ) { // 150, 100  
+    return true;
   }
   return false;
 }
@@ -42,10 +42,10 @@ bool has_45_right_wall(){
 void testIR(){
   digitalWrite(sensor_left_power,HIGH);
   sensorReading_left = analogRead(sensor_left);
-  Serial.println("SensorReading");
+ // Serial.println("SensorReading");
   Serial.println(sensorReading_left);
-
-  delay(2000);
+//  Serial.print("HELLOOOO");
+ // delay(2000);
   
 }
 //Reads Ir sensors but with no mapped values

@@ -112,17 +112,15 @@ void setup() {
   digitalWrite(turn_on_en_2, LOW);
 
 
-  gyro_init();
+  gyro_init(); 
   gyro_tick();//sets up gyro read function
-  motor_init();//sets up motor tick state
-  
-  //ir_start_func(); // DONT USE THIS THE ERRORS IN READ IR SEEM BETTER
-  
+  motor_init();//sets up motor tick state  
   wait_until_start_hand();
   
   
 
-  
+  //ir_start_func(); // DONT USE THIS THE ERRORS IN READ IR SEEM BETTER
+
 //gyro setup
 //REMEMBER TO SETUP gyro 
 //PROBABLY THE REASON WHY THE gyro ISN'T WORKING
@@ -151,8 +149,8 @@ void loop() {
 //  error_catch();
 
 
-testIR();//tests single led (this is before soldering
-
+//testIR();//tests single led (this is before soldering
+//Serial.println("HELLO");
 ////forward(base_speed,base_speed);
 //go_one_cell();
 //
@@ -160,7 +158,10 @@ testIR();//tests single led (this is before soldering
 //delay(1000);
 //
 
-//forward();
+
+
+//forward(0,255);
+//
 //  readIR();
 //  delay(900);
 //halt_until(1000);
@@ -169,11 +170,11 @@ testIR();//tests single led (this is before soldering
 ////gyro_tick();
 //
 //
-//halt_until(halt_delay);
+halt_until(halt_delay);
 //left_turn_until(); //good
 //halt_until(halt_delay);
-//right_turn_until(); // good 
-//halt_until(halt_delay);
+right_turn_until(); // good 
+halt_until(halt_delay);
 //reverse_turn_until(); // good
 //halt_until(halt_delay);
 

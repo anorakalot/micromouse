@@ -21,7 +21,7 @@ void print_encoder_count() {
 }
 
 //Basic Motor Functions
-void reverse() {
+void forward() {
   digitalWrite(turn_on_en_1, HIGH);
   digitalWrite(turn_on_en_2, HIGH);
 
@@ -34,7 +34,7 @@ void reverse() {
 }
 
 
-void forward() {
+void reverse() {
   digitalWrite(turn_on_en_1, HIGH);
   digitalWrite(turn_on_en_2, HIGH);
 
@@ -121,15 +121,25 @@ void right_turn(int turn_speed) {
   digitalWrite(motor_2_logic_2, LOW);
 }
 
-
+//double check this function I switched which logic is left and which is right
 void forward(double left_speed, double right_speed) {
+//  digitalWrite(turn_on_en_1, HIGH);
+//  digitalWrite(turn_on_en_2, HIGH);
+//
+//  digitalWrite(motor_1_logic_2,LOW );
+//  analogWrite(motor_1_logic_1,left_speed);
+//  analogWrite(motor_2_logic_2, right_speed);
+//  digitalWrite(motor_2_logic_1, LOW);
+
+
   digitalWrite(turn_on_en_1, HIGH);
   digitalWrite(turn_on_en_2, HIGH);
 
-  digitalWrite(motor_1_logic_2,LOW );
-  analogWrite(motor_1_logic_1,left_speed);
-  analogWrite(motor_2_logic_2, right_speed);
-  digitalWrite(motor_2_logic_1, LOW);
+  analogWrite(motor_1_logic_2, right_speed);
+  analogWrite(motor_2_logic_1, left_speed);
+  digitalWrite(motor_1_logic_1, LOW);
+  digitalWrite(motor_2_logic_2, LOW);
+  
 }
 
 ////Encoder turn functions 
