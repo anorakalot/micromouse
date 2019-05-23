@@ -138,7 +138,6 @@ void setup() {
 
 void loop() {
 //main sequence 
-  //readIR_map();
 //  readIR();
 //  
 //  motor_tick();//does go_one_cell
@@ -149,7 +148,7 @@ void loop() {
 //  error_catch();
 
 
-//testIR();//tests single led (this is before soldering
+testIR();//tests single led (this is before soldering
 //Serial.println("HELLO");
 ////forward(base_speed,base_speed);
 //go_one_cell();
@@ -163,18 +162,18 @@ void loop() {
 //forward(0,255);
 //
 //  readIR();
-//  delay(900);
+//  delay(1000);
 //halt_until(1000);
 //print_encoder_count();
 //left_turn();
 ////gyro_tick();
 //
 //
-halt_until(halt_delay);
+//halt_until(halt_delay);
 //left_turn_until(); //good
 //halt_until(halt_delay);
-right_turn_until(); // good 
-halt_until(halt_delay);
+//right_turn_until(); // good 
+//halt_until(halt_delay);
 //reverse_turn_until(); // good
 //halt_until(halt_delay);
 

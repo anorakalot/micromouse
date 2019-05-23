@@ -99,10 +99,10 @@ int sensor_middle = A1 ;
 int sensorReading_middle;
 int sensor_middle_power = 1;
 
-//MIDDLE
+//MIDDLE_RIGHT
 int sensor_middle_right = A3 ;
 int sensorReading_middle_right;
-int sensor_middle_power_right = 7;
+int sensor_middle_right_power = 7;
 
 //RIGHT
 int sensor_right = A0;
@@ -139,6 +139,7 @@ int prev_sensorReading_left;
 
 int error_left;
 int error_middle;
+int error_middle_right;
 int error_right;
 int error_45_left;
 int error_45_right;

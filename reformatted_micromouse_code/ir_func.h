@@ -40,13 +40,18 @@ bool has_45_right_wall(){
 }
 
 void testIR(){
-  digitalWrite(sensor_left_power,HIGH);
-  sensorReading_left = analogRead(sensor_left);
+//  digitalWrite(sensor_left_power,HIGH);
+//  sensorReading_left = analogRead(sensor_left);
+// // Serial.println("SensorReading");
+//  Serial.println(sensorReading_left);
+////  Serial.print("HELLOOOO");
+// // delay(2000);
+
+  digitalWrite(sensor_middle_right_power,HIGH);
+  sensorReading_middle_right = analogRead(sensor_middle_right);
  // Serial.println("SensorReading");
-  Serial.println(sensorReading_left);
-//  Serial.print("HELLOOOO");
- // delay(2000);
-  
+  Serial.println(sensorReading_middle_right);
+  delay(2000);
 }
 //Reads Ir sensors but with no mapped values
 void readIR() {
@@ -54,19 +59,24 @@ void readIR() {
   digitalWrite(sensor_left_power,LOW);
   digitalWrite(sensor_right_power,LOW);
   digitalWrite(sensor_middle_power,LOW);
-
+  //digitalWrite(sensor_middle_right_power,LOW);
+  
+  
   digitalWrite(sensor_45_right_power,LOW);
   digitalWrite(sensor_45_left_power,LOW);
   delay(50);
   error_left = analogRead(sensor_left);
   error_middle = analogRead(sensor_middle);
+ // error_middle_right = analogRead(sensor_middle_right);
   error_right = analogRead(sensor_right);
+ 
   error_45_left = analogRead(sensor_45_left);
   error_45_right = analogRead(sensor_45_right);
 
   digitalWrite(sensor_left_power,HIGH);
   digitalWrite(sensor_right_power,HIGH);
   digitalWrite(sensor_middle_power,HIGH);
+  //digitalWrite(sensor_middle_right_power,HIGH);
   
   digitalWrite(sensor_45_right_power,LOW);
   digitalWrite(sensor_45_left_power,LOW);
@@ -76,12 +86,14 @@ void readIR() {
   delay(50);
   sensorReading_left = analogRead(sensor_left);
   sensorReading_middle = analogRead(sensor_middle);
+  //sensorReading_middle_right = analogRead(sensor_middle_right);
   sensorReading_right = analogRead(sensor_right);
-
+  
   
   digitalWrite(sensor_left_power,LOW);
   digitalWrite(sensor_right_power,LOW);
   digitalWrite(sensor_middle_power,LOW);
+  //digitalWrite(sensor_middle_right_power,LOW);
   
   digitalWrite(sensor_45_right_power,HIGH);
   digitalWrite(sensor_45_left_power,HIGH);
@@ -93,6 +105,8 @@ void readIR() {
   digitalWrite(sensor_left_power,LOW);
   digitalWrite(sensor_right_power,LOW);
   digitalWrite(sensor_middle_power,LOW);
+  //digitalWrite(sensor_middle_right_power,LOW);
+  
   
   digitalWrite(sensor_45_right_power,LOW);
   digitalWrite(sensor_45_left_power,LOW);
@@ -103,6 +117,9 @@ void readIR() {
   Serial.println(sensorReading_left);
   Serial.print( "MIDDLE : ");
   Serial.println(sensorReading_middle);
+  //Serial.print( "MIDDLE_RIGHT : ");
+  //Serial.println(sensorReading_middle_right);
+  
   Serial.print( "RIGHT : ");
   Serial.println(sensorReading_right);
 
@@ -115,10 +132,13 @@ void readIR() {
 
   sensorReading_left -= error_left;
   sensorReading_middle -= error_middle;
+  //sensorReading_middle_right -= error_middle_right;
   sensorReading_right -= error_right;
+  
   sensorReading_45_left -= error_45_left;
   sensorReading_45_right -= error_45_right;
 
+  sensorReading_45_right -= 20;
   //map(value, fromLow, fromHigh, toLow, toHigh)
   
 //  sensorReading_45_left = map(sensorReading_45_left, 50, 600, 0, 200);
@@ -132,6 +152,8 @@ void readIR() {
   Serial.println(sensorReading_left);
   Serial.print( "MIDDLE : ");
   Serial.println(sensorReading_middle);
+  //Serial.print( "MIDDLE_RIGHT : ");
+  //Serial.println(sensorReading_middle_right);
   Serial.print( "RIGHT : ");
   Serial.println(sensorReading_right);
   
