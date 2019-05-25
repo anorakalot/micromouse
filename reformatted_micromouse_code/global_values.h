@@ -22,9 +22,9 @@ bool first_check = true;
 
 
 double base_speed = 200; // 200,150,125,150
-double kp = 0.90;//0.50,0.030,0.50
-double kd = 0.70;//0.40
-double ki = 0.0001;
+double kp = 0.40;//0.50,0.030,0.50, 0.90
+double kd = 0.30;//0.40
+double ki = 0.00001;
 double error = 0;
 double prev_error = 0;
 double p_control = 0;

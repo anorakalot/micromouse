@@ -148,18 +148,18 @@ void loop() {
 //  error_catch();
 
 
-testIR();//tests single led (this is before soldering
+//testIR();//tests single led (this is before soldering
 //Serial.println("HELLO");
-////forward(base_speed,base_speed);
-//go_one_cell();
-//
-//halt_until(halt_delay);
+//forward(base_speed,base_speed);
+go_one_cell();
+
+halt_until(halt_delay);
 //delay(1000);
 //
 
 
 
-//forward(0,255);
+//forward(255,255);
 //
 //  readIR();
 //  delay(1000);

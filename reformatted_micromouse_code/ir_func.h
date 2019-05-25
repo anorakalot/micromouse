@@ -9,7 +9,7 @@ bool hasfrontwall() {
 }
 
 bool hasleftwall() {     
-  if (sensorReading_left > 120 ) { //
+  if (sensorReading_left > 65 ) { //120
     return true;
   }
   return false;
@@ -17,7 +17,7 @@ bool hasleftwall() {
 
 
 bool hasrightwall() {     
-  if (sensorReading_right > 120 ) { //
+  if (sensorReading_right > 65 ) { //120
     return true;
   }
   return false;
@@ -25,7 +25,7 @@ bool hasrightwall() {
 
 
 bool has_45_left_wall(){
-  if (sensorReading_45_left > 120 ) { //
+  if (sensorReading_45_left > 68 ) { //80
     return true;
   }
   return false;
@@ -33,7 +33,7 @@ bool has_45_left_wall(){
 
 
 bool has_45_right_wall(){
-  if (sensorReading_45_right > 120 ) { //
+  if (sensorReading_45_right > 68 ) { //80
     return true;
   }
   return false;
@@ -138,7 +138,7 @@ void readIR() {
   sensorReading_45_left -= error_45_left;
   sensorReading_45_right -= error_45_right;
 
-  sensorReading_45_right -= 20;
+  sensorReading_45_right -= 28; // 30
   //map(value, fromLow, fromHigh, toLow, toHigh)
   
 //  sensorReading_45_left = map(sensorReading_45_left, 50, 600, 0, 200);

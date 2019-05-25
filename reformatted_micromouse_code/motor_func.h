@@ -249,6 +249,48 @@ void forward_until(int left_speed, int right_speed, unsigned long stop_time) {
   digitalWrite(motor_2_logic_1, LOW);
   }
 }
+void regulateSensor_45_L() {
+  //readIR();
+  //sensorReading_left = analogRead(sensor_left);
+  //sensorReading_left = map(sensorReading_left, left_ir_low_bound, left_ir_high_bound, 0, 200);
+
+  //permReading_left = 0 for some reason
+  
+  //sensorReading_left = sensorReading_left - permReading_left;
+  
+   
+   //if (sensorReading_left - permReading_left < 0){ 
+  if (sensorReading_45_left < 0){
+    sensorReading_45_left = ~sensorReading_45_left + 1;
+  }
+//
+//   if (sensorReading_left < 0){
+//    sensorReading_left = ~sensorReading_left + 1;
+//  }
+  
+}
+
+//gets sensor data from r to use for pid control function
+//all it does is take the sensors reading and if its less than 0 make it plus one
+//EITHER MAP IN THIS FUNC OR IN READIR
+void regulateSensor_45_R() {
+  //sensorReading_right = analogRead(sensor_right);
+  //readIR();
+  
+  //sensorReading_right = map(sensorReading_right, 180, 820, 0, 200);
+
+  //sensorReading_right = sensorReading_right - permReading_right;
+  
+  
+    
+   //if (sensorReading_right - permReading_right < 0){ 
+//  if (sensorReading_45_right < 0){  
+//    sensorReading_45_right = ~sensorReading_45_right + 1;
+//  }
+  if (sensorReading_right < 0){  
+    sensorReading_right = ~sensorReading_right + 1;
+  }
+}
 
 //gets sensor data from l to use for pid control function
 //all it does is take the sensors reading and if its less than 0 make it plus one
@@ -363,7 +405,7 @@ void pid_control_no_walls() {
   
 }
 
-void pid_control_two_walls() {
+void pid_control_two_90_walls() {
   readIR();
 
 
@@ -378,7 +420,6 @@ void pid_control_two_walls() {
     error_buildup = 0;
   }
     //error value
-    //error = abs(sensorReading_45_left - sensorReading_45_right);
     error = abs(sensorReading_left - sensorReading_right);
 
     //p control 
@@ -397,8 +438,7 @@ void pid_control_two_walls() {
     
 
   //too close left
-  if (sensorReading_45_left > sensorReading_45_right) {
-//  if (sensorReading_left > sensorReading_right) {
+  if (sensorReading_left > sensorReading_right) {
 
     //maybe try instead of making motor left and right base_speed - pid values 
     //try motor_l + pid_values and motor_r - pid values
@@ -414,8 +454,7 @@ void pid_control_two_walls() {
   }
 
   //too close right
-  if (sensorReading_45_right > sensorReading_45_left) {
-//  else if (sensorReading_right > sensorReading_left) {
+  else if (sensorReading_right > sensorReading_left) {
 
     
 
@@ -431,42 +470,139 @@ void pid_control_two_walls() {
     return;
   }
 
+  //equal to each other
+  else{
+    //nothing
+    //motor_left and motor_right stay the same
+    prev_error = error;
+  }
+  
+
+}
+void pid_control_two_45_walls() {
+  readIR();
+
+
+  regulateSensor_45_L();
+  regulateSensor_45_R();
+
+
+  reset_error ++;
+  //resets reset error which is used for i part of pid  which takes in error from previous cycles
+  if (reset_error > 10000) {
+    reset_error = 0;
+    error_buildup = 0;
+  }
+    //error value
+    error = abs(sensorReading_45_left - sensorReading_45_right);
+
+    //p control 
+    p_control = error * kp;
+
+
+    //i control
+    error_buildup += error;
+    i_control = error_buildup * ki;
+
+    
+    //d control
+    
+    d_control = abs(error - prev_error) * kd;
+
+    
+
+  //too close left
+  if (sensorReading_45_left > sensorReading_45_right) {
+ 
+      
+    motor_left = base_speed + (p_control + d_control); //+ i_control
+    motor_right = base_speed - (p_control + d_control); //+ i_control
+//    motor_left += (p_control + d_control);
+//    motor_right -= (p_control + d_control);
+
+//    
+    prev_error = error;
+    return;
+  }
+
+  //too close right
+  else if (sensorReading_45_right > sensorReading_45_left) {
+
+    
+
+
+      
+    motor_left = base_speed - (p_control  + d_control); //+ i_control 
+    motor_right = base_speed +  (p_control  + d_control);//+ i_control
+//    motor_left -= (p_control + d_control);
+//    motor_right += (p_control + d_control);
+    prev_error = error;
+    return;
+  }
+  //equal to each other
+  else{
+    //nothing
+    //motor_left and motor_right stay the same
+    prev_error = error;
+  }
+  
 }
 
 //chooses which pid to do
 void pid_control(){
   readIR();
-    
+
+  //testing
+  pid_control_two_45_walls();    
+  //pid_control_no_walls();
      
-     if (has_45_left_wall() == true && has_45_right_wall() == true){
-        pid_control_two_walls();
-      }
-      else if (has_45_left_wall() == true &&  has_45_right_wall() == false){
-        pid_control_one_wall();
-      }
-      else if (has_45_left_wall() == false && has_45_right_wall() == true){
-       pid_control_one_wall();
-      
-      }
-      else if (has_45_left_wall() && has_45_right_wall() == false){
-        pid_control_no_walls();
-      
-         }
-      else{
-        pid_control_two_walls();
-      }
+//     if (has_45_left_wall() == true && has_45_right_wall() == true){
+//        pid_control_two_45_walls();
+//      }
+//      else if (has_45_left_wall() == true &&  has_45_right_wall() == false){
+//        pid_control_one_wall();
+//      }
+//      else if (has_45_left_wall() == false && has_45_right_wall() == true){
+//       pid_control_one_wall();
+//      
+//      }
+//      else if (has_45_left_wall() && has_45_right_wall() == false){
+//        pid_control_no_walls();
+//      
+//         }
+//      else{
+//        pid_control_two_45_walls();
+//      }
 //  pid_control_two_walls();
 //
-//  pid_control_two_walls();
+
 //  //pid_control_no_walls();
+//     if (has_left_wall() == true && has_right_wall() == true){
+//        pid_control_two_90_walls();
+//      }
+//      else if (has_left_wall() == true &&  has_right_wall() == false){
+//        pid_control_one_wall();
+//      }
+//      else if (has_left_wall() == false && has_right_wall() == true){
+//       pid_control_one_wall();
+//      
+//      }
+//      else if (has_left_wall() && has_right_wall() == false){
+//        pid_control_no_walls();
+//      
+//         }
+//      else{
+//        pid_control_two_90_walls();
+//      }
+  
   return;
 }
 
 
 
 void go_one_cell() {
-  unsigned long curr = left_count;//935
-  while (left_count - curr < 945 ) { // 450,600, 800,950,900,960,955,945,950,945,930,925,940
+  unsigned long curr = left_count;//
+  while (left_count - curr <500 ) {//945,400 
     readIR();
     print_encoder_count();
     //pid_control_two_walls();
