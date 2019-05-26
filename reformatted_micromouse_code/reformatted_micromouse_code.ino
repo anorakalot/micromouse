@@ -4,6 +4,14 @@
 
 //#include <basic_io_arm.h>
 //#include <FreeRTOS_ARM.h>
+/*
+ * TO DO UCLA COMP
+ * DO ONE WALL PID
+ * DO SELF CORRECTION WITH FRONT WALL
+ * CALIBRATE ALL THE VALUES
+ * DO NO WALL PID
+ */
+
 
 /*
  * TO DO LIST
@@ -143,23 +151,27 @@ void loop() {
 //  motor_tick();//does go_one_cell
 //  
 //  readIR();
+////possible calibration function here
 //  motor_tick(); // does random_move
 //  readIR();
+
 //  error_catch();
 
+//ALL BELOW IS JUST FOR TESTING BEFORE COMPETITION
 
 //testIR();//tests single led (this is before soldering
 //Serial.println("HELLO");
 //forward(base_speed,base_speed);
 go_one_cell();
-
+//
 halt_until(halt_delay);
 //delay(1000);
 //
 
+//gyro_testing
+//gyro_tick();
 
-
-//forward(255,255);
+//forward(0,255);
 //
 //  readIR();
 //  delay(1000);
@@ -170,13 +182,16 @@ halt_until(halt_delay);
 //
 //
 //halt_until(halt_delay);
-//left_turn_until(); //good
-//halt_until(halt_delay);
-//right_turn_until(); // good 
-//halt_until(halt_delay);
-//reverse_turn_until(); // good
-//halt_until(halt_delay);
+//left_turn_until(); //
+//right_turn_until(); //  
+//reverse_turn_until(); // 
 
+//halt_until(halt_delay);
+//delay(2000);
+
+//reverse(200,200);
+//halt_until(halt_delay);
+//delay(2000);
 
 
 

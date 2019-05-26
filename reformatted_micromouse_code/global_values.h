@@ -163,7 +163,8 @@ int gyro_raw_dps_conversion_factor = 8.75;
 int gyro_reset_limit = 1000;
 
 int accel_raw_data;
-
+int accel_force_conversion_factor = 0.061;
+int accel_force_data;
 
 //bool go_one_cell_happening = 0;
 

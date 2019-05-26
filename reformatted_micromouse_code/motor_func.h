@@ -38,12 +38,35 @@ void reverse() {
   digitalWrite(turn_on_en_1, HIGH);
   digitalWrite(turn_on_en_2, HIGH);
 
-  digitalWrite(motor_1_logic_1, HIGH);
+  digitalWrite(motor_1_logic_1, HIGH);//right
   digitalWrite(motor_1_logic_2, LOW);
 
   digitalWrite(motor_2_logic_1, LOW);
-  digitalWrite(motor_2_logic_2, HIGH);
+  digitalWrite(motor_2_logic_2, HIGH);//left
 }
+
+//double check this function I switched which logic is left and which is right
+void reverse(double left_speed, double right_speed) {
+//  digitalWrite(turn_on_en_1, HIGH);
+//  digitalWrite(turn_on_en_2, HIGH);
+//
+//  digitalWrite(motor_1_logic_2,LOW );
+//  analogWrite(motor_1_logic_1,left_speed);
+//  analogWrite(motor_2_logic_2, right_speed);
+//  digitalWrite(motor_2_logic_1, LOW);
+
+
+  digitalWrite(turn_on_en_1, HIGH);
+  digitalWrite(turn_on_en_2, HIGH);
+
+  analogWrite(motor_1_logic_1, right_speed);//right
+  digitalWrite(motor_1_logic_2, LOW);
+
+  digitalWrite(motor_2_logic_1, LOW);
+  analogWrite(motor_2_logic_2, left_speed);//left
+  
+}
+
 
 
 
@@ -154,7 +177,7 @@ void forward(double left_speed, double right_speed) {
 void left_turn_until() {
   gyro_angle = 0;
   gyro_sum = 0;
-  while (  abs(gyro_angle)  <130 ) { //150, 175,120,110
+  while (  abs(gyro_angle)  <90 ) { //150, 175,120,110,130
     gyro_tick();
     left_turn();                  //350,360,380,390
   }
@@ -178,7 +201,7 @@ void left_turn_until() {
 void right_turn_until() {//330,240,220
   gyro_angle = 0;
   gyro_sum = 0;
-  while ( abs(gyro_angle)  <130) { //150,175,120,110 
+  while ( abs(gyro_angle)  <90) { //150,175,120,110,130 
     gyro_tick();
     right_turn();                  //350,360,380,390
   }
@@ -229,7 +252,7 @@ void reverse_until() {
 void reverse_turn_until() {//330,240,220
   gyro_angle = 0;
   gyro_sum = 0;
-  while ( abs(gyro_angle)  <305 ) { //350,330,305
+  while ( abs(gyro_angle)  < 200) { //350,330,305,305,180
     gyro_tick();
     right_turn();                  //350,360,380,390
   }
@@ -243,10 +266,16 @@ void forward_until(int left_speed, int right_speed, unsigned long stop_time) {
   digitalWrite(turn_on_en_1, HIGH);
   digitalWrite(turn_on_en_2, HIGH);
 
-  digitalWrite(motor_1_logic_2,LOW );
-  analogWrite(motor_1_logic_1,left_speed);
-  analogWrite(motor_2_logic_2, right_speed);
-  digitalWrite(motor_2_logic_1, LOW);
+//  digitalWrite(motor_1_logic_2,LOW );
+//  analogWrite(motor_1_logic_1,left_speed);
+//  analogWrite(motor_2_logic_2, right_speed);
+//  digitalWrite(motor_2_logic_1, LOW);
+
+  //for mark 4 and above
+  analogWrite(motor_1_logic_2, right_speed);
+  analogWrite(motor_2_logic_1, left_speed);
+  digitalWrite(motor_1_logic_1, LOW);
+  digitalWrite(motor_2_logic_2, LOW);
   }
 }
 void regulateSensor_45_L() {
@@ -374,6 +403,7 @@ void pid_control_one_wall() {
 //TEST THE ENCODER PID 
 //in the meantime this will go off good base values
 //MAKE THIS LATER INTO ENCODER PID
+//DOING IT OFF ONLY ENCODERS SUCKS
 void pid_control_no_walls() {
   curr_left_count = left_count;
   curr_right_count = right_count;
@@ -475,6 +505,7 @@ void pid_control_two_90_walls() {
     //nothing
     //motor_left and motor_right stay the same
     prev_error = error;
+    return;
   }
   
 
@@ -544,6 +575,7 @@ void pid_control_two_45_walls() {
     //nothing
     //motor_left and motor_right stay the same
     prev_error = error;
+    return;
   }
   
 }
@@ -555,7 +587,8 @@ void pid_control(){
   //testing
   pid_control_two_45_walls();    
   //pid_control_no_walls();
-     
+
+//using 45 deg sensors
 //     if (has_45_left_wall() == true && has_45_right_wall() == true){
 //        pid_control_two_45_walls();
 //      }
@@ -576,6 +609,7 @@ void pid_control(){
 //  pid_control_two_walls();
 //
 
+//using 90 deg sensors 
 //  //pid_control_no_walls();
 //     if (has_left_wall() == true && has_right_wall() == true){
 //        pid_control_two_90_walls();
@@ -776,7 +810,13 @@ void random_move() {
 }
 
 
-
+void calibrate(){
+  if (hasfrontwall()){
+    //sensor Reading 
+     while(sensorReading_middle > 0)//some number
+      reverse();
+  }
+}
 
 ////this only happens I think when the sensor readings are the same for multiple cycles 
 ////which usually indicates the mouse is stuch somehow

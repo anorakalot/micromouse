@@ -23,8 +23,14 @@ void read_angle(){
   gyro_sum += (gyro_dps /50); // divided / multipled by 0.01 because thats the sampling period of 10 ms delay
   gyro_angle = gyro_sum; 
 
+  
   //accerlerometer reading
   accel_raw_data = ((int)gyro.a.z);
+  accel_force_data = (accel_raw_data * accel_force_conversion_factor) / 1000 ;// divided by 1000 because its in mg not g
+
+  //complementary filter
+  gyro_angle = (0.98 * gyro_angle) + (0.02 * accel_force_data);
+  
   
   //Serial.print("G ");
   //Serial.print("X: ");
@@ -37,9 +43,10 @@ void read_angle(){
 //  Serial.println(gyro_raw_data);
 //  Serial.println(" Z dps: ");
 //  Serial.println(gyro_dps);
-//  Serial.println("gyro angle");
+  Serial.println("gyro angle");
   Serial.println(gyro_angle);
-  
+  //Serial.println("accel force");
+  //Serial.println(accel_force_data);  
   
   delay(5);
 }
