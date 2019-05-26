@@ -162,10 +162,12 @@ void loop() {
 //testIR();//tests single led (this is before soldering
 //Serial.println("HELLO");
 //forward(base_speed,base_speed);
-go_one_cell();
+
+//go_one_cell();
 //
-halt_until(halt_delay);
-//delay(1000);
+//halt_until(halt_delay);
+//delay(500);
+
 //
 
 //gyro_testing
@@ -193,7 +195,7 @@ halt_until(halt_delay);
 //halt_until(halt_delay);
 //delay(2000);
 
-
+correct_mouse();
 
 //right_turn();
 //reverse();

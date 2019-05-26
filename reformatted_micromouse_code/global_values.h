@@ -1,5 +1,5 @@
 
-int halt_delay = 300;//350,300
+int halt_delay = 400;//350,300
 
 
 unsigned long prev_encoder_tick;
@@ -21,7 +21,7 @@ bool first_check = true;
 //int permReading_right;
 
 
-double base_speed = 200; // 200,150,125,150
+double base_speed = 150; // 200,150,125,150,   200
 double kp = 0.40;//0.50,0.030,0.50, 0.90
 double kd = 0.30;//0.40
 double ki = 0.00001;
@@ -34,6 +34,35 @@ double i_control = 0;
 unsigned long error_buildup;
 
 double reset_error = 0;
+
+
+int middle_point_l = 34;//31,34,36
+
+//double base_speed = 200; // 200,150,125,150
+double kp_l = 0.40;//0.50,0.030,0.50, 0.90
+double kd_l = 0.30;//0.40
+double ki_l = 0.00001;
+double error_l = 0;
+double prev_error_l = 0;
+double p_control_l = 0;
+double d_control_l = 0;
+double i_control_l = 0;
+unsigned long error_buildup_l;
+double reset_error_l = 0;
+
+
+int middle_point_r = 35;
+double kp_r = 0.40;//0.50,0.030,0.50, 0.90
+double kd_r = 0.30;//0.40
+double ki_r = 0.00001;
+double error_r = 0;
+double prev_error_r = 0;
+double p_control_r = 0;
+double d_control_r = 0;
+double i_control_r = 0;
+unsigned long error_buildup_r;
+double reset_error_r = 0;
+
 
 ///////////////////////////////////
 double motor_left = 125;
