@@ -174,10 +174,10 @@ void forward(double left_speed, double right_speed) {
 //}
 
 //GYROSCOPE turn functions 
-void left_turn_until() {
+void left_turn_until(){
   gyro_angle = 0;
   gyro_sum = 0;
-  while (  abs(gyro_angle)  <90 ) { //150, 175,120,110,130
+  while (  abs(gyro_angle)  <90 ) { //150, 175,120,110,130,90,95
     gyro_tick();
     left_turn();                  //350,360,380,390
   }
@@ -198,10 +198,10 @@ void left_turn_until() {
 //  }                 //330,264,270,275
 //}
 
-void right_turn_until() {//330,240,220
+void right_turn_until(){//330,240,220
   gyro_angle = 0;
   gyro_sum = 0;
-  while ( abs(gyro_angle)  <90) { //150,175,120,110,130 
+  while ( abs(gyro_angle)  <90) { //150,175,120,110,130 ,90,95
     gyro_tick();
     right_turn();                  //350,360,380,390
   }
@@ -249,7 +249,7 @@ void reverse_until() {
   }
 }
 */
-void reverse_turn_until() {//330,240,220
+void reverse_turn_until(){//330,240,220
   gyro_angle = 0;
   gyro_sum = 0;
 
@@ -637,34 +637,34 @@ void pid_control(){
 
   //testing
   //pid_control_two_45_walls();    
-  pid_control_one_wall_l();
+  //pid_control_one_wall_l();
   //pid_control_one_wall_r();
   //pid_control_no_walls();
 
 //using 45 deg sensors
-//     if (has_45_left_wall() == true && has_45_right_wall() == true){
-//        pid_control_two_45_walls();
-//      }
-//      else if (has_45_left_wall() == true &&  has_45_right_wall() == false){
-//        pid_control_one_wall_l();
-//      }
-//      else if (has_45_left_wall() == false && has_45_right_wall() == true){
-//       pid_control_one_wall_r();
-//      
-//      }
-//
-//      //it works surpisingly well
-//      else if (has_45_left_wall() && has_45_right_wall() == false){
-//       // pid_control_no_walls();
-//       pid_control_two_walls();
-//
-//      
-//         }
-//      else{
-//        pid_control_two_45_walls();
-//      }
-//  pid_control_two_walls();
-//
+     if (has_45_left_wall() == true && has_45_right_wall() == true){
+        pid_control_two_45_walls();
+      }
+      else if (has_45_left_wall() == true &&  has_45_right_wall() == false){
+        pid_control_one_wall_l();
+      }
+      else if (has_45_left_wall() == false && has_45_right_wall() == true){
+       pid_control_one_wall_r();
+      
+      }
+
+      //it works surpisingly well
+      else if (has_45_left_wall() && has_45_right_wall() == false){
+       // pid_control_no_walls();
+       pid_control_two_45_walls();
+
+      
+         }
+      else{
+        pid_control_two_45_walls();
+      }
+
+
 
 //using 90 deg sensors 
 //  //pid_control_no_walls();
@@ -1114,33 +1114,33 @@ void pid_tick(){
 */
 
 
-enum FLOODFILL_STATES{FLOODFILL_INIT,FLOODFILL_START} floodfill_state;
-void floodfill_init(){
-  floodfill_state = FLOODFILL_INIT;
-}
-
-void floodfill_tick(){
-  switch(floodfill_state){//transitions
-    case FLOODFILL_INIT:
-      break;
-    case FLOODFILL_START:
-      break;
-    default:
-      break;
-  }
-  switch(floodfill_state){//actions
-    case FLOODFILL_INIT:
-      break;
-     case FLOODFILL_START:
-      goal_coord.y_pos = 4;
-      goal_coord.x_pos = 4;
-
-      mouse_pos.y_pos = 8;
-      mouse_pos.x_pos = 0;
-      break;
-  }
-  
-}
+//enum FLOODFILL_STATES{FLOODFILL_INIT,FLOODFILL_START} floodfill_state;
+//void floodfill_init(){
+//  floodfill_state = FLOODFILL_INIT;
+//}
+//
+//void floodfill_tick(){
+//  switch(floodfill_state){//transitions
+//    case FLOODFILL_INIT:
+//      break;
+//    case FLOODFILL_START:
+//      break;
+//    default:
+//      break;
+//  }
+//  switch(floodfill_state){//actions
+//    case FLOODFILL_INIT:
+//      break;
+//     case FLOODFILL_START:
+//      goal_coord.y_pos = 4;
+//      goal_coord.x_pos = 4;
+//
+//      mouse_pos.y_pos = 8;
+//      mouse_pos.x_pos = 0;
+//      break;
+//  }
+//  
+//}
 
 //just call the function instead
 /*

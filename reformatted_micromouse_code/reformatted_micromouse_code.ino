@@ -157,16 +157,18 @@ void loop() {
 
 //  error_catch();
 
+
+
 //ALL BELOW IS JUST FOR TESTING BEFORE COMPETITION
 
 //testIR();//tests single led (this is before soldering
 //Serial.println("HELLO");
 //forward(base_speed,base_speed);
 
-//go_one_cell();
-//
-//halt_until(halt_delay);
-//delay(500);
+go_one_cell();
+
+halt_until(halt_delay);
+delay(500);
 
 //
 
@@ -187,7 +189,7 @@ void loop() {
 //left_turn_until(); //
 //right_turn_until(); //  
 //reverse_turn_until(); // 
-
+//
 //halt_until(halt_delay);
 //delay(2000);
 
@@ -195,7 +197,13 @@ void loop() {
 //halt_until(halt_delay);
 //delay(2000);
 
-correct_mouse();
+//correct_mouse();
+//forward(motor_left,motor_right);
+//delay(1000);
+//halt();
+//reverse(motor_left,motor_right);
+//delay(1000);
+//halt();
 
 //right_turn();
 //reverse();

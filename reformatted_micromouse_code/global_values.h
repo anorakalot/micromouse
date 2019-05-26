@@ -21,7 +21,7 @@ bool first_check = true;
 //int permReading_right;
 
 
-double base_speed = 150; // 200,150,125,150,   200
+double base_speed =150 ; // 200,150,125,    150,   200
 double kp = 0.40;//0.50,0.030,0.50, 0.90
 double kd = 0.30;//0.40
 double ki = 0.00001;
@@ -39,8 +39,8 @@ double reset_error = 0;
 int middle_point_l = 34;//31,34,36
 
 //double base_speed = 200; // 200,150,125,150
-double kp_l = 0.40;//0.50,0.030,0.50, 0.90
-double kd_l = 0.30;//0.40
+double kp_l = 0.40;//0.40,0.30
+double kd_l = 0.30;//0.40,0.30
 double ki_l = 0.00001;
 double error_l = 0;
 double prev_error_l = 0;
