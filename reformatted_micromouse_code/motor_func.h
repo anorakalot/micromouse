@@ -1,5 +1,6 @@
 
 
+
 //encoder and turns
 void left_encoder_event() {
   left_count ++;
@@ -47,13 +48,6 @@ void reverse() {
 
 //double check this function I switched which logic is left and which is right
 void reverse(double left_speed, double right_speed) {
-//  digitalWrite(turn_on_en_1, HIGH);
-//  digitalWrite(turn_on_en_2, HIGH);
-//
-//  digitalWrite(motor_1_logic_2,LOW );
-//  analogWrite(motor_1_logic_1,left_speed);
-//  analogWrite(motor_2_logic_2, right_speed);
-//  digitalWrite(motor_2_logic_1, LOW);
 
 
   digitalWrite(turn_on_en_1, HIGH);
@@ -78,8 +72,13 @@ void halt() {
   digitalWrite(motor_1_logic_2, LOW);
   digitalWrite(motor_2_logic_1, LOW);
   digitalWrite(motor_2_logic_2, LOW);
+}
 
-
+void halt_until(unsigned long stop_time ) {
+  unsigned long curr = millis();
+  while (millis() - curr < stop_time) {
+    halt();
+  }
 }
 
 
@@ -109,14 +108,16 @@ void left_turn() {
 }
 
 
-void right_turn() {
+void right_turn(){
   digitalWrite(turn_on_en_1, HIGH);
   digitalWrite(turn_on_en_2, HIGH);
 
 
-  digitalWrite(motor_1_logic_1, HIGH);
+  //digitalWrite(motor_1_logic_1, HIGH);
+  analogWrite(motor_1_logic_1,255);
   digitalWrite(motor_1_logic_2, LOW);
-  digitalWrite(motor_2_logic_1, HIGH);
+  //digitalWrite(motor_2_logic_1, HIGH);
+  analogWrite(motor_2_logic_1,255);
   digitalWrite(motor_2_logic_2, LOW);
 }
 
@@ -146,13 +147,6 @@ void right_turn(int turn_speed) {
 
 //double check this function I switched which logic is left and which is right
 void forward(double left_speed, double right_speed) {
-//  digitalWrite(turn_on_en_1, HIGH);
-//  digitalWrite(turn_on_en_2, HIGH);
-//
-//  digitalWrite(motor_1_logic_2,LOW );
-//  analogWrite(motor_1_logic_1,left_speed);
-//  analogWrite(motor_2_logic_2, right_speed);
-//  digitalWrite(motor_2_logic_1, LOW);
 
 
   digitalWrite(turn_on_en_1, HIGH);
@@ -165,95 +159,41 @@ void forward(double left_speed, double right_speed) {
   
 }
 
-////Encoder turn functions 
-//void left_turn_until() {//330,240,220
-//  unsigned long curr = left_count;//382,380,375,378,380,383,390,380,382,365
-//  while ( left_count - curr < 232) { //380 330 ,280,290,300,310,320,330,340,350,360,380,365,360
-//    left_turn();                  //350,360,380,390
-//  }
-//}
 
 //GYROSCOPE turn functions 
 void left_turn_until(){
   gyro_angle = 0;
   gyro_sum = 0;
-  while (  abs(gyro_angle)  <90 ) { //150, 175,120,110,130,90,95
+  halt_until(halt_delay);
+  while (  abs(gyro_angle)  <95 ) { //150, 175,120,110,130,90,95
     gyro_tick();
     left_turn();                  //350,360,380,390
   }
+  halt_until(halt_delay);
 }
-////PROBABLY DELETE THESE WITH WALL FUNC
-//void left_with_wall() {//330,240,340
-//  unsigned long curr = left_count;//382,380,375,378,380,383,390,380,382,365
-//  while ( left_count - curr < 356  ) { //380 330 ,280,290,300,310,320,330,340,350,360,380,365,360
-//    left_turn();                  //350,360,380,390
-//  }               //318
-//}
 
 ////use left_count
-//void right_turn_until() {
-//  unsigned long curr = left_count;//335,243 
-//  while ( left_count - curr < 265) { //320,340, 370,300,290,280,270,260,280,300,325,330
-//    right_turn();               //325,335
-//  }                 //330,264,270,275
-//}
+
 
 void right_turn_until(){//330,240,220
   gyro_angle = 0;
   gyro_sum = 0;
-  while ( abs(gyro_angle)  <90) { //150,175,120,110,130 ,90,95
+  halt_until(halt_delay);
+  while ( abs(gyro_angle)  <95) { //150,175,120,110,130 ,90,95
     gyro_tick();
     right_turn();                  //350,360,380,390
   }
+  halt_until(halt_delay);
 }
 
 
-////PROBABLY DELETE THESE WITH WALL FUNC
-//void right_with_wall() {
-//  unsigned long curr = left_count;//335
-//  while ( left_count - curr <310  ) { //320,340, 370,300,290,280,270,260,280,300,325,330
-//    right_turn();               //325,335
-//  }                 //330
-//}
-//
-void reverse_until() {
-  unsigned long curr_l = left_count;
-  //use left_count instead of right_count
-  while ( left_count - curr_l < 100) { //800,830, 860,870,790,800,810,840,860,870
-    reverse();
-  }
-}
-//void reverse_until() {//330,240,220
-//  gyro_angle = 0;
-//  gyro_sum = 0;
-//  while ( gyro_angle  < 140) { //380 330 ,280,290,300,310,320,330,340,350,360,380,365,360
-//    gyro_tick();
-//    left_turn();                  //350,360,380,390
-//  }
-//}
-/*
-  void reverse_turn_until() {
-  unsigned long curr_l = left_count;
-  //use left_count instead of right_count
-  unsigned long curr_r = left_count;
-  //
-  if (sensorReading_left < sensorReading_right) {//880
-    while ( left_count - curr_l < 860 ) { //800,830, 860,870,790,800,810,840,860,870
-      left_turn();                  //870,910u
-    }
-  }
-  else { //use left_count instead of right_count
-    while ( left_count - curr_r < 720) { //800,830, 860,870,790
-      right_turn();
-    }
-  }
-}
-*/
+
 void reverse_turn_until(){//330,240,220
   gyro_angle = 0;
   gyro_sum = 0;
 
   readIR();
+  halt_until(halt_delay);
   if (sensorReading_left > sensorReading_right){
   
   while ( abs(gyro_angle)  < 260) { //350,330,305,305,180,200,230,250,260,255
@@ -269,7 +209,8 @@ void reverse_turn_until(){//330,240,220
     left_turn();                  //350,360,380,390
    }
   }
-  
+
+  halt_until(halt_delay);
 }
 
 //only uses this forward until function for certain special times when going forward
@@ -637,7 +578,7 @@ void pid_control(){
 
   //testing
   //pid_control_two_45_walls();    
-  //pid_control_one_wall_l();
+ // pid_control_one_wall_l();
   //pid_control_one_wall_r();
   //pid_control_no_walls();
 
@@ -656,13 +597,17 @@ void pid_control(){
       //it works surpisingly well
       else if (has_45_left_wall() && has_45_right_wall() == false){
        // pid_control_no_walls();
-       pid_control_two_45_walls();
+      
+       //pid_control_two_45_walls();
 
+       pid_control_one_wall_r();
       
          }
       else{
         pid_control_two_45_walls();
       }
+
+//pid_control_two_45_walls();
 
 
 
@@ -691,11 +636,11 @@ void pid_control(){
 
 
 
-void go_one_cell() {
-  unsigned long curr = right_count;//
-  while (right_count - curr <1130 ) {//945,400,500,600,650,750,1000,1100,1200  ,1300 
-    readIR();                   //900,500,600,700,800,900,1000,1070,1100, ,1150,1160, 1200
-    print_encoder_count();
+void go_one_cell(){
+ unsigned long curr = millis();
+  while (millis() - curr <903 ) { 
+   readIR();                   
+   // print_encoder_count();
     //pid_control_two_walls();
     //IF PID IS DONE IN A STATE MACHINE I WONT NEED PID IN THIS FUNCTION 
     //HAVING IN STATE MACHINES COULD MEAN I COULD HAVE BETTER READ RESULTS
@@ -703,7 +648,27 @@ void go_one_cell() {
     pid_control();
     
     forward(motor_left, motor_right);
+
+   
+    
   }
+  halt_until(halt_delay);
+  
+//  //off encoders
+//  unsigned long curr = right_count;//
+//  while (abs(right_count - curr) <912) {//945,400,500,600,650,750,1000,1100,1200  ,1300  , 952 , 930 , 912,908(best so far) , 905 , 890 , 908 
+//    readIR();                   //900,500,600,700,800,900,1000,1070,1100, ,1150,1160, 1200 , 1130,1000 , 900    ,1000 , 945  ,800 ,850 , 880 , 885,895 , 915 ,925(over),920(both) , close 905 ,980 ,960(closest)
+//   // print_encoder_count();
+//    //pid_control_two_walls();
+//    //IF PID IS DONE IN A STATE MACHINE I WONT NEED PID IN THIS FUNCTION 
+//    //HAVING IN STATE MACHINES COULD MEAN I COULD HAVE BETTER READ RESULTS
+//    //NEED TO MAKE SURE THIS DOESN'T MESS UP CONTROL GOING FORWARD
+//    pid_control();
+//    
+//    forward(motor_left, motor_right);
+//    //print_encoder_count();
+//  }
+ 
   //testing
 //  print_encoder_count();
 //  halt();
@@ -711,170 +676,176 @@ void go_one_cell() {
 
 }
 
-void halt_until(unsigned long stop_time ) {
+
+
+void reverse_until( unsigned long stop_time) {
+
   unsigned long curr = millis();
   while (millis() - curr < stop_time) {
-    halt();
+    pid_control();
+    reverse(motor_left,motor_right);
+
   }
 }
 
 //does random move based on sensor data
-void random_move() {
-  int random_move;
-  //readIR_map();
-  readIR();
-  //has to turn cases
-
-  //wall: left , right open: front
-  if (hasleftwall() && hasrightwall() && !hasfrontwall()) {
-    //go_one_cell();
-    return;
-  }
-
-  //wall: left , right , front open: 
-  if (hasleftwall() && hasrightwall() && hasfrontwall()) {
-    halt_until(halt_delay);
-//    forward_until(125, 125, 100);
+//void random_move(){
+//  int random_move;
+//  //readIR_map();
+//  readIR();
+//  //has to turn cases
+//
+//  //wall: left , right open: front
+//  if (hasleftwall() && hasrightwall() && !hasfrontwall()) {
+//    //go_one_cell();
+//    return;
+//  }
+//
+//  //wall: left , right , front open: 
+//  if (hasleftwall() && hasrightwall() && hasfrontwall()) {
 //    halt_until(halt_delay);
-    reverse_turn_until();
-    halt_until(halt_delay);
-
-
-    return;
-  }
-  
-  //wall: left , front  open: right
-  else if (hasleftwall() && !hasrightwall() && hasfrontwall()) {
-
-    halt_until(halt_delay);
-//    forward_until(125, 125, 100);
+//    reverse_until(100);
 //    halt_until(halt_delay);
-    right_turn_until();
-    //right_with_wall();
-    halt_until(halt_delay);
-
-    return;
-  }
-  //wall: right , front open: left
-  else if (hasrightwall()  && !hasleftwall() && hasfrontwall()) { //|| (hasfronwall() &&(hasrightwall - hasleftwall > 200) ){//
-    halt_until(halt_delay);
-//    forward_until(125, 125, 100);
+//    reverse_turn_until();
 //    halt_until(halt_delay);
-    left_turn_until();
-    //left_with_wall();
-    halt_until(halt_delay);
-
-    return;
-  }
-
-  //random choice cases
-
-  //
-  //wall: right open: left, front
-  else if (!hasleftwall() && !hasfrontwall() && hasrightwall()) {
-    random_move = random(millis()) % 2;
-    if (random_move == 1) {
-      halt_until(halt_delay);
-      left_turn_until();
-      halt_until(halt_delay);
-      return;
-    }
-    else {
-      //goes straight
-      halt_until(halt_delay);
-      return;
-
-    }
-  }
-
-  //wall: left , open: front , right
-  else if (hasleftwall() && !hasfrontwall() && !hasrightwall() ) {
-    random_move = random(millis()) % 2;
-    if (random_move == 1) {
-      halt_until(halt_delay);
-      right_turn_until();
-      halt_until(halt_delay);
-      return;
-    }
-    else {
-      //goes straight
-      halt_until(halt_delay);
-      return;
-    }
-  }
-
-  //wall: front  open:left , right
-  else if (!hasleftwall() && hasfrontwall() && !hasrightwall())  {
-    random_move = random(millis()) % 2;
-    if (random_move == 1) {
-      halt_until(halt_delay);
-//      forward_until(125, 125, 100);
+//
+//
+//    return;
+//  }
+//  
+//  //wall: left , front  open: right
+//  else if (hasleftwall() && !hasrightwall() && hasfrontwall()) {
+//
+//    halt_until(halt_delay);
+//    reverse_until(100);
+//    halt_until(halt_delay);
+//    right_turn_until();
+//    //right_with_wall();
+//    halt_until(halt_delay);
+//
+//    return;
+//  }
+//  //wall: right , front open: left
+//  else if (hasrightwall()  && !hasleftwall() && hasfrontwall()) { //|| (hasfronwall() &&(hasrightwall - hasleftwall > 200) ){//
+//    halt_until(halt_delay);
+//    reverse_until( 100);
+//    halt_until(halt_delay);
+//    left_turn_until();
+//    //left_with_wall();
+//    halt_until(halt_delay);
+//
+//    return;
+//  }
+//
+//  //random choice cases
+//
+//  //
+//  //wall: right open: left, front
+//  else if (!hasleftwall() && !hasfrontwall() && hasrightwall()) {
+//    random_move = random(millis()) % 2;
+//    if (random_move == 1) {
 //      halt_until(halt_delay);
-      right_turn_until();
-      //right_with_wall();
-      halt_until(halt_delay);
-      return;
-    }
-    else {
-      halt_until(halt_delay);
-//      forward_until(125, 125, 100);
+//      left_turn_until();
 //      halt_until(halt_delay);
-      left_turn_until();
-      //left_with_wall();
-      halt_until(halt_delay);
-      return;
-    }
-  }
-  //wall:  open: front , left, right
-  else if (!hasfrontwall() && !hasleftwall() && !hasrightwall()) {
-    random_move = random(millis()) % 3;
-    if (random_move == 1) {
-      halt_until(halt_delay);
-      right_turn_until();
-      halt_until(halt_delay);
-      return;
-    }
-    else if (random_move == 2) {
-      halt_until(halt_delay);
-      return;
-    }
-    else {
-      halt_until(halt_delay);
-      left_turn_until();
-      halt_until(halt_delay);
-      return;
+//      return;
+//    }
+//    else {
+//      //goes straight
+//      halt_until(halt_delay);
+//      return;
+//
+//    }
+//  }
+//
+//  //wall: left , open: front , right
+//  else if (hasleftwall() && !hasfrontwall() && !hasrightwall() ) {
+//    random_move = random(millis()) % 2;
+//    if (random_move == 1) {
+//      halt_until(halt_delay);
+//      right_turn_until();
+//      halt_until(halt_delay);
+//      return;
+//    }
+//    else {
+//      //goes straight
+//      halt_until(halt_delay);
+//      return;
+//    }
+//  }
+//
+//  //wall: front  open:left , right
+//  else if (!hasleftwall() && hasfrontwall() && !hasrightwall())  {
+//    random_move = random(millis()) % 2;
+//    if (random_move == 1) {
+//      halt_until(halt_delay);
+//      reverse_until(100);
+//      halt_until(halt_delay);
+//      right_turn_until();
+//      //right_with_wall();
+//      halt_until(halt_delay);
+//      return;
+//    }
+//    else {
+//      halt_until(halt_delay);
+//      reverse_until(100);
+//      halt_until(halt_delay);
+//      left_turn_until();
+//      //left_with_wall();
+//      halt_until(halt_delay);
+//      return;
+//    }
+//  }
+//  //wall:  open: front , left, right
+//  else if (!hasfrontwall() && !hasleftwall() && !hasrightwall()) {
+//    random_move = random(millis()) % 3;
+//    if (random_move == 1) {
+//      halt_until(halt_delay);
+//      right_turn_until();
+//      halt_until(halt_delay);
+//      return;
+//    }
+//    else if (random_move == 2) {
+//      halt_until(halt_delay);
+//      return;
+//    }
+//    else {
+//      halt_until(halt_delay);
+//      left_turn_until();
+//      halt_until(halt_delay);
+//      return;
+//
+//    }
+//  }
+//
+//
+//  //in case of errors
+//  else {
+//    random_move = random(millis()) % 3;
+//    if (random_move == 1) {
+//      halt_until(700);
+//      right_turn_until();
+//      halt_until(700);
+//      return;
+//    }
+//    else if (random_move == 2) {
+//      halt_until(700);
+//      left_turn_until();
+//      halt_until(700);
+//      return;
+//
+//    }
+//    else {
+//      return;
+//    }
+//
+//    //go_one_cell();
+//    return;
+//  }
+//  
+//  return;
+//
+//}
 
-    }
-  }
-
-
-  //in case of errors
-  else {
-    random_move = random(millis()) % 3;
-    if (random_move == 1) {
-      halt_until(700);
-      right_turn_until();
-      halt_until(700);
-      return;
-    }
-    else if (random_move == 2) {
-      halt_until(700);
-      left_turn_until();
-      halt_until(700);
-      return;
-
-    }
-    else {
-      return;
-    }
-
-    //go_one_cell();
-    return;
-  }
-  
-  return;
-
-}
 
 
 
@@ -882,30 +853,78 @@ void random_move() {
 //should replace bumping into walls in random_move function
 //run pid while reversing so it straightens it self out even more
 
-void correct_mouse(){
+void correct_mouse_far(){
   readIR();
   
-  //if (hasfrontwall()){
+  if (hasfrontwall()){
      
-  //!(sensorReading_middle < 82 && sensorReading_middle >  90)
-  while(sensorReading_middle != 82){
-    
-  
-    //75
-     //while(sensorReading_middle > 85){//some number
-    if (sensorReading_middle >82){ 
-      pid_control();
-      reverse(motor_left,motor_right);
+  //82, 
+    if (sensorReading_middle <84){
+      while(sensorReading_middle < 84){
+        
+        forward(motor_left,motor_right);
+        pid_control();
+        readIR();
+        Serial.println("FARRRRR");
       }
-    //while(sensorReading_middle < 82){
-    if (sensorReading_middle < 82){ 
-      pid_control ();
-      forward(motor_left,motor_right);
-      }
+      halt_until(halt_delay);
     }
-   return;
-  //}
+    
+
+  }
+
+  //return;
 }
+
+void correct_mouse_close(){
+readIR();
+  if (hasfrontwall()){
+     
+    
+    if (sensorReading_middle > 84){
+      while(sensorReading_middle > 84){
+        reverse(motor_left,motor_right);
+        pid_control();
+        readIR();
+        Serial.println("CLOSEEEE");
+      }
+      
+      halt_until(halt_delay);
+    }
+
+  }
+  //return;
+  
+}
+
+//void testing_func(){
+//  readIR();
+//  
+//  //if (hasfrontwall()){
+//     
+//  //82, 
+//    if (sensorReading_middle <84){
+//      while(sensorReading_middle < 84){
+//        forward(motor_left,motor_right);
+//        pid_control();
+//      }
+//      halt_until(halt_delay);
+//    }
+//    
+//    else if (sensorReading_middle > 84){
+//      while(sensorReading_middle > 84){
+//        reverse(motor_left,motor_right);
+//        pid_control();
+//      }
+//      halt_until(halt_delay);
+//    }
+//    
+//
+////  }
+//
+//  return;
+//}
+
 
 ////this only happens I think when the sensor readings are the same for multiple cycles 
 ////which usually indicates the mouse is stuch somehow
@@ -920,14 +939,14 @@ void correct_mouse(){
 //      int rand_num = random(millis()) % 2;
 //      if (rand_num == 1) {
 //        halt_until(700);
-//        reverse_until();
+//        reverse_until(100);
 //        halt_until(700);
 //        left_turn_until();
 //        halt_until(700);
 //      }
 //      else {
 //        halt_until(700);
-//        reverse_until();
+//        reverse_until(100);
 //        halt_until(700);
 //        right_turn_until();
 //        halt_until(700);
@@ -938,14 +957,14 @@ void correct_mouse(){
 //      int rand_num = random(millis()) % 2;
 //      if (rand_num == 1) {
 //        halt_until(700);
-//        reverse_until();
+//        reverse_until(100);
 //        halt_until(700);
 //        left_turn_until();
 //        halt_until(700);
 //      }
 //      else {
 //        halt_until(700);
-//        reverse_until();
+//        reverse_until(100);
 //        halt_until(700);
 //        right_turn_until();
 //        halt_until(700);
@@ -959,10 +978,12 @@ void correct_mouse(){
 //  }
 //}
 
+
+
 //error_check = false;
 //MIGHT PUT FLOODFILL INTO THIS STATE MACHINE AS WELL
-enum MOTOR_STATES{MOTOR_INIT,GO_ONE_CELL,CORRECT_MOUSE,RANDOM_MOVE } motor_state;
-
+enum MOTOR_STATES{MOTOR_INIT,GO_ONE_CELL,CHOOSE_MOVE,TURN_REVERSE,TURN_LEFT,TURN_RIGHT } motor_state;
+                                      //CORRECT_MOUSE
 void motor_init(){
   motor_state = MOTOR_INIT;
 }
@@ -974,19 +995,109 @@ void motor_tick(){
       break;
     case GO_ONE_CELL:
       //motor_state = RANDOM_MOVE;
-      //motor_state = CORRECT_MOUSE;
-      if (hasfrontwall() == true){
-       motor_state = CORRECT_MOUSE; 
-      }
-      else{
-        motor_state = RANDOM_MOVE;
-      }
-      break;
-    case CORRECT_MOUSE:
+      //all walls 
+      motor_state = CHOOSE_MOVE;
       
       break;
-    case RANDOM_MOVE:
-      motor_state = GO_ONE_CELL;
+
+    case CHOOSE_MOVE:
+      //structured like a 3 input truth table
+      
+      readIR();
+      //000
+      if (hasfrontwall() == false && hasleftwall() == false && hasrightwall() == false){
+        random_choice = random(millis()) % 2;
+        if (random_choice == 0){
+          motor_state = GO_ONE_CELL;
+        }
+        else if (random_choice == 1){
+          motor_state = TURN_LEFT;
+        }
+        else if (random_choice == 2){
+          motor_state = TURN_RIGHT;
+        }
+      }
+      //001
+      else if (hasfrontwall() == false && hasleftwall() == false && hasrightwall() == true){
+        random_choice = random(millis()) % 2;
+        if (random_choice == 0){
+          motor_state = GO_ONE_CELL;
+        }
+        else if (random_choice == 1){
+          motor_state = TURN_LEFT;
+        }
+      }
+      //010
+      else if (hasfrontwall() == false && hasleftwall() == true && hasrightwall() == false){
+        random_choice = random(millis()) % 2;
+        if (random_choice == 0){
+          motor_state = GO_ONE_CELL;      
+        }
+        else if (random_choice == 1){
+          motor_state = TURN_RIGHT;
+        }
+      }
+      
+      //011
+      else if (hasfrontwall() == false && hasleftwall() == true && hasrightwall() == true){
+        motor_state = GO_ONE_CELL;
+      }
+      //100
+      else if (hasfrontwall() == true && hasleftwall() == false && hasrightwall() == false){
+        random_choice = random(millis()) % 2;
+        if (random_choice == 0){
+          motor_state = TURN_LEFT;
+        }
+        else if (random_choice == 1){
+          motor_state = TURN_RIGHT;
+        }
+      }
+      //101
+      else if (hasfrontwall() == true && hasleftwall() == false && hasrightwall() == true){
+        motor_state = TURN_LEFT;
+      }
+      //110
+      else if (hasfrontwall() == true && hasleftwall() == true && hasrightwall() == false){
+        motor_state = TURN_RIGHT;
+      }
+
+      
+      //111
+      else if (hasfrontwall() == true && hasleftwall() == true && hasrightwall() == true){
+        motor_state = TURN_REVERSE;
+      }
+
+      
+
+      
+      
+      
+      
+
+      
+
+     
+       
+      
+
+
+      
+      //nothing else
+      else{
+        motor_state = GO_ONE_CELL;
+      }
+      
+      //motor_state = REVERSE;
+      break;
+    
+    case TURN_RIGHT:
+      motor_state = CHOOSE_MOVE;
+      break;
+    case TURN_LEFT:
+      motor_state = CHOOSE_MOVE;
+      break;
+    case TURN_REVERSE:
+      motor_state = CHOOSE_MOVE;    
       break;
     default:
       motor_state = GO_ONE_CELL;
@@ -996,174 +1107,30 @@ void motor_tick(){
     case MOTOR_INIT:
       break;
     case GO_ONE_CELL:
-      //go_one_cell_happening = 1;
       go_one_cell();//this calls pid inside of it
-      halt_until(halt_delay);
+      Serial.println("GO_ONE_CELL");
       break;
-    case CORRECT_MOUSE:
-      
+    case CHOOSE_MOVE:
+      //nothing it just chooses move
       break;
-    case RANDOM_MOVE:
-      //go_one_cell_happening = 0;
-      random_move();
+    case TURN_REVERSE:
+      reverse_turn_until();
+      Serial.println("REVERSE");
       break;
-    
-  }
-  
-}
-
-//IF ERROR HAPPENS WITH THIS MIGHT JUST GO AND HAVE THE DIFFERENT PID'S IN ONE FUNCTION INSTEAD
-//do this with just 3 functions again that are called while going one cell
-/*
-enum PID_STATES{PID_INIT, PID_TWO_WALLS,PID_ONE_WALL,PID_NO_WALLS } pid_state;
-void pid_init(){
-  pid_state = PID_INIT;
-}
-
-void pid_tick(){
-  if (go_one_cell_happening){
-  switch(pid_state){//transitions
-    case PID_INIT:
-      if (hasleftwall() == true && hasrightwall() == true){
-        pid_state = PID_TWO_WALLS;
-      }
-      else if (hasleftwall() == true && hasrightwall() == false){
-        pid_state = PID_ONE_WALL;
-      }
-      else if (hasleftwall() == false && hasrightwall() == true){
-        pid_state = PID_ONE_WALL;
-      }
-      else if (hasleftwall() == false && hasrightwall() == false){
-        pid_state = PID_NO_WALLS;
-      }
-      else{
-        pid_state = PID_TWO_WALLS;
-      }
+    case TURN_LEFT:
+      left_turn_until();
       break;
-     case PID_TWO_WALLS:
-      if (hasleftwall() == true && hasrightwall() == true){
-        pid_state = PID_TWO_WALLS;
-      }
-      else if (hasleftwall() == true && hasrightwall() == false){
-        pid_state = PID_ONE_WALL;
-      }
-      else if (hasleftwall() == false && hasrightwall() == true){
-        pid_state = PID_ONE_WALL;
-      }
-      else if (hasleftwall() == false && hasrightwall() == false){
-        pid_state = PID_NO_WALLS;
-      }
-      else{
-        pid_state = PID_TWO_WALLS;
-      }
-      break;
-     case PID_ONE_WALL:
-      if (hasleftwall() == true && hasrightwall() == true){
-        pid_state = PID_TWO_WALLS;
-      }
-      else if (hasleftwall() == true && hasrightwall() == false){
-        pid_state = PID_ONE_WALL;
-      }
-      else if (hasleftwall() == false && hasrightwall() == true){
-        pid_state = PID_ONE_WALL;
-      }
-      else if (hasleftwall() == false && hasrightwall() == false){
-        pid_state = PID_NO_WALLS;
-      }
-      else{
-        pid_state = PID_TWO_WALLS;
-      }
-      break;
-     case PID_NO_WALLS:
-      if (hasleftwall() == true && hasrightwall() == true){
-        pid_state = PID_TWO_WALLS;
-      }
-      else if (hasleftwall() == true && hasrightwall() == false){
-        pid_state = PID_ONE_WALL;
-      }
-      else if (hasleftwall() == false && hasrightwall() == true){
-        pid_state = PID_ONE_WALL;
-      }
-      else if (hasleftwall() == false && hasrightwall() == false){
-        pid_state = PID_NO_WALLS;
-      }
-      else{
-        pid_state = PID_TWO_WALLS;
-      }
-      break;
-     default:
-      pid_state = PID_INIT;
-      break; 
-  }
-  switch(pid_state){//actions
-    case PID_INIT:
-      break;
-    case PID_TWO_WALLS:
-      pid_control_two_walls();
-      break;
-    case PID_ONE_WALL:
-      pid_control_one_wall();
-      break;
-    case PID_NO_WALLS:
-      pid_control_no_walls();
-      break;
-     
-    }
-  }
-}
-*/
-
-
-//enum FLOODFILL_STATES{FLOODFILL_INIT,FLOODFILL_START} floodfill_state;
-//void floodfill_init(){
-//  floodfill_state = FLOODFILL_INIT;
-//}
-//
-//void floodfill_tick(){
-//  switch(floodfill_state){//transitions
-//    case FLOODFILL_INIT:
-//      break;
-//    case FLOODFILL_START:
-//      break;
-//    default:
-//      break;
-//  }
-//  switch(floodfill_state){//actions
-//    case FLOODFILL_INIT:
-//      break;
-//     case FLOODFILL_START:
-//      goal_coord.y_pos = 4;
-//      goal_coord.x_pos = 4;
-//
-//      mouse_pos.y_pos = 8;
-//      mouse_pos.x_pos = 0;
-//      break;
-//  }
-//  
-//}
-
-//just call the function instead
-/*
-//ERROR CATCH 
-enum ERROR_CATCH_STATES{ERROR_CATCH_INIT } error_catch_state;
-
-void error_catch_init(){
-  error_catch_state = ERROR_CATCH_INIT;
-}
-void error_catch_tick(){
-  switch(error_catch_state){//transitions
-    case ERROR_CATCH_INIT:
-      break;
-    default:
-      break;
-  }
-  switch(error_catch_state){//actions
-    case ERROR_CATCH_INIT:
+    case TURN_RIGHT:
+      right_turn_until();
       break;
   }
   
+  
 }
-*/
+
+
+
+
 
 
 

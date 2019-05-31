@@ -5,11 +5,10 @@
 //#include <basic_io_arm.h>
 //#include <FreeRTOS_ARM.h>
 /*
- * TO DO UCLA COMP
- * DO ONE WALL PID
- * DO SELF CORRECTION WITH FRONT WALL
- * CALIBRATE ALL THE VALUES
+ * DO ONE WALL PID DONE
+ * DO SELF CORRECTION WITH FRONT WALL 
  * DO NO WALL PID
+ * DO ONE CELL LENGTH
  */
 
 
@@ -146,77 +145,31 @@ void setup() {
 
 void loop() {
 //main sequence 
+  readIR();
+  motor_tick();
+  delay(1000);
+  
+  //motor_tick();//does go_one_cell
+  //go_one_cell();
+//  halt_until(halt_delay);
 //  readIR();
-//  
-//  motor_tick();//does go_one_cell
-//  
+//possible calibration function here
+//  correct_mouse_far()
+//  correct_mouse_close();
+  //motor_tick(); // does random_move
+//  random_move();
 //  readIR();
-////possible calibration function here
-//  motor_tick(); // does random_move
-//  readIR();
 
-//  error_catch();
-
-
-
-//ALL BELOW IS JUST FOR TESTING BEFORE COMPETITION
-
-//testIR();//tests single led (this is before soldering
-//Serial.println("HELLO");
-//forward(base_speed,base_speed);
-
-go_one_cell();
-
-halt_until(halt_delay);
-delay(500);
-
-//
-
-//gyro_testing
-//gyro_tick();
-
-//forward(0,255);
-//
-//  readIR();
-//  delay(1000);
-//halt_until(1000);
-//print_encoder_count();
-//left_turn();
-////gyro_tick();
-//
-//
-//halt_until(halt_delay);
-//left_turn_until(); //
-//right_turn_until(); //  
-//reverse_turn_until(); // 
-//
-//halt_until(halt_delay);
-//delay(2000);
-
-//reverse(200,200);
-//halt_until(halt_delay);
-//delay(2000);
-
-//correct_mouse();
-//forward(motor_left,motor_right);
-//delay(1000);
-//halt();
-//reverse(motor_left,motor_right);
-//delay(1000);
-//halt();
-
-//right_turn();
-//reverse();
 //readIR();
-//delay(10);
-//Serial.println("hello");
+//reverse_turn_until();
+//left_turn_until();
+
 //delay(1000);
-//read_angle();
-//t.update();
+
+
+//readIR()
 //delay(1000);
-//readIR();
-//Serial.println("HELLOOOO");
-//return;
+
 }
 
 
@@ -230,8 +183,7 @@ delay(500);
 //  motor_init();
 //  for(;;){
 //    motor_tick();
-//    vTaskDelay(10); 
-//  }
+//    vTaskDelay(10); //  }
 //}
 //void StartSecPulse_2(unsigned portBASE_TYPE Priority)
 //{

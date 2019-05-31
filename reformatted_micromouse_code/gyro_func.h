@@ -29,7 +29,7 @@ void read_angle(){
   accel_force_data = (accel_raw_data * accel_force_conversion_factor) / 1000 ;// divided by 1000 because its in mg not g
 
   //complementary filter
-  gyro_angle = (0.98 * gyro_angle) + (0.02 * accel_force_data);
+  gyro_angle = (0.97 * gyro_angle) + (0.03 * accel_force_data);
   
   
   //Serial.print("G ");
@@ -43,7 +43,7 @@ void read_angle(){
 //  Serial.println(gyro_raw_data);
 //  Serial.println(" Z dps: ");
 //  Serial.println(gyro_dps);
-  Serial.println("gyro angle");
+//  Serial.println("gyro angle");
   Serial.println(gyro_angle);
   //Serial.println("accel force");
   //Serial.println(accel_force_data);  
@@ -53,6 +53,10 @@ void read_angle(){
 //*/
 
 
+void read_distance(){
+
+  
+}
 enum GYRO_STATES {GYRO_INIT,GYRO_START, GYRO_READ_ANGLE} gyro_state;
 
 void gyro_init(){

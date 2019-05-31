@@ -20,9 +20,11 @@ bool first_check = true;
 //int permReading_middle;
 //int permReading_right;
 
+int random_choice = 0;
+
 
 double base_speed =150 ; // 200,150,125,    150,   200
-double kp = 0.40;//0.50,0.030,0.50, 0.90
+double kp = 0.36;//0.50,0.030,0.50, 0.90,0.40
 double kd = 0.30;//0.40
 double ki = 0.00001;
 double error = 0;
@@ -36,11 +38,11 @@ unsigned long error_buildup;
 double reset_error = 0;
 
 
-int middle_point_l = 34;//31,34,36
+int middle_point_l = 40;//31,34,36,34,40
 
 //double base_speed = 200; // 200,150,125,150
-double kp_l = 0.40;//0.40,0.30
-double kd_l = 0.30;//0.40,0.30
+double kp_l = 0.30;//0.40,0.30,0.40
+double kd_l = 0.20;//0.40,0.30
 double ki_l = 0.00001;
 double error_l = 0;
 double prev_error_l = 0;
@@ -51,9 +53,9 @@ unsigned long error_buildup_l;
 double reset_error_l = 0;
 
 
-int middle_point_r = 35;
-double kp_r = 0.40;//0.50,0.030,0.50, 0.90
-double kd_r = 0.30;//0.40
+int middle_point_r = 40;
+double kp_r = 0.30;//0.40
+double kd_r = 0.20;//0.40 0.30
 double ki_r = 0.00001;
 double error_r = 0;
 double prev_error_r = 0;
@@ -183,6 +185,7 @@ int error_45_right;
 
 //gryo values 
 //I PUT GRYO VARIABLES IN GRYO_FUNC DUE TO ERRORS
+
 LSM6 gyro;
 int gyro_dps; //degrees per second
 int gyro_raw_data;
@@ -191,9 +194,13 @@ signed long gyro_angle = 0;
 int gyro_raw_dps_conversion_factor = 8.75;
 int gyro_reset_limit = 1000;
 
+//accelerometer values
 int accel_raw_data;
 int accel_force_conversion_factor = 0.061;
 int accel_force_data;
+
+
+
 
 //bool go_one_cell_happening = 0;
 
@@ -202,36 +209,36 @@ int accel_force_data;
 //Timer t;
 
 //FLOODFILL VARIABLES
-struct pair{
-  int y_pos;
-  int x_pos;
-};
-
-//floodfill variables
-struct cell{
-  bool left_wall;
-  bool right_wall;
-  bool top_wall;
-  bool bottom_wall;
-  int value;
-  pair coord;
-};
-
-//typedef struct Cell cell;
-//stack pair checks;
-struct pair goal_coord;
-
-//pair <int,int> goal_coord(4,4);
-struct pair mouse_pos;
-
-//pair <int,int> mouse_pos (8,0);
-
-const int maze_x_length = 9;
-const int maze_y_length = 9;
-int index_x_max = 8;
-int index_y_max = 8;
-
-struct cell maze[maze_y_length][maze_x_length];
+//struct pair{
+//  int y_pos;
+//  int x_pos;
+//};
+//
+////floodfill variables
+//struct cell{
+//  bool left_wall;
+//  bool right_wall;
+//  bool top_wall;
+//  bool bottom_wall;
+//  int value;
+//  pair coord;
+//};
+//
+////typedef struct Cell cell;
+////stack pair checks;
+//struct pair goal_coord;
+//
+////pair <int,int> goal_coord(4,4);
+//struct pair mouse_pos;
+//
+////pair <int,int> mouse_pos (8,0);
+//
+//const int maze_x_length = 9;
+//const int maze_y_length = 9;
+//int index_x_max = 8;
+//int index_y_max = 8;
+//
+//struct cell maze[maze_y_length][maze_x_length];
 
 
 
