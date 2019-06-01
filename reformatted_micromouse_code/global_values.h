@@ -1,5 +1,5 @@
 
-int halt_delay = 400;//350,300
+unsigned long halt_delay = 400;//350,300
 
 
 unsigned long prev_encoder_tick;
@@ -23,9 +23,9 @@ bool first_check = true;
 int random_choice = 0;
 
 
-double base_speed =150 ; // 200,150,125,    150,   200
-double kp = 0.36;//0.50,0.030,0.50, 0.90,0.40
-double kd = 0.30;//0.40
+double base_speed = 90; // 200,150,125,150,200,150,125,100
+double kp = 0.30;//0.50,0.030,0.50, 0.90,0.40,0.36
+double kd = 0.20;//0.40,030
 double ki = 0.00001;
 double error = 0;
 double prev_error = 0;
@@ -187,17 +187,28 @@ int error_45_right;
 //I PUT GRYO VARIABLES IN GRYO_FUNC DUE TO ERRORS
 
 LSM6 gyro;
-int gyro_dps; //degrees per second
-int gyro_raw_data;
+double gyro_dps; //degrees per second
+double gyro_raw_data;
 signed long gyro_sum = 0;
 signed long gyro_angle = 0;
-int gyro_raw_dps_conversion_factor = 8.75;
-int gyro_reset_limit = 1000;
+double gyro_raw_dps_conversion_factor = 8.75;
+double gyro_reset_limit = 1000;
 
 //accelerometer values
-int accel_raw_data;
-int accel_force_conversion_factor = 0.061;
-int accel_force_data;
+double accel_raw_data;
+double accel_force_conversion_factor = 0.061;
+double accel_force_data;
+
+
+
+//accelerometer distance values
+double accel_raw_dist_data;
+double accel_dist_conversion_factor = 0.061;
+double accel_dist_data;
+double accel_velocity;
+double accel_distance;
+double g_conv_factor= 9.81;
+
 
 
 

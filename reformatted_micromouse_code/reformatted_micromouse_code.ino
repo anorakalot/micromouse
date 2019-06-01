@@ -8,7 +8,9 @@
  * DO ONE WALL PID DONE
  * DO SELF CORRECTION WITH FRONT WALL 
  * DO NO WALL PID
- * DO ONE CELL LENGTH
+ * DO ONE CELL LENGTH WITH IMU
+ * fix go one cell and turn error
+ * 
  */
 
 
@@ -81,6 +83,7 @@ void setup() {
   
   pinMode(sensor_left, INPUT);
   pinMode(sensor_middle, INPUT);
+  //put in sensor Middle_right
   pinMode(sensor_right, INPUT);  
   pinMode(sensor_45_left, INPUT);
   pinMode(sensor_45_right, INPUT);
@@ -88,6 +91,7 @@ void setup() {
 
   pinMode(sensor_left_power, OUTPUT);
   pinMode(sensor_middle_power, OUTPUT);
+  //pinMode(sensor_middle_right
   pinMode(sensor_right_power, OUTPUT);
   pinMode(sensor_45_left_power,OUTPUT);
   pinMode(sensor_45_right_power,OUTPUT);
@@ -95,7 +99,7 @@ void setup() {
   digitalWrite(sensor_left_power, HIGH);
 
   digitalWrite(sensor_middle_power, HIGH);
-
+  //sensorMiddle right
   digitalWrite(sensor_right_power, HIGH);
 
   digitalWrite(sensor_45_left_power,HIGH);
@@ -122,7 +126,7 @@ void setup() {
   gyro_init(); 
   gyro_tick();//sets up gyro read function
   motor_init();//sets up motor tick state  
-  wait_until_start_hand();
+  //wait_until_start_hand();
   
   
 
@@ -145,30 +149,54 @@ void setup() {
 
 void loop() {
 //main sequence 
-  readIR();
-  motor_tick();
-  delay(1000);
-  
+//  readIR();
+//  motor_tick(); 
+//  delay(1000);
+//  
   //motor_tick();//does go_one_cell
-  //go_one_cell();
+//  go_one_cell();
+//  delay(1000);
 //  halt_until(halt_delay);
 //  readIR();
+//  delay(1000);
 //possible calibration function here
 //  correct_mouse_far()
 //  correct_mouse_close();
-  //motor_tick(); // does random_move
+//  motor_tick(); // does random_move
+//
 //  random_move();
 //  readIR();
+//  read_distance();
+  readIR();
+//correct_mouse_far();
 
-//readIR();
-//reverse_turn_until();
+
+
+
+
+
+//reverse_turn_until_l();
 //left_turn_until();
+////
+//delay(100);
 
-//delay(1000);
+//reverse_turn_until_r();
 
 
+//gyro_tick();
 //readIR()
 //delay(1000);
+
+//right_turn();
+//left_turn();
+//delay(100);
+//halt_until(halt_delay);
+//reverse_turn();
+//delay(100);
+//halt_until(halt_delay);
+//delay(100);
+//go_one_cell();
+//forward(255,255);
 
 }
 

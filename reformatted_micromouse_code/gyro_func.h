@@ -29,8 +29,8 @@ void read_angle(){
   accel_force_data = (accel_raw_data * accel_force_conversion_factor) / 1000 ;// divided by 1000 because its in mg not g
 
   //complementary filter
-  gyro_angle = (0.97 * gyro_angle) + (0.03 * accel_force_data);
-  
+ // gyro_angle = (0.97 * gyro_angle) + (0.03 * accel_force_data);
+ 
   
   //Serial.print("G ");
   //Serial.print("X: ");
@@ -54,9 +54,20 @@ void read_angle(){
 
 
 void read_distance(){
+  accel_raw_dist_data = ((int)gyro.a.y);
+  accel_dist_data = (accel_raw_dist_data * accel_dist_conversion_factor) / 1000; //so it comes to be in g's
+  //accel_dist_data *= g_conv_factor; // times 9.81 to turn g's into m/s^2 
+  //accel_velocity+= (accel_dist_data); //turns into m/s since its integrated 
+  //accel_distance += (accel_velocity ); // turns into m since its integrated
 
-  
+  Serial.println(accel_dist_data);
+  //Serial.println(accel_velocity);
+  //Serial.println(accel_distance);
+  //delay(5);
+//    
 }
+
+
 enum GYRO_STATES {GYRO_INIT,GYRO_START, GYRO_READ_ANGLE} gyro_state;
 
 void gyro_init(){
