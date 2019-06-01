@@ -182,6 +182,8 @@ int error_45_right;
 //int error_45_right_sum;
 
 
+//correct variable
+bool can_correct = 0;
 
 //gryo values 
 //I PUT GRYO VARIABLES IN GRYO_FUNC DUE TO ERRORS

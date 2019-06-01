@@ -5,10 +5,13 @@
 //#include <basic_io_arm.h>
 //#include <FreeRTOS_ARM.h>
 /*
- * DO ONE WALL PID DONE
- * DO SELF CORRECTION WITH FRONT WALL 
- * DO NO WALL PID
- * DO ONE CELL LENGTH WITH IMU
+ * DO ONE WALL PID done
+ * DO NO WALL PID done with base values
+ * DO ONE CELL LENGTH WITH IMU done with lowering speed and using encoders
+ * 
+ * DO SELF CORRECTION WITH FRONT WALL (did code need to test now);
+ * 
+ * fix random stopping
  * fix go one cell and turn error
  * 
  */
@@ -126,7 +129,7 @@ void setup() {
   gyro_init(); 
   gyro_tick();//sets up gyro read function
   motor_init();//sets up motor tick state  
-  //wait_until_start_hand();
+  wait_until_start_hand();
   
   
 
@@ -154,8 +157,8 @@ void loop() {
 //  delay(1000);
 //  
   //motor_tick();//does go_one_cell
-//  go_one_cell();
-//  delay(1000);
+  //go_one_cell();
+  //delay(1000);
 //  halt_until(halt_delay);
 //  readIR();
 //  delay(1000);
@@ -167,7 +170,7 @@ void loop() {
 //  random_move();
 //  readIR();
 //  read_distance();
-  readIR();
+  //readIR();
 //correct_mouse_far();
 
 
@@ -175,10 +178,10 @@ void loop() {
 
 
 
-//reverse_turn_until_l();
+reverse_turn_until_l();
 //left_turn_until();
 ////
-//delay(100);
+delay(1000);
 
 //reverse_turn_until_r();
 

@@ -910,6 +910,7 @@ void reverse_until( unsigned long stop_time) {
 //run pid while reversing so it straightens it self out even more
 void correct_mouse_far(){
   readIR();
+  halt_until(halt_delay);
   while(sensorReading_middle <50){//70
 //    readIR();
 //    if (sensorReading_middle > 60){
@@ -922,6 +923,17 @@ void correct_mouse_far(){
   halt_until(halt_delay);
 }
 
+void correct_mouse_close(){
+  readIR();
+  //if (hasfrontwall(){
+  halt_until(halt_delay);
+  while(sensorReading_middle>50){
+    pid_control();
+    reverse(motor_left-20,motor_right-20);
+    readIR();
+  }
+  halt_until(halt_delay);
+}
 
 //void correct_mouse_far(){
 //  readIR();
@@ -1048,6 +1060,13 @@ void correct_mouse_far(){
 //  }
 //}
 
+void can_correct_func(){
+  if (can_correct == 1){
+        correct_mouse_far();
+        correct_mouse_close();
+        can_correct == 0;
+  }
+}
 
 
 //error_check = false;
@@ -1114,6 +1133,7 @@ void motor_tick(){
 //      }
 //      //100
 //      else if (hasfrontwall() == true && hasleftwall() == false && hasrightwall() == false){
+//        can_correct = 1;
 //        random_choice = random(millis()) % 2;
 //        if (random_choice == 0){
 //          motor_state = TURN_LEFT;
@@ -1124,16 +1144,19 @@ void motor_tick(){
 //      }
 //      //101
 //      else if (hasfrontwall() == true && hasleftwall() == false && hasrightwall() == true){
+//          can_correct = 1;
 //        motor_state = TURN_LEFT;
 //      }
 //      //110
 //      else if (hasfrontwall() == true && hasleftwall() == true && hasrightwall() == false){
+//          can_correct = 1;
 //        motor_state = TURN_RIGHT;
 //      }
 //
 //      
 //      //111
 //      else if (hasfrontwall() == true && hasleftwall() == true && hasrightwall() == true){
+//        can_correct = 1;
 //        readIR();
 //          if (sensorReading_right > sensorReading_left){
 //          motor_state = TURN_REVERSE_L;  
@@ -1165,7 +1188,7 @@ void motor_tick(){
       break;
     
     case TURN_RIGHT:
-      motor_state = CHOOSE_MOVE;
+      motor_state = CHOOSE_MOVE;      
       break;
     case TURN_LEFT:
       motor_state = CHOOSE_MOVE;
@@ -1184,6 +1207,7 @@ void motor_tick(){
     case MOTOR_INIT:
       break;
     case GO_ONE_CELL:
+    
       go_one_cell();//this calls pid inside of it
       Serial.println("GO_ONE_CELL");
       break;
@@ -1191,16 +1215,20 @@ void motor_tick(){
       //nothing it just chooses move
       break;
     case TURN_REVERSE_L:
+      can_correct_func();
       reverse_turn_until_l();
       Serial.println("REVERSE");
       break;
     case TURN_REVERSE_R:
+      can_correct_func();
       reverse_turn_until_r();
       break;
     case TURN_LEFT:
+      can_correct_func();
       left_turn_until();
       break;
     case TURN_RIGHT:
+      can_correct_func();
       right_turn_until();
       break;
   }
