@@ -24,7 +24,7 @@ int random_choice = 0;
 
 
 double base_speed = 90; // 200,150,125,150,200,150,125,100
-double kp = 0.20;//0.50,0.030,0.50, 0.90,0.40,0.36,0.30
+double kp = 0.20;//0.50,0.030,0.50, 0.90,0.40,0.36,0.30,0.20
 double kd = 0.20;//0.40,030
 double ki = 0.00001;
 double error = 0;
@@ -69,8 +69,10 @@ double reset_error_r = 0;
 
 
 ///////////////////////////////////
-double motor_left = 125;
-double motor_right = 125;
+//double motor_left = 125;
+//double motor_right = 125;
+double motor_left = base_speed;
+double motor_right = base_speed;
 
 ///////////////////////////////////
 

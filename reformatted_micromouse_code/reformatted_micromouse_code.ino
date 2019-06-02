@@ -181,6 +181,7 @@ void loop(){
     //can_correct_func();
 
 //reverse(100,100);
+//reverse(motor_left,motor_right);
 //forward_until(255,255,400);
 //reverse_until(255,255,400);
 
