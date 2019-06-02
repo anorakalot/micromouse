@@ -113,7 +113,7 @@ void readIR() {
 //  
 
   Serial.print("Sensor Reading without Minus Errors: ");
-  Serial.print( "LEFT : ");
+  Serial.println( "LEFT : ");
   Serial.println(sensorReading_left);
   Serial.print( "MIDDLE : ");
   Serial.println(sensorReading_middle);

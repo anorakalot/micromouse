@@ -5,14 +5,14 @@
 //#include <basic_io_arm.h>
 //#include <FreeRTOS_ARM.h>
 /*
- * DO ONE WALL PID done
- * DO NO WALL PID done with base values
- * DO ONE CELL LENGTH WITH IMU done with lowering speed and using encoders
+ * DO ONE WALL PID -- done
+ * DO NO WALL PID -- done with base values
+ * DO ONE CELL LENGTH WITH IMU -- done with lowering speed and using encoders
  * 
- * DO SELF CORRECTION WITH FRONT WALL (did code need to test now);
+ * DO SELF CORRECTION WITH FRONT WALL -- (did code need to test now);
  * 
- * fix random stopping
- * fix go one cell and turn error
+ * fix random stopping -- done should be fixed due to setting forward(0,0) and rev(0,0) after running fix
+ * fix go one cell and turn error -- done should be fixed due to setting forward(0,0) and rev(0,0) after running fix
  * 
  */
 
@@ -152,9 +152,9 @@ void setup() {
 
 void loop() {
 //main sequence 
-//  readIR();
-//  motor_tick(); 
-//  delay(1000);
+  readIR();
+  motor_tick(); 
+  //delay(1000);
 //  
   //motor_tick();//does go_one_cell
   //go_one_cell();
@@ -163,7 +163,7 @@ void loop() {
 //  readIR();
 //  delay(1000);
 //possible calibration function here
-//  correct_mouse_far();
+  //correct_mouse_far();
 //  correct_mouse_close();
 //  motor_tick(); // does random_move
 //
@@ -172,6 +172,7 @@ void loop() {
 //  read_distance();
   //readIR();
 //correct_mouse_far();
+//correct_mouse_close();
     //pid_control();
     //reverse(motor_left,motor_right);
     //reverse(motor_right,motor_left);
@@ -179,17 +180,18 @@ void loop() {
     //readIR();
 
 //reverse(100,100);
+//forward_until(255,255,400);
+//reverse_until(255,255,400);
 
-
-
-delay(1000);
-//reverse_turn_until_l();
+//delay(1000);
+///reverse_turn_until_l();
 //left_turn_until();
-reverse_turn_until_r();
-
-////
-delay(1000);
-
+//right_turn_until();
+//reverse_turn_until_r();
+//
+//////
+//delay(1000);
+//go_one_cell();
 
 
 //gyro_tick();
