@@ -153,11 +153,11 @@ void setup(){
 void loop(){
 //main sequence 
   readIR();
-  motor_tick(); 
+  //motor_tick(); 
   //delay(1000);
 //  
   //motor_tick();//does go_one_cell
-  //go_one_cell();
+  go_one_cell();
   //delay(2000);
 //  halt_until(halt_delay);
 //  readIR();
@@ -209,7 +209,7 @@ void loop(){
 //halt_until(halt_delay);
 //delay(100);
 //go_one_cell();
-//forward(255,255);
+//forward(base_speed +50,base_speed - 50);
 //read_distance();
 }
 
@@ -220,7 +220,7 @@ void loop(){
 //  motor_state = MOTOR_START;  
 //}
 //
-//void motor_task(){
+///void motor_task(){
 //  motor_init();
 //  for(;;){
 //    motor_tick();
