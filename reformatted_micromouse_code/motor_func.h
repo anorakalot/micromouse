@@ -106,12 +106,12 @@ void reverse_turn() {
   digitalWrite(turn_on_en_2, HIGH);
 
   digitalWrite(motor_1_logic_1, LOW);
-  analogWrite(motor_1_logic_2,255);
-  //digitalWrite(motor_1_logic_2, HIGH);
+  //analogWrite(motor_1_logic_2,255);
+  digitalWrite(motor_1_logic_2, HIGH);
 
   digitalWrite(motor_2_logic_1, LOW);
-  analogWrite(motor_2_logic_2,255);
-  //digitalWrite(motor_2_logic_2, HIGH);
+  //analogWrite(motor_2_logic_2,255);
+  digitalWrite(motor_2_logic_2, HIGH);
 }
 
 
@@ -120,12 +120,12 @@ void left_turn() {
   digitalWrite(turn_on_en_2, HIGH);
 
   digitalWrite(motor_1_logic_1, LOW);
-  analogWrite(motor_1_logic_2,255);
-  //digitalWrite(motor_1_logic_2, HIGH);
+  //analogWrite(motor_1_logic_2,255);
+  digitalWrite(motor_1_logic_2, HIGH);
 
   digitalWrite(motor_2_logic_1, LOW);
-  analogWrite(motor_2_logic_2,255);
-  //digitalWrite(motor_2_logic_2, HIGH);
+  //analogWrite(motor_2_logic_2,255);
+  digitalWrite(motor_2_logic_2, HIGH);
 
 }
 
@@ -135,11 +135,12 @@ void right_turn(){
   digitalWrite(turn_on_en_2, HIGH);
 
 
-  //digitalWrite(motor_1_logic_1, HIGH);
-  analogWrite(motor_1_logic_1,255);
+  digitalWrite(motor_1_logic_1, HIGH);
+  //analogWrite(motor_1_logic_1,255);
   digitalWrite(motor_1_logic_2, LOW);
-  //digitalWrite(motor_2_logic_1, HIGH);
-  analogWrite(motor_2_logic_1,255);
+
+  digitalWrite(motor_2_logic_1, HIGH);
+//  //analogWrite(motor_2_logic_1,255);
   digitalWrite(motor_2_logic_2, LOW);
 }
 
@@ -198,7 +199,7 @@ void left_turn_until(){
   gyro_angle = 0;
   gyro_sum = 0;
   halt_until(halt_delay);
-  while (  abs(gyro_angle)  <90 ) { //150, 175,120,110,130,90,95,96
+  while (  abs(gyro_angle)  <93) { //150, 175,120,110,130,90,95,96
     gyro_tick();
     left_turn();                  //350,360,380,390
   }
@@ -212,7 +213,7 @@ void right_turn_until(){//330,240,220
   gyro_angle = 0;
   gyro_sum = 0;
   halt_until(halt_delay);
-  while ( abs(gyro_angle)  <90) { //150,175,120,110,130 ,90,95,96
+  while ( abs(gyro_angle)  <93) { //150,175,120,110,130 ,90,95,96
     gyro_tick();
     right_turn();                  //350,360,380,390
   }
@@ -626,35 +627,35 @@ void pid_control(){
   readIR();
 
   //testing
-  pid_control_two_45_walls();    
+  //pid_control_two_45_walls();    
  // pid_control_one_wall_l();
   //pid_control_one_wall_r();
   //pid_control_no_walls();
 
 //using 45 deg sensors
-//     if (has_45_left_wall() == true && has_45_right_wall() == true){
-//        pid_control_two_45_walls();
-//      }
-//      else if (has_45_left_wall() == true &&  has_45_right_wall() == false){
-//        pid_control_one_wall_l();
-//      }
-//      else if (has_45_left_wall() == false && has_45_right_wall() == true){
-//       pid_control_one_wall_r();
-//      
-//      }
-//
-//      //it works surpisingly well
-//      else if (has_45_left_wall() && has_45_right_wall() == false){
-//       // pid_control_no_walls();
-//      
-//       pid_control_two_45_walls();
-//
-//       //pid_control_one_wall_r();
-//      
-//         }
-//      else{
-//        pid_control_two_45_walls();
-//      }
+     if (has_45_left_wall() == true && has_45_right_wall() == true){
+        pid_control_two_45_walls();
+      }
+      else if (has_45_left_wall() == true &&  has_45_right_wall() == false){
+        pid_control_one_wall_l();
+      }
+      else if (has_45_left_wall() == false && has_45_right_wall() == true){
+       pid_control_one_wall_r();
+      
+      }
+
+      //it works surpisingly well
+      else if (has_45_left_wall() && has_45_right_wall() == false){
+        pid_control_no_walls();
+      
+       //pid_control_two_45_walls();
+
+       //pid_control_one_wall_r();
+      
+         }
+      else{
+        pid_control_two_45_walls();
+      }
 
 //pid_control_two_45_walls();
 
@@ -712,7 +713,7 @@ void go_one_cell(){
   //off encoders
   halt_until(halt_delay);
   unsigned long curr = right_count;//
-  while (abs(right_count - curr) <1400) {//945,400,500,600,650,750,1000,1100,1200  ,1300  , 952 , 930 , 912,908(best so far) , 905 , 890 , 908 ,912,920,930,945,960,1300
+  while (abs(right_count - curr) <1480) {//945,400,500,600,650,750,1000,1100,1200  ,1300  , 952 , 930 , 912,908(best so far) , 905 , 890 , 908 ,912,920,930,945,960,1300,1400,1450,1470,1474
     readIR();                   //900,500,600,700,800,900,1000,1070,1100, ,1150,1160, 1200 , 1130,1000 , 900    ,1000 , 945  ,800 ,850 , 880 , 885,895 , 915 ,925(over),920(both) , close 905 ,980 ,960(closest)
    // print_encoder_count();
     //pid_control_two_walls();

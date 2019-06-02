@@ -163,7 +163,7 @@ void loop() {
 //  readIR();
 //  delay(1000);
 //possible calibration function here
-//  correct_mouse_far()
+//  correct_mouse_far();
 //  correct_mouse_close();
 //  motor_tick(); // does random_move
 //
@@ -172,18 +172,24 @@ void loop() {
 //  read_distance();
   //readIR();
 //correct_mouse_far();
+    //pid_control();
+    //reverse(motor_left,motor_right);
+    //reverse(motor_right,motor_left);
+    //forward(motor_left,motor_right);
+    //readIR();
+
+//reverse(100,100);
 
 
 
-
-
-
-reverse_turn_until_l();
+delay(1000);
+//reverse_turn_until_l();
 //left_turn_until();
+reverse_turn_until_r();
+
 ////
 delay(1000);
 
-//reverse_turn_until_r();
 
 
 //gyro_tick();

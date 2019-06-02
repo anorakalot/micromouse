@@ -25,8 +25,8 @@ void read_angle(){
 
   
   //accerlerometer reading
-  accel_raw_data = ((int)gyro.a.z);
-  accel_force_data = (accel_raw_data * accel_force_conversion_factor) / 1000 ;// divided by 1000 because its in mg not g
+//  accel_raw_data = ((int)gyro.a.z);
+//  accel_force_data = (accel_raw_data * accel_force_conversion_factor) / 1000 ;// divided by 1000 because its in mg not g
 
   //complementary filter
  // gyro_angle = (0.97 * gyro_angle) + (0.03 * accel_force_data);
