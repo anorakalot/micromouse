@@ -1,14 +1,14 @@
 
 
 //HAS functions should be checked before every single comp
-bool hasfrontwall() {       
-  if (sensorReading_middle > 58 ) { // 150, 100,80,72  
+bool hasfrontwall(){       
+  if (sensorReading_middle > 42 ) { // 150, 100,80,72,58  
     return true;
   }
   return false;
 }
 
-bool hasleftwall() {     
+bool hasleftwall(){     
   if (sensorReading_left > 42 ) { //120 , 65
     return true;
   }
@@ -16,7 +16,7 @@ bool hasleftwall() {
 }
 
 
-bool hasrightwall() {     
+bool hasrightwall(){     
   if (sensorReading_right > 40 ) { //120 , 65
     return true;
   }
@@ -54,7 +54,7 @@ void testIR(){
   delay(2000);
 }
 //Reads Ir sensors but with no mapped values
-void readIR() {
+void readIR(){
 
   digitalWrite(sensor_left_power,LOW);
   digitalWrite(sensor_right_power,LOW);
@@ -178,7 +178,7 @@ void readIR() {
 
 
 //code to show to not start until hand is shown
-void wait_until_start_hand() {
+void wait_until_start_hand(){
 
   while (first_check) {
     readIR();
@@ -339,7 +339,7 @@ void ir_tick(){
 
 
 ////Reads Ir sensors but with mapped values
-//void readIR_map() {
+//void readIR_map(){
 //
 //
 //  digitalWrite(sensor_left_power, LOW);

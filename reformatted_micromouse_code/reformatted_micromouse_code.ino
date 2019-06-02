@@ -65,7 +65,7 @@
 
 
 //sets up all the functions and variables
-void setup() {
+void setup(){
   Serial.begin(9600);
   
   ///*
@@ -150,15 +150,15 @@ void setup() {
 
 
 
-void loop() {
+void loop(){
 //main sequence 
   readIR();
- // motor_tick(); 
+  motor_tick(); 
   //delay(1000);
 //  
   //motor_tick();//does go_one_cell
-  go_one_cell();
-  delay(5000);
+  //go_one_cell();
+  //delay(2000);
 //  halt_until(halt_delay);
 //  readIR();
 //  delay(1000);
@@ -173,11 +173,12 @@ void loop() {
   //readIR();
 //correct_mouse_far();
 //correct_mouse_close();
-    //pid_control();
-    //reverse(motor_left,motor_right);
+//    pid_control();
+//    reverse(motor_left,motor_right);
     //reverse(motor_right,motor_left);
     //forward(motor_left,motor_right);
     //readIR();
+    //can_correct_func();
 
 //reverse(100,100);
 //forward_until(255,255,400);
@@ -208,7 +209,7 @@ void loop() {
 //delay(100);
 //go_one_cell();
 //forward(255,255);
-
+//read_distance();
 }
 
 

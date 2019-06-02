@@ -24,7 +24,7 @@ int random_choice = 0;
 
 
 double base_speed = 90; // 200,150,125,150,200,150,125,100
-double kp = 0.30;//0.50,0.030,0.50, 0.90,0.40,0.36
+double kp = 0.20;//0.50,0.030,0.50, 0.90,0.40,0.36,0.30
 double kd = 0.20;//0.40,030
 double ki = 0.00001;
 double error = 0;
@@ -38,10 +38,10 @@ unsigned long error_buildup;
 double reset_error = 0;
 
 
-int middle_point_l = 40;//31,34,36,34,40
-
+int middle_point_l = 42;//31,34,36,34,40,37
+int middle_point_90_l = 40;
 //double base_speed = 200; // 200,150,125,150
-double kp_l = 0.30;//0.40,0.30,0.40
+double kp_l = 0.20;//0.40,0.30,0.40,0.30
 double kd_l = 0.20;//0.40,0.30
 double ki_l = 0.00001;
 double error_l = 0;
@@ -53,8 +53,10 @@ unsigned long error_buildup_l;
 double reset_error_l = 0;
 
 
-int middle_point_r = 40;
-double kp_r = 0.30;//0.40
+int middle_point_r = 48;//38,40,50,45
+int middle_point_90_r = 40;
+
+double kp_r = 0.50;//0.40,0.30
 double kd_r = 0.20;//0.40 0.30
 double ki_r = 0.00001;
 double error_r = 0;
@@ -72,21 +74,21 @@ double motor_right = 125;
 
 ///////////////////////////////////
 
-unsigned long curr_left_count;
-unsigned long curr_right_count;
-
-double kp_enc = 0.0050;//0.50
-double kd_enc = 0.0040;//0.30
-double ki_enc = 0.0001;
-double error_enc = 0;
-double prev_error_enc = 0;
-double p_control_enc = 0;
-double d_control_enc = 0;
-double i_control_enc = 0;
-
-unsigned long error_buildup_enc;
-
-double reset_error_enc = 0;
+//unsigned long curr_left_count;
+//unsigned long curr_right_count;
+//
+//double kp_enc = 0.0050;//0.50
+//double kd_enc = 0.0040;//0.30
+//double ki_enc = 0.0001;
+//double error_enc = 0;
+//double prev_error_enc = 0;
+//double p_control_enc = 0;
+//double d_control_enc = 0;
+//double i_control_enc = 0;
+//
+//unsigned long error_buildup_enc;
+//
+//double reset_error_enc = 0;
 
 
 //may not need these

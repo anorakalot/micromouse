@@ -55,13 +55,13 @@ void read_angle(){
 
 
 void read_distance(){
-  accel_raw_dist_data = ((int)gyro.a.y);
-  accel_dist_data = (accel_raw_dist_data * accel_dist_conversion_factor) / 1000; //so it comes to be in g's
+  //accel_raw_dist_data = (gyro.a.z);
+  //accel_dist_data = (accel_raw_dist_data * accel_dist_conversion_factor) / 1000; //so it comes to be in g's
   //accel_dist_data *= g_conv_factor; // times 9.81 to turn g's into m/s^2 
   //accel_velocity+= (accel_dist_data); //turns into m/s since its integrated 
   //accel_distance += (accel_velocity ); // turns into m since its integrated
 
-  Serial.println(accel_dist_data);
+  //Serial.println(accel_raw_dist_data);
   //Serial.println(accel_velocity);
   //Serial.println(accel_distance);
   //delay(5);
