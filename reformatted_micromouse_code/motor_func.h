@@ -696,7 +696,7 @@ void pid_control() {
 
 
 
-void go_one_cell() {
+void go_one_cell(){
   //timer approach
   // halt_until(halt_delay);
   // //unsigned long curr = millis();
@@ -723,7 +723,7 @@ void go_one_cell() {
   //off encoders
   halt_until(halt_delay);
   unsigned long curr = right_count;//
-  while (abs(right_count - curr) < 1480) { //945,400,500,600,650,750,1000,1100,1200  ,1300  , 952 , 930 , 912,908(best so far) , 905 , 890 , 908 ,912,920,930,945,960,1300,1400,1450,1470,1474
+  while (abs(right_count - curr) <1490) { //945,400,500,600,650,750,1000,1100,1200  ,1300  , 952 , 930 , 912,908(best so far) , 905 , 890 , 908 ,912,920,930,945,960,1300,1400,1450,1470,1474,1480,1490
     readIR();                   //900,500,600,700,800,900,1000,1070,1100, ,1150,1160, 1200 , 1130,1000 , 900    ,1000 , 945  ,800 ,850 , 880 , 885,895 , 915 ,925(over),920(both) , close 905 ,980 ,960(closest)
     // print_encoder_count();
     //pid_control_two_walls();
@@ -923,7 +923,7 @@ void reverse_until( unsigned long stop_time) {
 void correct_mouse_far() {
   readIR();
   halt_until(halt_delay);
-  while (sensorReading_middle < 50) { //70
+  while (sensorReading_middle < 58) { //70
     //    readIR();
     //    if (sensorReading_middle > 60){
     //      break;
