@@ -153,11 +153,11 @@ void setup(){
 void loop(){
 //main sequence 
   readIR();
-  //motor_tick(); 
+  motor_tick(); 
   //delay(1000);
+//go_one_cell();
 //  
   //motor_tick();//does go_one_cell
-  go_one_cell();
   //delay(2000);
 //  halt_until(halt_delay);
 //  readIR();

@@ -2,7 +2,7 @@
 
 //HAS functions should be checked before every single comp
 bool hasfrontwall(){       
-  if (sensorReading_middle > 42 ) { // 150, 100,80,72,58  
+  if (sensorReading_middle > 41 ) { // 150, 100,80,72,58,42  
     return true;
   }
   return false;
@@ -25,7 +25,7 @@ bool hasrightwall(){
 
 
 bool has_45_left_wall(){
-  if (sensorReading_45_left > 30 ) { //80,68,25
+  if (sensorReading_45_left > 32 ) { //80,68,25,30
     return true;
   }
   return false;

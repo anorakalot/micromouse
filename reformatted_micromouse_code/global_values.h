@@ -23,9 +23,9 @@ bool first_check = true;
 int random_choice = 0;
 
 
-double base_speed = 90; // 200,150,125,150,200,150,125,100
-double kp = 0.20;//0.50,0.030,0.50, 0.90,0.40,0.36,0.30,0.20
-double kd = 0.20;//0.40,030
+double base_speed =95 ; // 200,150,125,150,200,150,125,100,80,90,88
+double kp = 0.10;//0.50,0.030,0.50, 0.90,0.40,0.36,0.30,0.20
+double kd = 0.10;//0.40,030
 double ki = 0.00001;
 double error = 0;
 double prev_error = 0;
@@ -75,18 +75,28 @@ double motor_left = base_speed;
 double motor_right = base_speed;
 
 ///////////////////////////////////
-
+//
 //unsigned long curr_left_count;
 //unsigned long curr_right_count;
+//long expec_left_count = 1500;
+//long expec_right_count = 1500;
 //
-//double kp_enc = 0.0050;//0.50
-//double kd_enc = 0.0040;//0.30
+//
+//double kp_enc = 0.20;//0.50
+//double kd_enc = 0.20;//0.30
 //double ki_enc = 0.0001;
-//double error_enc = 0;
-//double prev_error_enc = 0;
-//double p_control_enc = 0;
-//double d_control_enc = 0;
-//double i_control_enc = 0;
+//double error_l_enc = 0;
+//double error_r_enc = 0;
+//double prev_error_enc_l = 0;
+//double prev_error_enc_r = 0;
+//double p_control_enc_l = 0;
+//double p_control_enc_r = 0;
+//
+//double d_control_enc_l = 0;
+//double d_control_enc_r = 0;
+//
+//double i_control_enc_l = 0;
+//double i_control_enc_r = 0;
 //
 //unsigned long error_buildup_enc;
 //
@@ -116,7 +126,9 @@ int LH_ENCODER_A = 10;
 int LH_ENCODER_B = 11;
 
 unsigned long left_count = 0;
+//long left_count_pid = 0;
 unsigned long right_count = 0;
+//long right_count_pid = 0;
 //unsigned long reverse_count = 0;
 
 
