@@ -146,10 +146,10 @@ int sensor_middle = A1 ;
 int sensorReading_middle;
 int sensor_middle_power = 1;
 
-//MIDDLE_RIGHT
-int sensor_middle_right = A3 ;
-int sensorReading_middle_right;
-int sensor_middle_right_power = 7;
+//BACK
+int sensor_back = A3 ;
+int sensorReading_back;
+int sensor_back_power = 7;
 
 //RIGHT
 int sensor_right = A0;
@@ -170,12 +170,16 @@ int sensorReading_45_right;
 int sensor_45_right_power = 3;
 
 
-//Strings for printing in ir_tick
-String left_side_string = "LEFT:"; 
-String middle_side_string = "MIDDLE:"; 
-String right_side_string = "RIGHT:"; 
-String left_45_side_string = "45_LEFT:"; 
-String right_45_side_string = "45_RIGHT:"; 
+
+
+
+
+////Strings for printing in ir_tick
+//String left_side_string = "LEFT:"; 
+//String middle_side_string = "MIDDLE:"; 
+//String right_side_string = "RIGHT:"; 
+//String left_45_side_string = "45_LEFT:"; 
+//String right_45_side_string = "45_RIGHT:"; 
 
 
 //prev led values
@@ -186,7 +190,7 @@ int prev_sensorReading_left;
 
 int error_left;
 int error_middle;
-int error_middle_right;
+int error_back;
 int error_right;
 int error_45_left;
 int error_45_right;
