@@ -597,6 +597,62 @@ void pid_control_two_45_walls(){
 
 }
 
+//NEED TO TEST THIS
+//WILL RUN INTO ERRORS IF COUNT GOES UP DURING TURNS THUS MESSING UP THE CURR_SPEED CALCULATIONS
+//TEST TO SEE IF IT WORKS GOING FORWARD ONLY FIRST
+//does both motors 
+void pid_control_enc(){
+  curr_left_count = left_count;
+  curr_right_count = right_count;
+
+  //take derivative to get curr speed
+  curr_left_speed = curr_left_count - prev_left_count;
+  curr_right_speed = curr_right_count - prev_right_count;
+
+  //get error from difference between wanted speed and curr speed
+  error_l_enc = abs(curr_left_speed - left_wanted_speed);
+  error_r_enc = abs(curr_right_speed - right_wanted_speed);
+  
+  p_control_enc_l = error_l_enc * kp_enc;
+  p_control_enc_r = error_r_enc * kp_enc;
+
+  d_control_enc_l = error_l_enc - prev_error_l_enc;
+  d_control_enc_r = error_r_enc - prev_error_r_enc;
+
+  
+  if (left_wanted_speed > curr_left_speed){
+    motor_left = base_speed  + (p_control_enc_l + d_control_enc_l);
+  
+  }
+
+
+  if (left_wanted_speed < curr_left_speed){
+    motor_left = base_speed - (p_control_enc_l + d_control_enc_l);
+    
+  }
+
+
+  if (right_wanted_speed > curr_right_speed){
+    motor_right = base_speed  + (p_control_enc_r + d_control_enc_r);
+    
+  }
+
+  if (right_wanted_speed < curr_right_speed){
+    motor_right = base_speed - (p_control_enc_r + d_control_enc_r);
+    
+  }
+
+  //for getting curr speed;
+  prev_left_count = curr_left_count;
+  prev_right_count = curr_right_count;
+
+  //for d_control
+  prev_error_l_enc = error_l_enc;
+  prev_error_r_enc = error_r_enc;
+  
+  
+}
+
 //chooses which pid to do
 void pid_control(){
   readIR();
@@ -609,30 +665,30 @@ void pid_control(){
    // pid_control_two_90_walls();
 
 //  //using 45 deg sensors
-  if (has_45_left_wall() == true && has_45_right_wall() == true) {
-    pid_control_two_45_walls();
-  }
-  else if (has_45_left_wall() == true &&  has_45_right_wall() == false) {
-    pid_control_one_wall_l();
-    //pid_control_no_walls();
-  }
-  else if (has_45_left_wall() == false && has_45_right_wall() == true) {
-    pid_control_one_wall_r();
-    //pid_control_no_walls();
-  }
-
-  //it works surpisingly well
-  else if (has_45_left_wall() && has_45_right_wall() == false) {
-    pid_control_no_walls();
-
-    //pid_control_two_45_walls();
-
-    //pid_control_one_wall_r();
-
-  }
-  else {
-    pid_control_two_45_walls();
-  }
+//  if (has_45_left_wall() == true && has_45_right_wall() == true) {
+//    pid_control_two_45_walls();
+//  }
+//  else if (has_45_left_wall() == true &&  has_45_right_wall() == false) {
+//    pid_control_one_wall_l();
+//    //pid_control_no_walls();
+//  }
+//  else if (has_45_left_wall() == false && has_45_right_wall() == true) {
+//    pid_control_one_wall_r();
+//    //pid_control_no_walls();
+//  }
+//
+//  //it works surpisingly well
+//  else if (has_45_left_wall() && has_45_right_wall() == false) {
+//    pid_control_no_walls();
+//
+//    //pid_control_two_45_walls();
+//
+//    //pid_control_one_wall_r();
+//
+//  }
+//  else {
+//    pid_control_two_45_walls();
+//  }
 
   //pid_control_two_45_walls();
 

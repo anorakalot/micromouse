@@ -76,31 +76,47 @@ double motor_right = base_speed;
 
 ///////////////////////////////////
 //
-//unsigned long curr_left_count;
-//unsigned long curr_right_count;
+unsigned long curr_left_count;
+unsigned long curr_right_count;
 //long expec_left_count = 1500;
 //long expec_right_count = 1500;
-//
-//
-//double kp_enc = 0.20;//0.50
-//double kd_enc = 0.20;//0.30
-//double ki_enc = 0.0001;
-//double error_l_enc = 0;
-//double error_r_enc = 0;
-//double prev_error_enc_l = 0;
-//double prev_error_enc_r = 0;
-//double p_control_enc_l = 0;
-//double p_control_enc_r = 0;
-//
-//double d_control_enc_l = 0;
-//double d_control_enc_r = 0;
-//
-//double i_control_enc_l = 0;
-//double i_control_enc_r = 0;
-//
-//unsigned long error_buildup_enc;
-//
-//double reset_error_enc = 0;
+
+unsigned long curr_left_speed;
+unsigned long curr_right_speed;
+
+
+
+unsigned long left_wanted_speed;
+unsigned long right_wanted_speed;
+
+double kp_enc = 0.20;//0.50
+double kd_enc = 0.20;//0.30
+double ki_enc = 0.0001;
+
+double error_l_enc = 0;
+double error_r_enc = 0;
+
+//to keep track of prev count so i can get curr speed
+double prev_left_count;
+double prev_right_count;
+
+double prev_error_l_enc = 0;
+double prev_error_r_enc = 0;
+
+double p_control_enc_l = 0;
+double p_control_enc_r = 0;
+
+double d_control_enc_l = 0;
+double d_control_enc_r = 0;
+
+double i_control_enc_l = 0;
+double i_control_enc_r = 0;
+
+unsigned long error_buildup_enc;
+
+
+
+double reset_error_enc = 0;
 
 
 //may not need these
