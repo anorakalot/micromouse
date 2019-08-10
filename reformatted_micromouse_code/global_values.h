@@ -76,6 +76,9 @@ double motor_right = base_speed;
 
 ///////////////////////////////////
 //
+
+
+//FOR PID ENCODERS
 unsigned long curr_left_count;
 unsigned long curr_right_count;
 //long expec_left_count = 1500;
@@ -122,6 +125,8 @@ double reset_error_enc = 0;
 //may not need these
 //int left_ir_low_bound = 995;
 //int left_ir_high_bound = 1009;
+
+
 
 //Motor
 int motor_1_logic_1 = 20;
@@ -185,8 +190,22 @@ int sensor_45_right = A8;
 int sensorReading_45_right;
 int sensor_45_right_power = 3;
 
+//Bool for Ir has_wall functions
+bool front_wall = 0;
+bool left_wall = 0;
+bool right_wall = 0;
+bool back_wall = 0;
+bool left_45_wall = 0;
+bool right_45_wall = 0;
 
 
+//bool for Ir has_wall functions
+double avg_front_wall_reading;
+double avg_left_wall_reading;
+double avg_right_wall_reading;
+double avg_back_wall_reading;
+double avg_45_left_wall_reading;
+double avg_45_right_wall_reading;
 
 
 

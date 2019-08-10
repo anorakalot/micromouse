@@ -664,21 +664,31 @@ void pid_control(){
   //pid_control_no_walls();
    // pid_control_two_90_walls();
 
+  has_45_left_wall();
+  has_45_right_wall();
+  has_left_wall();
+  has_right_wall();
+  has_back_wall();
+  has_front_wall();
+
+
+  
+
 //  //using 45 deg sensors
-//  if (has_45_left_wall() == true && has_45_right_wall() == true) {
+//  if (left_45_wall == true && right_45_wall == true) {
 //    pid_control_two_45_walls();
 //  }
-//  else if (has_45_left_wall() == true &&  has_45_right_wall() == false) {
+//  else if (left_45_wall == true &&  right_45_wall == false) {
 //    pid_control_one_wall_l();
 //    //pid_control_no_walls();
 //  }
-//  else if (has_45_left_wall() == false && has_45_right_wall() == true) {
+//  else if (left_45_wall == false && right_45_wall == true) {
 //    pid_control_one_wall_r();
 //    //pid_control_no_walls();
 //  }
 //
 //  //it works surpisingly well
-//  else if (has_45_left_wall() && has_45_right_wall() == false) {
+//  else if (left_45_wall && right_45_wall == false) {
 //    pid_control_no_walls();
 //
 //    //pid_control_two_45_walls();
@@ -696,17 +706,17 @@ void pid_control(){
 
   //using 90 deg sensors
   //  //pid_control_no_walls();
-  //     if (has_left_wall() == true && has_right_wall() == true){
+  //     if (left_wall == true && right_wall == true){
   //        pid_control_two_90_walls();
   //      }
-  //      else if (has_left_wall() == true &&  has_right_wall() == false){
+  //      else if (left_wall == true &&  right_wall == false){
   //        pid_control_one_wall_90_l();
   //      }
-  //      else if (has_left_wall() == false && has_right_wall() == true){
+  //      else if (left_wall == false && right_wall == true){
   //       pid_control_one_wall_90_r();
   //
   //      }
-  //      else if (has_left_wall() && has_right_wall() == false){
+  //      else if (left_wall && right_wall == false){
   //        pid_control_no_walls();
   //
   //         }
@@ -1066,8 +1076,12 @@ void motor_tick(){
       //structured like a 3 input truth table
 
       readIR();
+      has_front_wall();
+      has_left_wall();
+      has_right_wall();
+      
       //000
-            if (hasfrontwall() == false && hasleftwall() == false && hasrightwall() == false){
+            if (front_wall == false && left_wall == false && right_wall == false){
               random_choice = random(millis()) % 2;
               if (random_choice == 0){
                 motor_state = GO_ONE_CELL;
@@ -1080,7 +1094,7 @@ void motor_tick(){
               }
             }
             //001
-            else if (hasfrontwall() == false && hasleftwall() == false && hasrightwall() == true){
+            else if (front_wall == false && left_wall == false && right_wall == true){
               random_choice = random(millis()) % 2;
               if (random_choice == 0){
                 motor_state = GO_ONE_CELL;
@@ -1090,7 +1104,7 @@ void motor_tick(){
               }
             }
             //010
-            else if (hasfrontwall() == false && hasleftwall() == true && hasrightwall() == false){
+            else if (front_wall == false && left_wall == true && right_wall == false){
               random_choice = random(millis()) % 2;
               if (random_choice == 0){
                 motor_state = GO_ONE_CELL;
@@ -1101,11 +1115,11 @@ void motor_tick(){
             }
       
             //011
-            else if (hasfrontwall() == false && hasleftwall() == true && hasrightwall() == true){
+            else if (front_wall == false && left_wall == true && right_wall == true){
               motor_state = GO_ONE_CELL;
             }
             //100
-            else if (hasfrontwall() == true && hasleftwall() == false && hasrightwall() == false){
+            else if (front_wall == true && left_wall == false && right_wall == false){
               //can_correct = 1;
               random_choice = random(millis()) % 2;
               if (random_choice == 0){
@@ -1116,19 +1130,19 @@ void motor_tick(){
               }
             }
             //101
-            else if (hasfrontwall() == true && hasleftwall() == false && hasrightwall() == true){
+            else if (front_wall == true && left_wall == false && right_wall == true){
               //can_correct = 1;
               motor_state = TURN_LEFT;
             }
             //110
-            else if (hasfrontwall() == true && hasleftwall() == true && hasrightwall() == false){
+            else if (front_wall == true && left_wall == true && right_wall == false){
               //can_correct = 1;
               motor_state = TURN_RIGHT;
             }
       
       
             //111
-            else if (hasfrontwall() == true && hasleftwall() == true && hasrightwall() == true){
+            else if (front_wall == true && left_wall == true && right_wall == true){
               //can_correct = 1;
               readIR();
                 if (sensorReading_right > sensorReading_left){
@@ -1150,7 +1164,7 @@ void motor_tick(){
             }
 
       //testing
-//      if (hasfrontwall() == true) {
+//      if (front_wall == true) {
 //         if (sensorReading_right > sensorReading_left){
 //          motor_state = TURN_REVERSE_L;
 //          

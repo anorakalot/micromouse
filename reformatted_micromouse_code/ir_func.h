@@ -1,65 +1,3 @@
-
-
-//HAS functions should be checked before every single comp
-bool hasfrontwall(){       
-  if (sensorReading_middle > 41 ) { // 150, 100,80,72,58,42  
-    return true;
-  }
-  return false;
-}
-
-bool hasleftwall(){     
-  if (sensorReading_left > 42 ) { //120 , 65
-    return true;
-  }
-  return false;
-}
-
-
-bool hasrightwall(){     
-  if (sensorReading_right > 40 ) { //120 , 65
-    return true;
-  }
-  return false;
-}
-
-
-bool has_45_left_wall(){
-  if (sensorReading_45_left > 32 ) { //80,68,25,30
-    return true;
-  }
-  return false;
-}
-
-
-bool has_45_right_wall(){
-  if (sensorReading_45_right > 32) { //80,68,22,30 
-    return true;
-  }
-  return false;
-}
-
-bool has_back_wall(){
-  if (sensorReading_back > 32){
-    return true;
-  }
-  return false;
-}
-
-void testIR(){
-//  digitalWrite(sensor_left_power,HIGH);
-//  sensorReading_left = analogRead(sensor_left);
-// // Serial.println("SensorReading");
-//  Serial.println(sensorReading_left);
-////  Serial.print("HELLOOOO");
-// // delay(2000);
-
-  digitalWrite(sensor_back_power,HIGH);
-  sensorReading_back = analogRead(sensor_back);
- // Serial.println("SensorReading");
-  Serial.println(sensorReading_back);
-  delay(2000);
-}
 //Reads Ir sensors but with no mapped values
 void readIR(){
 
@@ -145,7 +83,8 @@ void readIR(){
   sensorReading_45_left -= error_45_left;
   sensorReading_45_right -= error_45_right;
 
-  sensorReading_45_right -= 20; // 30,28
+//  sensorReading_45_right -= 20; // 30,28
+  
   //map(value, fromLow, fromHigh, toLow, toHigh)
   
 //  sensorReading_45_left = map(sensorReading_45_left, 50, 600, 0, 200);
@@ -170,6 +109,8 @@ void readIR(){
   
   Serial.print( "45_RIGHT : ");
   Serial.println(sensorReading_45_right);
+
+
 // 
 //  Serial.println("ERRORS");
 //  Serial.println(error_left);
@@ -182,6 +123,144 @@ void readIR(){
   //Serial.println();
 }
 
+//HAS functions should be checked before every single comp
+//has functions are changed so they take multiple readings and take 
+// the avg of them to make sure the readings are as accurate as possible
+bool has_front_wall(){
+  
+  for(int x = 0; x < 10; x++){
+  readIR();
+  avg_front_wall_reading += sensorReading_middle;  
+  }
+  avg_front_wall_reading /= 10;
+  
+         
+  if (avg_front_wall_reading > 41 ) { // 150, 100,80,72,58,42  
+    front_wall = true;
+    
+  }
+  else{
+    front_wall = false;
+  }
+  
+  return front_wall;
+}
+
+bool has_left_wall(){     
+  for(int x = 0; x < 10; x++){
+  readIR();
+  avg_left_wall_reading += sensorReading_left;  
+  }
+  avg_left_wall_reading /= 10;
+  
+  
+  if (avg_left_wall_reading > 42 ) { //120 , 65
+    left_wall = true;
+    
+  }
+  else{
+    left_wall = false;
+  }
+  
+  return left_wall;}
+
+
+bool has_right_wall(){     
+  for(int x = 0; x < 10; x++){
+  readIR();
+  avg_right_wall_reading += sensorReading_right;  
+  }
+  avg_right_wall_reading /= 10;
+  
+  if (avg_right_wall_reading > 40 ) { //120 , 65
+    right_wall = true;
+    
+  }
+  else{
+    right_wall = false;
+  }
+  
+  return right_wall;
+}
+
+
+bool has_45_left_wall(){
+  for(int x = 0; x < 10; x++){
+  readIR();
+  avg_45_left_wall_reading += sensorReading_45_left;  
+  }
+  avg_45_left_wall_reading /= 10;
+  
+  if (avg_45_left_wall_reading > 32 ) { //80,68,25,30
+    left_45_wall = true;
+    
+  }
+  else{
+    left_45_wall = false;
+  }
+  
+  return left_45_wall;
+  
+}
+
+
+bool has_45_right_wall(){
+  for(int x = 0; x < 10; x++){
+  readIR();
+  avg_45_right_wall_reading += sensorReading_45_right;  
+  }
+  avg_45_right_wall_reading /= 10;
+
+  
+  
+  if (avg_45_right_wall_reading > 32) { //80,68,22,30 
+    right_45_wall = true;
+    
+  }
+  else{
+    right_45_wall = false;
+  }
+  
+  return right_45_wall;
+}
+
+
+bool has_back_wall(){
+  
+  for(int x = 0; x < 10; x++){
+  readIR();
+  avg_back_wall_reading += sensorReading_back;  
+  }
+  avg_back_wall_reading /= 10;
+
+  if (avg_back_wall_reading > 32){
+    back_wall = true;
+    
+  }
+  else{
+    back_wall = false;
+  }
+  
+  return back_wall;
+}
+
+
+void testIR(){
+//  digitalWrite(sensor_left_power,HIGH);
+//  sensorReading_left = analogRead(sensor_left);
+// // Serial.println("SensorReading");
+//  Serial.println(sensorReading_left);
+////  Serial.print("HELLOOOO");
+// // delay(2000);
+
+  digitalWrite(sensor_back_power,HIGH);
+  sensorReading_back = analogRead(sensor_back);
+ // Serial.println("SensorReading");
+  Serial.println(sensorReading_back);
+  delay(2000);
+}
+
+
 
 
 //code to show to not start until hand is shown
@@ -191,8 +270,9 @@ void wait_until_start_hand(){
     readIR();
     //readIR_map();
     //delay(500);
-
-    if (hasfrontwall()) {
+    has_front_wall();
+    
+    if (front_wall == true) {
       first_check = false;
       delay(500);
       Serial.println(sensorReading_middle);
