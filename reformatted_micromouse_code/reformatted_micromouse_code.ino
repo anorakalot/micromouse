@@ -1,44 +1,9 @@
-
-//#include <basic_io_avr.h>
-//#include <FreeRTOS_AVR.h>
-
-//#include <basic_io_arm.h>
-//#include <FreeRTOS_ARM.h>
-/*
- * DO ONE WALL PID -- done
- * DO NO WALL PID -- done with base values
- * DO ONE CELL LENGTH WITH IMU -- done with lowering speed and using encoders
- * 
- * DO SELF CORRECTION WITH FRONT WALL -- (did code need to test now);
- * 
- * fix random stopping -- done should be fixed due to setting forward(0,0) and rev(0,0) after running fix
- * fix go one cell and turn error -- done should be fixed due to setting forward(0,0) and rev(0,0) after running fix
- * 
- */
+#include <avr/io.h>
+#include <avr/interrupt.h>
 
 
-/*
- * TO DO LIST
- * MAKE THIS IN STATE MACHINES // DO ONLY MOTOR /FLOODFILL IN STATE MACHINES AND GYRO
- * DO PID OFF ONE WALL // use different middle ir's
- * DO PID OFF ENCODERS/GYRO for no walls
- * PORBABLY MAKE MOTOR_LEFT AND MOTOR_RIGHT SPEED VARIABLES
- * THEN DO SPEED + or -  the p i d control variables
- * PROBABLY JUST DO BASE_SPEED + or - for MOTOR_LEFT AND MOTOR_RIGHT
- * DO SELF CORRECTION WHENEVER IT REACHES A FRONT WALL 
- * DO SELF CORRECTION WITH SIDE WALLS AS WELL
- * SO GYRO WITH ACCELEROMETER SENSOR FUSION
- * GET FLOODFILL WORKING
- * TRY TO GET FREERTOS WORKING 
- */
- /*
-  * DONE LIST
-  *DO GYRO ANGLES and CALL DURING TURN_UNTIL FUNCTIONS DONE 
-  *GO BACK TO LOOP DONE
-  */
-//#include "Timer.h"
-////#include <NewPing.h>
-//#include "Time.h"
+
+
 
 //floodfill libraries
 #include <stack>
@@ -126,7 +91,7 @@ void setup(){
   digitalWrite(turn_on_en_2, LOW);
 
 
-  gyro_init(); 
+  gyro_init(); //sets up gyro
   gyro_tick();//sets up gyro read function
   motor_init();//sets up motor tick state  
   wait_until_start_hand();
@@ -215,23 +180,5 @@ void loop(){
 
 
 
-//EXAMPLE CODE FOR FREERTOS IF THAT EVER STARTS TO WORK
-//void motor_init(){
-//  motor_state = MOTOR_START;  
-//}
-//
-///void motor_task(){
-//  motor_init();
-//  for(;;){
-//    motor_tick();
-//    vTaskDelay(10); //  }
-//}
-//void StartSecPulse_2(unsigned portBASE_TYPE Priority)
-//{
-//  xTaskCreate(motor_task,(signed portCHAR *)"motor_task",configMINIMAL_STACK_SIZE,NULL,Priority,NULL);
-//}
-//
-//StartSecPulse_2();
-//vTaskStartScheduler();
 
 

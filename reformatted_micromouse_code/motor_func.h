@@ -1,18 +1,31 @@
-
-
-
 //encoder and turns
+//put in if statement so the PID encoder function is more accurate
+//and only takes into account encoder ticks when its moving forward 
+//having it take into account when turning would mess up the speed calculations
+//I dont even use encoders for turning anymore anymore
 void left_encoder_event(){
+  if (motor_state== GO_ONE_CELL){
   left_count ++;
+    
+  }
   //left_count_pid ++;
 }
 
 
 // encoder event for the interrupt call
+//put in if statement so the PID encoder function is more accurate
+//and only takes into account encoder ticks when its moving forward 
+//having it take into account when turning would mess up the speed calculations
+//I dont even use encoders for turning anymore anymore
 void right_encoder_event(){
+  if (motor_state == GO_ONE_CELL){
   right_count ++;
+    
+  }
   //right_count_pid ++;
 }
+
+
 void print_encoder_count(){
 
   Serial.print("left_count");
@@ -67,29 +80,7 @@ void reverse(double left_speed, double right_speed) {
 
 
 void halt(){
-//  digitalWrite(turn_on_en_1, LOW);
-//  digitalWrite(turn_on_en_2, LOW);
-//
-//  digitalWrite(motor_1_logic_1, LOW);
-//  digitalWrite(motor_1_logic_2, LOW);
-//  digitalWrite(motor_2_logic_1, LOW);
-//  digitalWrite(motor_2_logic_2, LOW);
 
-  //  digitalWrite(turn_on_en_1, HIGH);
-  //  digitalWrite(turn_on_en_2, HIGH);
-  //
-  //  digitalWrite(motor_1_logic_1, HIGH);
-  //  digitalWrite(motor_1_logic_2, HIGH);
-  //  digitalWrite(motor_2_logic_1, HIGH);
-  //  digitalWrite(motor_2_logic_2, HIGH);
-
-  //  digitalWrite(turn_on_en_1, HIGH);
-  //  digitalWrite(turn_on_en_2, HIGH);
-
-  //  digitalWrite(motor_1_logic_1, LOW);
-  //  digitalWrite(motor_1_logic_2, LOW);
-  //  digitalWrite(motor_2_logic_1, LOW);
-  //  digitalWrite(motor_2_logic_2, LOW);
 
   digitalWrite(turn_on_en_1, LOW);
   digitalWrite(turn_on_en_2, LOW);
@@ -174,19 +165,6 @@ void right_turn(int turn_speed) {
   digitalWrite(motor_2_logic_2, LOW);
 }
 
-//double check this function I switched which logic is left and which is right
-//void forward(double left_speed, double right_speed) {
-//
-//
-//  digitalWrite(turn_on_en_1, HIGH);
-//  digitalWrite(turn_on_en_2, HIGH);
-//
-//  analogWrite(motor_1_logic_2, right_speed);
-//  analogWrite(motor_2_logic_1, left_speed);
-//  digitalWrite(motor_1_logic_1, LOW);
-//  digitalWrite(motor_2_logic_2, LOW);
-//
-//}
 void forward(int left_speed, int right_speed) {
 
 
@@ -235,32 +213,10 @@ void right_turn_until(){ //330,240,220
 void reverse_turn_until_r(){ //330,240,220
   gyro_angle = 0;
   gyro_sum = 0;
-  //halt_until(halt_delay);
-  //readIR();
-  //if (sensorReading_left > sensorReading_right){
-
-  //  while ( abs(gyro_angle)  < 255) { //350,330,305,305,180,200,230,250,260,255,260
-  //    gyro_tick();
-  //    right_turn();                  //350,360,380,390
-  //   }
   right_turn_until();
   delay(100);
   right_turn_until();
 
-  //}
-
-  //  else if (sensorReading_right > sensorReading_left){
-  //
-  ////  while ( abs(gyro_angle)  < 255) { //350,330,305,305,180,200,230,250,260,255
-  ////    gyro_tick();
-  ////    left_turn();                  //350,360,380,390
-  ////   }
-  //    left_turn_until();
-  //    delay(100);
-  //    left_turn_until();
-  //  }
-
-  //halt_until(halt_delay);
 }
 void reverse_turn_until_l(){
   gyro_angle = 0;
@@ -295,23 +251,9 @@ void reverse_until(int left_speed, int right_speed, unsigned long stop_time) {
 }
 
 void regulateSensor_45_L(){
-  //readIR();
-  //sensorReading_left = analogRead(sensor_left);
-  //sensorReading_left = map(sensorReading_left, left_ir_low_bound, left_ir_high_bound, 0, 200);
-
-  //permReading_left = 0 for some reason
-
-  //sensorReading_left = sensorReading_left - permReading_left;
-
-
-  //if (sensorReading_left - permReading_left < 0){
   if (sensorReading_45_left < 0) {
     sensorReading_45_left = ~sensorReading_45_left + 1;
   }
-  //
-  //   if (sensorReading_left < 0){
-  //    sensorReading_left = ~sensorReading_left + 1;
-  //  }
 
 }
 
@@ -319,41 +261,15 @@ void regulateSensor_45_L(){
 //all it does is take the sensors reading and if its less than 0 make it plus one
 //EITHER MAP IN THIS FUNC OR IN READIR
 void regulateSensor_45_R(){
-  //sensorReading_right = analogRead(sensor_right);
-  //readIR();
-
-  //sensorReading_right = map(sensorReading_right, 180, 820, 0, 200);
-
-  //sensorReading_right = sensorReading_right - permReading_right;
-
-
-
-  //if (sensorReading_right - permReading_right < 0){
   if (sensorReading_45_right < 0) {
     sensorReading_45_right = ~sensorReading_45_right + 1;
   }
-  //  if (sensorReading_right < 0){
-  //    sensorReading_right = ~sensorReading_right + 1;
-  //  }
 }
 
 //gets sensor data from l to use for pid control function
 //all it does is take the sensors reading and if its less than 0 make it plus one
 //EITHER MAP IN THIS FUNC OR IN READIR
 void regulateSensorL(){
-  //readIR();
-  //sensorReading_left = analogRead(sensor_left);
-  //sensorReading_left = map(sensorReading_left, left_ir_low_bound, left_ir_high_bound, 0, 200);
-
-  //permReading_left = 0 for some reason
-
-  //sensorReading_left = sensorReading_left - permReading_left;
-
-
-  //if (sensorReading_left - permReading_left < 0){
-  //  if (sensorReading_45_left < 0){
-  //    sensorReading_45_left = ~sensorReading_45_left + 1;
-  //  }
 
   if (sensorReading_left < 0) {
     sensorReading_left = ~sensorReading_left + 1;
@@ -365,19 +281,6 @@ void regulateSensorL(){
 //all it does is take the sensors reading and if its less than 0 make it plus one
 //EITHER MAP IN THIS FUNC OR IN READIR
 void regulateSensorR(){
-  //sensorReading_right = analogRead(sensor_right);
-  //readIR();
-
-  //sensorReading_right = map(sensorReading_right, 180, 820, 0, 200);
-
-  //sensorReading_right = sensorReading_right - permReading_right;
-
-
-
-  //if (sensorReading_right - permReading_right < 0){
-  //  if (sensorReading_45_right < 0){
-  //    sensorReading_45_right = ~sensorReading_45_right + 1;
-  //  }
   if (sensorReading_right < 0) {
     sensorReading_right = ~sensorReading_right + 1;
   }
@@ -457,68 +360,7 @@ void pid_control_one_wall_r(){
   }
 
 }
-//
-//void get_l_count(){
-// curr_left_count = left_count_pid; 
-// left_count_pid = 0;
-//}
-//
-//void get_r_count(){
-// curr_right_count = right_count_pid;
-// right_count_pid = 0;
-//}
 
-//TEST THE ENCODER PID
-//in the meantime this will go off good base values
-//MAKE THIS LATER INTO ENCODER PID
-//DOING IT OFF ONLY ENCODERS (GET THIS WORKING LATER)
-void pid_control_no_walls(){
-  
-//  motor_left = base_speed - 17;
-//  motor_right = base_speed - 10;
-
-  motor_left = motor_left;
-  motor_right = motor_right;
-
-//get_l_count();
-//get_r_count();
-//
-////right
-//error_r_enc = abs(expec_left_count - curr_left_count);
-//
-//p_control_enc_r =  error_r_enc *kp_enc;
-//
-//
-//d_control_enc_r = abs(error_r_enc - prev_error_enc_r) * kd_enc;
-//
-//if (expec_left_count > curr_left_count){
-//  motor_right = base_speed + (p_control_enc_r + d_control_enc_r);  
-//}
-//else if (expec_left_count < curr_left_count){
-//  motor_right = base_speed - (p_control_enc_r + d_control_enc_r);
-//}
-//
-//prev_error_enc_r = error_r_enc;
-//
-//
-////left
-//error_l_enc = expec_right_count - curr_right_count;
-//
-//p_control_enc_l =  error_l_enc *kp_enc;
-//
-//
-//d_control_enc_l = abs(error_l_enc - prev_error_enc_l) * kd_enc;
-//
-//if (expec_right_count > curr_right_count){
-//  motor_left = base_speed + (p_control_enc_l + d_control_enc_l);  
-//}
-//else if (expec_right_count < curr_right_count){
-//  motor_left = base_speed - (p_control_enc_l + d_control_enc_l);
-//}
-//prev_error_enc_l = error_l_enc;
-
-
-}
 
 
 
@@ -771,10 +613,6 @@ void go_one_cell(){
   }
   forward(0,0);
   halt_until(halt_delay);
-  //testing
-  //  print_encoder_count();
-  //  halt();
-  //  delay(2000);
 
 }
 
@@ -790,163 +628,6 @@ void reverse_until( unsigned long stop_time) {
   }
 }
 
-//does random move based on sensor data
-//void random_move(){
-//  int random_move;
-//  //readIR_map();
-//  readIR();
-//  //has to turn cases
-//
-//  //wall: left , right open: front
-//  if (hasleftwall() && hasrightwall() && !hasfrontwall()) {
-//    //go_one_cell();
-//    return;
-//  }
-//
-//  //wall: left , right , front open:
-//  if (hasleftwall() && hasrightwall() && hasfrontwall()) {
-//    halt_until(halt_delay);
-//    reverse_until(100);
-//    halt_until(halt_delay);
-//    reverse_turn_until();
-//    halt_until(halt_delay);
-//
-//
-//    return;
-//  }
-//
-//  //wall: left , front  open: right
-//  else if (hasleftwall() && !hasrightwall() && hasfrontwall()) {
-//
-//    halt_until(halt_delay);
-//    reverse_until(100);
-//    halt_until(halt_delay);
-//    right_turn_until();
-//    //right_with_wall();
-//    halt_until(halt_delay);
-//
-//    return;
-//  }
-//  //wall: right , front open: left
-//  else if (hasrightwall()  && !hasleftwall() && hasfrontwall()) { //|| (hasfronwall() &&(hasrightwall - hasleftwall > 200) ){//
-//    halt_until(halt_delay);
-//    reverse_until( 100);
-//    halt_until(halt_delay);
-//    left_turn_until();
-//    //left_with_wall();
-//    halt_until(halt_delay);
-//
-//    return;
-//  }
-//
-//  //random choice cases
-//
-//  //
-//  //wall: right open: left, front
-//  else if (!hasleftwall() && !hasfrontwall() && hasrightwall()) {
-//    random_move = random(millis()) % 2;
-//    if (random_move == 1) {
-//      halt_until(halt_delay);
-//      left_turn_until();
-//      halt_until(halt_delay);
-//      return;
-//    }
-//    else {
-//      //goes straight
-//      halt_until(halt_delay);
-//      return;
-//
-//    }
-//  }
-//
-//  //wall: left , open: front , right
-//  else if (hasleftwall() && !hasfrontwall() && !hasrightwall() ) {
-//    random_move = random(millis()) % 2;
-//    if (random_move == 1) {
-//      halt_until(halt_delay);
-//      right_turn_until();
-//      halt_until(halt_delay);
-//      return;
-//    }
-//    else {
-//      //goes straight
-//      halt_until(halt_delay);
-//      return;
-//    }
-//  }
-//
-//  //wall: front  open:left , right
-//  else if (!hasleftwall() && hasfrontwall() && !hasrightwall())  {
-//    random_move = random(millis()) % 2;
-//    if (random_move == 1) {
-//      halt_until(halt_delay);
-//      reverse_until(100);
-//      halt_until(halt_delay);
-//      right_turn_until();
-//      //right_with_wall();
-//      halt_until(halt_delay);
-//      return;
-//    }
-//    else {
-//      halt_until(halt_delay);
-//      reverse_until(100);
-//      halt_until(halt_delay);
-//      left_turn_until();
-//      //left_with_wall();
-//      halt_until(halt_delay);
-//      return;
-//    }
-//  }
-//  //wall:  open: front , left, right
-//  else if (!hasfrontwall() && !hasleftwall() && !hasrightwall()) {
-//    random_move = random(millis()) % 3;
-//    if (random_move == 1) {
-//      halt_until(halt_delay);
-//      right_turn_until();
-//      halt_until(halt_delay);
-//      return;
-//    }
-//    else if (random_move == 2) {
-//      halt_until(halt_delay);
-//      return;
-//    }
-//    else {
-//      halt_until(halt_delay);
-//      left_turn_until();
-//      halt_until(halt_delay);
-//      return;
-//
-//    }
-//  }
-//
-//
-//  //in case of errors
-//  else {
-//    random_move = random(millis()) % 3;
-//    if (random_move == 1) {
-//      halt_until(700);
-//      right_turn_until();
-//      halt_until(700);
-//      return;
-//    }
-//    else if (random_move == 2) {
-//      halt_until(700);
-//      left_turn_until();
-//      halt_until(700);
-//      return;
-//
-//    }
-//    else {
-//      return;
-//    }
-//
-//    //go_one_cell();
-//    return;
-//  }
-//
-//  return;
-//
-//}
 
 
 
@@ -991,57 +672,6 @@ void correct_mouse_close(){
 
 
 
-////this only happens I think when the sensor readings are the same for multiple cycles
-////which usually indicates the mouse is stuch somehow
-////should not need if new mouse is done right
-//void error_catch(){
-//  curr_timer = millis();
-//
-//  if (curr_timer - prev_timer >= error_check_interval) {
-//    prev_timer = curr_timer;
-//    // if (error_check == true) {
-//    if (prev_sensorReading_left == sensorReading_left && prev_sensorReading_middle == sensorReading_middle && prev_sensorReading_right == sensorReading_right) {
-//      int rand_num = random(millis()) % 2;
-//      if (rand_num == 1) {
-//        halt_until(700);
-//        reverse_until(100);
-//        halt_until(700);
-//        left_turn_until();
-//        halt_until(700);
-//      }
-//      else {
-//        halt_until(700);
-//        reverse_until(100);
-//        halt_until(700);
-//        right_turn_until();
-//        halt_until(700);
-//      }
-//    }
-//
-//    if (  left_count - prev_encoder_tick < 100) {
-//      int rand_num = random(millis()) % 2;
-//      if (rand_num == 1) {
-//        halt_until(700);
-//        reverse_until(100);
-//        halt_until(700);
-//        left_turn_until();
-//        halt_until(700);
-//      }
-//      else {
-//        halt_until(700);
-//        reverse_until(100);
-//        halt_until(700);
-//        right_turn_until();
-//        halt_until(700);
-//      }
-//    }
-//
-//    prev_sensorReading_left = sensorReading_left;
-//    prev_sensorReading_middle = sensorReading_middle;
-//    prev_sensorReading_right = sensorReading_right;
-//    prev_encoder_tick = left_count;
-//  }
-//}
 
 void can_correct_func(){
   if (can_correct == 1) {
@@ -1054,11 +684,15 @@ void can_correct_func(){
 
 //error_check = false;
 //MIGHT PUT FLOODFILL INTO THIS STATE MACHINE AS WELL
-enum MOTOR_STATES {MOTOR_INIT, GO_ONE_CELL, CHOOSE_MOVE, TURN_REVERSE_L, TURN_REVERSE_R, TURN_LEFT, TURN_RIGHT } motor_state;
+
+// I PUT A COPY OF THIS INTO GLOBAL VALUES.H SO THE STATES CAN BE ACCESSED GLOBALLY BY THE INTERRUPTS FUNCTIONS ABOVE 
+// LEAVING A COPY BELOW 
+//enum MOTOR_STATES {MOTOR_INIT, GO_ONE_CELL, CHOOSE_MOVE, TURN_REVERSE_L, TURN_REVERSE_R, TURN_LEFT, TURN_RIGHT } motor_state;
 //CORRECT_MOUSE
 void motor_init(){
   motor_state = MOTOR_INIT;
 }
+
 void motor_tick(){
 
   switch (motor_state) { //transitions
@@ -1233,6 +867,10 @@ void motor_tick(){
 
 }
 
+
+
+
+
 //void testing_func(){
 //  readIR();
 //
@@ -1260,134 +898,56 @@ void motor_tick(){
 //
 //  return;
 //}
-//void pid_control_one_wall_90_r(){
-//  readIR();
-//  error_r = abs(sensorReading_right - middle_point_90_r);
+
+////this only happens I think when the sensor readings are the same for multiple cycles
+////which usually indicates the mouse is stuch somehow
+////should not need if new mouse is done right
+//void error_catch(){
+//  curr_timer = millis();
 //
-//  p_control_r = error_r * kp_r;
+//  if (curr_timer - prev_timer >= error_check_interval) {
+//    prev_timer = curr_timer;
+//    // if (error_check == true) {
+//    if (prev_sensorReading_left == sensorReading_left && prev_sensorReading_middle == sensorReading_middle && prev_sensorReading_right == sensorReading_right) {
+//      int rand_num = random(millis()) % 2;
+//      if (rand_num == 1) {
+//        halt_until(700);
+//        reverse_until(100);
+//        halt_until(700);
+//        left_turn_until();
+//        halt_until(700);
+//      }
+//      else {
+//        halt_until(700);
+//        reverse_until(100);
+//        halt_until(700);
+//        right_turn_until();
+//        halt_until(700);
+//      }
+//    }
 //
-//  d_control_r = abs(error_r - prev_error_r) * kd_r;
+//    if (  left_count - prev_encoder_tick < 100) {
+//      int rand_num = random(millis()) % 2;
+//      if (rand_num == 1) {
+//        halt_until(700);
+//        reverse_until(100);
+//        halt_until(700);
+//        left_turn_until();
+//        halt_until(700);
+//      }
+//      else {
+//        halt_until(700);
+//        reverse_until(100);
+//        halt_until(700);
+//        right_turn_until();
+//        halt_until(700);
+//      }
+//    }
 //
-//
-//  if (sensorReading_right > middle_point_90_r) {
-//
-//    motor_left = base_speed - ( p_control_r + d_control_r);
-//    motor_right = base_speed + (p_control_r + d_control_r);
-//    prev_error_r = error_r;
-//  }
-//
-//  else if (sensorReading_right < middle_point_90_r) {
-//    motor_left = base_speed + (p_control_r + d_control_r);
-//    motor_right = base_speed - (p_control_r + d_control_r);
-//    prev_error_r = error_r;
-//  }
-//  else {
-//    //nothing
-//    return;
-//  }
-//}
-//
-//void pid_control_one_wall_90_l(){
-//  readIR();
-//  error_l = abs(sensorReading_left - middle_point_90_l);
-//
-//  p_control_l = error_l * kp_l;
-//
-//  d_control_l = abs(error_l - prev_error_l) * kd_l;
-//
-//
-//  if (sensorReading_left > middle_point_90_l) {
-//
-//    motor_left = base_speed + ( p_control_l + d_control_l);
-//    motor_right = base_speed - (p_control_l + d_control_l);
-//    prev_error_l = error_l;
-//  }
-//
-//  else if (sensorReading_left < middle_point_90_l) {
-//    motor_left = base_speed - (p_control_l + d_control_l);
-//    motor_right = base_speed + (p_control_l + d_control_l);
-//    prev_error_r = error_l;
-//  }
-//  
-//  else {
-//    //nothing
-//    return;
-//  }
-//}
-//
-//void pid_control_two_90_walls(){
-//  readIR();
-//
-//
-//  regulateSensorL();
-//  regulateSensorR();
-//
-//
-//  reset_error ++;
-//  //resets reset error which is used for i part of pid  which takes in error from previous cycles
-//  if (reset_error > 10000) {
-//    reset_error = 0;
-//    error_buildup = 0;
-//  }
-//  //error value
-//  error = abs(sensorReading_left - sensorReading_right);
-//  
-//  if (error > 250){
-//    error = 175;
-//  }
-//  //p control
-//  p_control = error * kp;
-//
-//
-//  //i control
-//  error_buildup += error;
-//  i_control = error_buildup * ki;
-//
-//
-//  //d control
-//  d_control = abs(error - prev_error) * kd;
-//
-//
-//
-//  //too close left
-//  if (sensorReading_left > sensorReading_right) {
-//
-//    //maybe try instead of making motor left and right base_speed - pid values
-//    //try motor_l + pid_values and motor_r - pid values
-//
-//    motor_left = base_speed + (p_control+ i_control + d_control);
-//    motor_right = base_speed - (p_control+ i_control + d_control);//);
-//    //    motor_left += (p_control + d_control);
-//    //    motor_right -= (p_control + d_control);
-//
-//    //
-//    prev_error = error;
-//    return;
-//  }
-//
-//  //too close right
-//  else if (sensorReading_right > sensorReading_left) {
-//
-//
-//
-//
-//    //maybe try instead of making motor left and right base_speed - pid values
-//    //try motor_l - pid_values and motor_r + pid values
-//
-//    motor_left = base_speed - (p_control+ i_control + d_control); //+ i_control + d_control);
-//    motor_right = base_speed +  (p_control+ i_control + d_control);
-//    //    motor_left -= (p_control + d_control);
-//    //    motor_right += (p_control + d_control);
-//    prev_error = error;
-//    return;
-//  }
-//
-//  //equal to each other
-//  else {
-//    //nothing
-//    //motor_left and motor_right stay the same
-//    prev_error = error;
-//    return;
+//    prev_sensorReading_left = sensorReading_left;
+//    prev_sensorReading_middle = sensorReading_middle;
+//    prev_sensorReading_right = sensorReading_right;
+//    prev_encoder_tick = left_count;
 //  }
 //}
 

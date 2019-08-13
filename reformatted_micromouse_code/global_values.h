@@ -152,6 +152,8 @@ unsigned long right_count = 0;
 //long right_count_pid = 0;
 //unsigned long reverse_count = 0;
 
+// Motor  Tick Enum States
+enum  MOTOR_STATES   {  MOTOR_INIT  ,  GO_ONE_CELL , CHOOSE_MOVE, TURN_REVERSE_L, TURN_REVERSE_R, TURN_LEFT, TURN_RIGHT } motor_state;
 
 //IRLED
 int left_offset = 20; // last value was 15 , 5 , 30, 10
@@ -230,11 +232,7 @@ int error_right;
 int error_45_left;
 int error_45_right;
 
-//int error_left_sum;
-//int error_middle_sum;
-//int error_right_sum;
-//int error_45_left_sum;
-//int error_45_right_sum;
+
 
 
 //correct variable
