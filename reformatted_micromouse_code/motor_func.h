@@ -672,12 +672,13 @@ void correct_mouse_close(){
 
 
 
-
+//CHECK IF THIS WORKS
+//GONNA COMMENT THIS OUT FOR NOW
 void can_correct_func(){
   if (can_correct == 1) {
     //correct_mouse_far();
-    correct_mouse_close();
-    can_correct = 0;
+    //correct_mouse_close();
+    //can_correct = 0;
   }
 }
 

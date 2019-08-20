@@ -51,7 +51,7 @@ void setup(){
   
   pinMode(sensor_left, INPUT);
   pinMode(sensor_middle, INPUT);
-  //put in sensor Middle_right
+  pinMode(sensor_back, INPUT);
   pinMode(sensor_right, INPUT);  
   pinMode(sensor_45_left, INPUT);
   pinMode(sensor_45_right, INPUT);
@@ -59,7 +59,7 @@ void setup(){
 
   pinMode(sensor_left_power, OUTPUT);
   pinMode(sensor_middle_power, OUTPUT);
-  //pinMode(sensor_middle_right
+  pinMode(sensor_back_power, OUTPUT);
   pinMode(sensor_right_power, OUTPUT);
   pinMode(sensor_45_left_power,OUTPUT);
   pinMode(sensor_45_right_power,OUTPUT);
@@ -73,6 +73,7 @@ void setup(){
   digitalWrite(sensor_45_left_power,HIGH);
 
   digitalWrite(sensor_45_right_power,HIGH);
+  digitalWrite(sensor_back_power,HIGH);
 
   //motor pins
   // pinMode(turn_on_en_input,INPUT);
@@ -116,12 +117,24 @@ void setup(){
 
 
 void loop(){
+
+
 //main sequence 
-  readIR();
+  //readIR();
   //motor_tick(); 
   //delay(1000);
+
+  testIR();
+
+
+
+
+
+
+
 //go_one_cell();
 //  
+
   //motor_tick();//does go_one_cell
   //delay(2000);
 //  halt_until(halt_delay);

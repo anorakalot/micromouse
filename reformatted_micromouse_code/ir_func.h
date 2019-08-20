@@ -246,7 +246,7 @@ void testIR(){
 
   digitalWrite(sensor_back_power,HIGH);
   sensorReading_back = analogRead(sensor_back);
- // Serial.println("SensorReading");
+  Serial.println("SensorReading");
   Serial.println(sensorReading_back);
   delay(2000);
 }
