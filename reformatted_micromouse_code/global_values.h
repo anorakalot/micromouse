@@ -1,5 +1,5 @@
 
-unsigned long halt_delay = 400;//350,300
+unsigned long halt_delay = 200;//350,300,400
 
 
 unsigned long prev_encoder_tick;
@@ -88,9 +88,9 @@ unsigned long curr_left_speed;
 unsigned long curr_right_speed;
 
 
-
-unsigned long left_wanted_speed;
-unsigned long right_wanted_speed;
+//need to set these speeds doe encoder pid
+unsigned long left_wanted_speed = 200;
+unsigned long right_wanted_speed = 200;
 
 double kp_enc = 0.20;//0.50
 double kd_enc = 0.20;//0.30

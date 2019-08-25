@@ -4,11 +4,11 @@
 //having it take into account when turning would mess up the speed calculations
 //I dont even use encoders for turning anymore anymore
 void left_encoder_event(){
-  if (motor_state== GO_ONE_CELL){
+//  if (motor_state== GO_ONE_CELL){
+//  left_count ++;
+//    
+//  }
   left_count ++;
-    
-  }
-  //left_count_pid ++;
 }
 
 
@@ -18,11 +18,11 @@ void left_encoder_event(){
 //having it take into account when turning would mess up the speed calculations
 //I dont even use encoders for turning anymore anymore
 void right_encoder_event(){
-  if (motor_state == GO_ONE_CELL){
+//  if (motor_state == GO_ONE_CELL){
+//  right_count ++;
+//    
+//  }
   right_count ++;
-    
-  }
-  //right_count_pid ++;
 }
 
 
@@ -500,19 +500,21 @@ void pid_control(){
   readIR();
 
   //testing
-  //pid_control_two_45_walls();
+  pid_control_two_45_walls();
   //pid_control_one_wall_l();
   //pid_control_one_wall_r();
-  //pid_control_no_walls();
-   // pid_control_two_90_walls();
+  //pid_control_enc();
+  // pid_control_two_90_walls();
 
-  has_45_left_wall();
-  has_45_right_wall();
-  has_left_wall();
-  has_right_wall();
-  has_back_wall();
-  has_front_wall();
+//  has_45_left_wall();
+//  has_45_right_wall();
+//  has_left_wall();
+//  has_right_wall();
+//  has_back_wall();
+//  has_front_wall();
+has_walls();
 
+  //pid_control_enc();
 
   
 
@@ -522,16 +524,17 @@ void pid_control(){
 //  }
 //  else if (left_45_wall == true &&  right_45_wall == false) {
 //    pid_control_one_wall_l();
-//    //pid_control_no_walls();
+//   
 //  }
 //  else if (left_45_wall == false && right_45_wall == true) {
 //    pid_control_one_wall_r();
-//    //pid_control_no_walls();
+//    
 //  }
 //
-//  //it works surpisingly well
+//  //go off encoders if no walls
+//  // if encoders are really good go off of encoders even more
 //  else if (left_45_wall && right_45_wall == false) {
-//    pid_control_no_walls();
+//    pid_control_enc();
 //
 //    //pid_control_two_45_walls();
 //
@@ -542,29 +545,12 @@ void pid_control(){
 //    pid_control_two_45_walls();
 //  }
 
-  //pid_control_two_45_walls();
+  
 
+//I GOT RID OF 90 degree sensor PID to shorten code 
+//if I need it back look at old github versions to get back the code 
+//but in the meantime it was just taking up space
 
-
-  //using 90 deg sensors
-  //  //pid_control_no_walls();
-  //     if (left_wall == true && right_wall == true){
-  //        pid_control_two_90_walls();
-  //      }
-  //      else if (left_wall == true &&  right_wall == false){
-  //        pid_control_one_wall_90_l();
-  //      }
-  //      else if (left_wall == false && right_wall == true){
-  //       pid_control_one_wall_90_r();
-  //
-  //      }
-  //      else if (left_wall && right_wall == false){
-  //        pid_control_no_walls();
-  //
-  //         }
-  //      else{
-  //        pid_control_two_90_walls();
-  //      }
 
   return;
 }
@@ -598,17 +584,20 @@ void go_one_cell(){
   //off encoders
   halt_until(halt_delay);  //1455
   //unsigned long curr = right_count;//1490,1480,1485,1487(really goodd but go to 1486 to mitigate going over),1400,1440,1460(sometimes over)
-  unsigned long curr = left_count;
-  //while (abs(right_count - curr) <1458) { //945, 1400,1380                                                                               400,500,600,650,750,1000,1100,1200  ,1300  , 952 , 930 , 912,908(best so far) , 905 , 890 , 908 ,912,920,930,945,960,1300,1400,1450,1470,1474,1480,1490,1510,1511
-  while(abs(left_count - curr) <1380 ){ //1450,1465,1450    readIR();                   //900,500,600,700,800,900,1000,1070,1100, ,1150,1160, 1200 , 1130,1000 , 900    ,1000 , 945  ,800 ,850 , 880 , 885,895 , 915 ,925(over),920(both) , close 905 ,980 ,960(closest)
+  //unsigned long curr = left_count;
+  unsigned long curr = right_count;
+  while (abs(right_count - curr) <400) { //945, 1400,1380,1438,1000                                                                               400,500,600,650,750,1000,1100,1200  ,1300  , 952 , 930 , 912,908(best so far) , 905 , 890 , 908 ,912,920,930,945,960,1300,1400,1450,1470,1474,1480,1490,1510,1511
+  //while(abs(left_count - curr) <1380 ){ //1450,1465,1450    readIR();                   //900,500,600,700,800,900,1000,1070,1100, ,1150,1160, 1200 , 1130,1000 , 900    ,1000 , 945  ,800 ,850 , 880 , 885,895 , 915 ,925(over),920(both) , close 905 ,980 ,960(closest)
     // print_encoder_count();
     //pid_control_two_walls();
     //IF PID IS DONE IN A STATE MACHINE I WONT NEED PID IN THIS FUNCTION
     //HAVING IN STATE MACHINES COULD MEAN I COULD HAVE BETTER READ RESULTS
     //NEED TO MAKE SURE THIS DOESN'T MESS UP CONTROL GOING FORWARD
+
     pid_control();
 
     forward(motor_left, motor_right);
+    
     print_encoder_count();
   }
   forward(0,0);
@@ -711,10 +700,11 @@ void motor_tick(){
       //structured like a 3 input truth table
 
       readIR();
-      has_front_wall();
-      has_left_wall();
-      has_right_wall();
-      
+//      has_front_wall();
+//      has_left_wall();
+//      has_right_wall();
+        has_walls();
+          
       //000
             if (front_wall == false && left_wall == false && right_wall == false){
               random_choice = random(millis()) % 2;
@@ -797,7 +787,9 @@ void motor_tick(){
             else{
               motor_state = GO_ONE_CELL;
             }
-
+     
+      
+      //motor_state = GO_ONE_CELL;
       //testing
 //      if (front_wall == true) {
 //         if (sensorReading_right > sensorReading_left){
@@ -839,7 +831,6 @@ void motor_tick(){
     case MOTOR_INIT:
       break;
     case GO_ONE_CELL:
-
       go_one_cell();//this calls pid inside of it
       Serial.println("GO_ONE_CELL");
       break;

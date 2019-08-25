@@ -14,17 +14,14 @@
 #include <Wire.h>
 #include <LSM6.h>
 
-//#include <Wire.h>
-//#include <L3G.h>
 #include "global_values.h"
 #include "gyro_func.h"
-//#include "Timer.h"
-//need time
-//#include "Time.h"
+
 #include "ir_func.h"
 #include "motor_func.h"
 
 
+//c interupt testing
 
 
 
@@ -32,7 +29,7 @@
 //sets up all the functions and variables
 void setup(){
   Serial.begin(9600);
-  
+ 
   ///*
   //interrups set up for turns 
   attachInterrupt(digitalPinToInterrupt(LH_ENCODER_A), left_encoder_event, CHANGE);
@@ -91,11 +88,11 @@ void setup(){
   digitalWrite(turn_on_en_1, LOW);
   digitalWrite(turn_on_en_2, LOW);
 
-
+//UNCOMMENT THESE WHEN NEEDING TO RUN MOUSE
   gyro_init(); //sets up gyro
   gyro_tick();//sets up gyro read function
   motor_init();//sets up motor tick state  
-  wait_until_start_hand();
+  wait_until_start_hand();//waits until hand in front of 
   
   
 
@@ -105,6 +102,7 @@ void setup(){
 //REMEMBER TO SETUP gyro 
 //PROBABLY THE REASON WHY THE gyro ISN'T WORKING
 //setup_gyro();
+
 
 
 
@@ -121,17 +119,27 @@ void loop(){
 
 //main sequence 
   //readIR();
-  //motor_tick(); 
-  //delay(1000);
-
-  testIR();
+//  motor_tick(); 
+//  delay(1000);
 
 
+  forward();
+  //testIR();
+//go_one_cell();
+   // pid_control();
+
+    // forward(motor_left, motor_right);
 
 
 
 
-
+//digitalWrite(sensor_back_power,HIGH);
+//delay(1000);
+//
+//digitalWrite(sensor_back_power,LOW);
+//delay(1000);
+//Serial.println("TESTING_LOOP");
+//delay(1000);
 //go_one_cell();
 //  
 
