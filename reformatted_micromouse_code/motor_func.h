@@ -4,11 +4,10 @@
 //having it take into account when turning would mess up the speed calculations
 //I dont even use encoders for turning anymore anymore
 void left_encoder_event(){
-//  if (motor_state== GO_ONE_CELL){
-//  left_count ++;
-//    
-//  }
+  if (motor_state== GO_ONE_CELL){
   left_count ++;
+  }
+//  left_count ++;
 }
 
 
@@ -18,11 +17,10 @@ void left_encoder_event(){
 //having it take into account when turning would mess up the speed calculations
 //I dont even use encoders for turning anymore anymore
 void right_encoder_event(){
-//  if (motor_state == GO_ONE_CELL){
+  if (motor_state == GO_ONE_CELL){
+  right_count ++; 
+  }
 //  right_count ++;
-//    
-//  }
-  right_count ++;
 }
 
 
@@ -444,9 +442,11 @@ void pid_control_two_45_walls(){
 //TEST TO SEE IF IT WORKS GOING FORWARD ONLY FIRST
 //does both motors 
 void pid_control_enc(){
+  cli();
   curr_left_count = left_count;
   curr_right_count = right_count;
-
+  sei();
+  
   //take derivative to get curr speed
   curr_left_speed = curr_left_count - prev_left_count;
   curr_right_speed = curr_right_count - prev_right_count;
@@ -499,6 +499,14 @@ void pid_control_enc(){
 void pid_control(){
   readIR();
 
+  //  has_45_left_wall();
+  //  has_45_right_wall();
+  //  has_left_wall();
+  //  has_right_wall();
+  //  has_back_wall();
+  //  has_front_wall();
+  has_walls();
+
   //testing
   pid_control_two_45_walls();
   //pid_control_one_wall_l();
@@ -506,13 +514,6 @@ void pid_control(){
   //pid_control_enc();
   // pid_control_two_90_walls();
 
-//  has_45_left_wall();
-//  has_45_right_wall();
-//  has_left_wall();
-//  has_right_wall();
-//  has_back_wall();
-//  has_front_wall();
-has_walls();
 
   //pid_control_enc();
 
@@ -699,97 +700,97 @@ void motor_tick(){
     case CHOOSE_MOVE:
       //structured like a 3 input truth table
 
-      readIR();
-//      has_front_wall();
-//      has_left_wall();
-//      has_right_wall();
-        has_walls();
-          
-      //000
-            if (front_wall == false && left_wall == false && right_wall == false){
-              random_choice = random(millis()) % 2;
-              if (random_choice == 0){
-                motor_state = GO_ONE_CELL;
-              }
-              else if (random_choice == 1){
-                motor_state = TURN_LEFT;
-              }
-              else if (random_choice == 2){
-                motor_state = TURN_RIGHT;
-              }
-            }
-            //001
-            else if (front_wall == false && left_wall == false && right_wall == true){
-              random_choice = random(millis()) % 2;
-              if (random_choice == 0){
-                motor_state = GO_ONE_CELL;
-              }
-              else if (random_choice == 1){
-                motor_state = TURN_LEFT;
-              }
-            }
-            //010
-            else if (front_wall == false && left_wall == true && right_wall == false){
-              random_choice = random(millis()) % 2;
-              if (random_choice == 0){
-                motor_state = GO_ONE_CELL;
-              }
-              else if (random_choice == 1){
-                motor_state = TURN_RIGHT;
-              }
-            }
-      
-            //011
-            else if (front_wall == false && left_wall == true && right_wall == true){
-              motor_state = GO_ONE_CELL;
-            }
-            //100
-            else if (front_wall == true && left_wall == false && right_wall == false){
-              //can_correct = 1;
-              random_choice = random(millis()) % 2;
-              if (random_choice == 0){
-                motor_state = TURN_LEFT;
-              }
-              else if (random_choice == 1){
-                motor_state = TURN_RIGHT;
-              }
-            }
-            //101
-            else if (front_wall == true && left_wall == false && right_wall == true){
-              //can_correct = 1;
-              motor_state = TURN_LEFT;
-            }
-            //110
-            else if (front_wall == true && left_wall == true && right_wall == false){
-              //can_correct = 1;
-              motor_state = TURN_RIGHT;
-            }
-      
-      
-            //111
-            else if (front_wall == true && left_wall == true && right_wall == true){
-              //can_correct = 1;
-              readIR();
-                if (sensorReading_right > sensorReading_left){
-                motor_state = TURN_REVERSE_L;
-                }
-                else if (sensorReading_right< sensorReading_left){
-                motor_state = TURN_REVERSE_R;
-                }
-      
-                else{
-                  motor_state = TURN_REVERSE_R;
-                }
-      
-            }
-      
-            //nothing else
-            else{
-              motor_state = GO_ONE_CELL;
-            }
+//      readIR();
+////      has_front_wall();
+////      has_left_wall();
+////      has_right_wall();
+//        has_walls();
+//          
+//      //000
+//            if (front_wall == false && left_wall == false && right_wall == false){
+//              random_choice = random(millis()) % 2;
+//              if (random_choice == 0){
+//                motor_state = GO_ONE_CELL;
+//              }
+//              else if (random_choice == 1){
+//                motor_state = TURN_LEFT;
+//              }
+//              else if (random_choice == 2){
+//                motor_state = TURN_RIGHT;
+//              }
+//            }
+//            //001
+//            else if (front_wall == false && left_wall == false && right_wall == true){
+//              random_choice = random(millis()) % 2;
+//              if (random_choice == 0){
+//                motor_state = GO_ONE_CELL;
+//              }
+//              else if (random_choice == 1){
+//                motor_state = TURN_LEFT;
+//              }
+//            }
+//            //010
+//            else if (front_wall == false && left_wall == true && right_wall == false){
+//              random_choice = random(millis()) % 2;
+//              if (random_choice == 0){
+//                motor_state = GO_ONE_CELL;
+//              }
+//              else if (random_choice == 1){
+//                motor_state = TURN_RIGHT;
+//              }
+//            }
+//      
+//            //011
+//            else if (front_wall == false && left_wall == true && right_wall == true){
+//              motor_state = GO_ONE_CELL;
+//            }
+//            //100
+//            else if (front_wall == true && left_wall == false && right_wall == false){
+//              //can_correct = 1;
+//              random_choice = random(millis()) % 2;
+//              if (random_choice == 0){
+//                motor_state = TURN_LEFT;
+//              }
+//              else if (random_choice == 1){
+//                motor_state = TURN_RIGHT;
+//              }
+//            }
+//            //101
+//            else if (front_wall == true && left_wall == false && right_wall == true){
+//              //can_correct = 1;
+//              motor_state = TURN_LEFT;
+//            }
+//            //110
+//            else if (front_wall == true && left_wall == true && right_wall == false){
+//              //can_correct = 1;
+//              motor_state = TURN_RIGHT;
+//            }
+//      
+//      
+//            //111
+//            else if (front_wall == true && left_wall == true && right_wall == true){
+//              //can_correct = 1;
+//              readIR();
+//                if (sensorReading_right > sensorReading_left){
+//                motor_state = TURN_REVERSE_L;
+//                }
+//                else if (sensorReading_right< sensorReading_left){
+//                motor_state = TURN_REVERSE_R;
+//                }
+//      
+//                else{
+//                  motor_state = TURN_REVERSE_R;
+//                }
+//      
+//            }
+//      
+//            //nothing else
+//            else{
+//              motor_state = GO_ONE_CELL;
+//            }
      
       
-      //motor_state = GO_ONE_CELL;
+      motor_state = GO_ONE_CELL;
       //testing
 //      if (front_wall == true) {
 //         if (sensorReading_right > sensorReading_left){

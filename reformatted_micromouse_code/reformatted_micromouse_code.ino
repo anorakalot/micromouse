@@ -21,8 +21,22 @@
 #include "motor_func.h"
 
 
-//c interupt testing
-
+// interupt testing
+//NEED TO FIND WAY TO SET PCINT to (8,9) (10,11) 
+//ONE FROM EACH OF THE INTERUPTS
+//Also check if just setting count as volatile and 
+//stopping and restarting the intterupts with cli/sei helps already with encoder innacuracy
+//ISR(PCINT0_vect){
+//  if (motor_state== GO_ONE_CELL){
+//  left_count ++;
+//    
+//  }
+//}
+//ISR(PCINT1_vect){
+//  if (motor_state == GO_ONE_CELL){
+//  right_count ++;
+//  }
+//}
 
 
 
@@ -31,6 +45,10 @@ void setup(){
   Serial.begin(9600);
  
   ///*
+
+  //TESTING INTERUPTS
+  
+  
   //interrups set up for turns 
   attachInterrupt(digitalPinToInterrupt(LH_ENCODER_A), left_encoder_event, CHANGE);
   attachInterrupt(digitalPinToInterrupt(LH_ENCODER_B), left_encoder_event, CHANGE);
@@ -118,12 +136,12 @@ void loop(){
 
 
 //main sequence 
-  //readIR();
-//  motor_tick(); 
-//  delay(1000);
+  readIR();
+  //motor_tick(); 
+  delay(1000);
 
 
-  forward();
+  //forward();
   //testIR();
 //go_one_cell();
    // pid_control();

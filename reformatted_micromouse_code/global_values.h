@@ -146,9 +146,9 @@ int RH_ENCODER_B = 8;
 int LH_ENCODER_A = 10;
 int LH_ENCODER_B = 11;
 
-unsigned long left_count = 0;
+volatile unsigned long left_count = 0;
 //long left_count_pid = 0;
-unsigned long right_count = 0;
+volatile unsigned long right_count = 0;
 //long right_count_pid = 0;
 //unsigned long reverse_count = 0;
 
