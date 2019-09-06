@@ -380,6 +380,8 @@ void pid_control_two_45_walls(){
   //error value
   error = abs(sensorReading_45_left - sensorReading_45_right);
 
+  //I THINK THIS IS TO PREVENT DRASTIC CHANGES IN MOTOR 
+  //ALTHOUGH SINCE MY IR'S ARE MUCH BETTER NOW I THINK I SHOULD PROBABLY EITHER CHANGE OR GET RID OF THIS
   if (error > 250){
     error = 175;
   }
@@ -468,7 +470,7 @@ void pid_control_enc(){
   }
 
 
-  if (left_wanted_speed < curr_left_speed){
+  else if (left_wanted_speed < curr_left_speed){
     motor_left = base_speed - (p_control_enc_l + d_control_enc_l);
     
   }
@@ -479,7 +481,7 @@ void pid_control_enc(){
     
   }
 
-  if (right_wanted_speed < curr_right_speed){
+  else if (right_wanted_speed < curr_right_speed){
     motor_right = base_speed - (p_control_enc_r + d_control_enc_r);
     
   }
@@ -586,8 +588,11 @@ void go_one_cell(){
   halt_until(halt_delay);  //1455
   //unsigned long curr = right_count;//1490,1480,1485,1487(really goodd but go to 1486 to mitigate going over),1400,1440,1460(sometimes over)
   //unsigned long curr = left_count;
-  unsigned long curr = right_count;
-  while (abs(right_count - curr) <400) { //945, 1400,1380,1438,1000                                                                               400,500,600,650,750,1000,1100,1200  ,1300  , 952 , 930 , 912,908(best so far) , 905 , 890 , 908 ,912,920,930,945,960,1300,1400,1450,1470,1474,1480,1490,1510,1511
+  cli();
+  //unsigned long curr = right_count;
+  curr_count_cell = right_count;
+  sei();
+  while (abs(right_count - curr_count_cell) <400) { //945, 1400,1380,1438,1000                                                                               400,500,600,650,750,1000,1100,1200  ,1300  , 952 , 930 , 912,908(best so far) , 905 , 890 , 908 ,912,920,930,945,960,1300,1400,1450,1470,1474,1480,1490,1510,1511
   //while(abs(left_count - curr) <1380 ){ //1450,1465,1450    readIR();                   //900,500,600,700,800,900,1000,1070,1100, ,1150,1160, 1200 , 1130,1000 , 900    ,1000 , 945  ,800 ,850 , 880 , 885,895 , 915 ,925(over),920(both) , close 905 ,980 ,960(closest)
     // print_encoder_count();
     //pid_control_two_walls();

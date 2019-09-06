@@ -132,9 +132,6 @@ for(int x = 0; x < 10; x++){
   avg_45_left_wall_reading += sensorReading_45_left;  
   avg_45_right_wall_reading += sensorReading_45_right;  
   avg_back_wall_reading += sensorReading_back;  
-
-  
-  
   
   }
   avg_front_wall_reading /= 10;
@@ -203,123 +200,6 @@ for(int x = 0; x < 10; x++){
   
 }
 
-//bool has_front_wall(){
-//  
-//  for(int x = 0; x < 10; x++){
-//  readIR();
-//  avg_front_wall_reading += sensorReading_middle;  
-//  }
-//  avg_front_wall_reading /= 10;
-//  
-//         
-//  if (avg_front_wall_reading > 41 ) { // 150, 100,80,72,58,42  
-//    front_wall = true;
-//    
-//  }
-//  else{
-//    front_wall = false;
-//  }
-//  
-//  return front_wall;
-//}
-//
-//bool has_left_wall(){     
-//  for(int x = 0; x < 10; x++){
-//  readIR();
-//  avg_left_wall_reading += sensorReading_left;  
-//  }
-//  avg_left_wall_reading /= 10;
-//  
-//  
-//  if (avg_left_wall_reading > 42 ) { //120 , 65
-//    left_wall = true;
-//    
-//  }
-//  else{
-//    left_wall = false;
-//  }
-//  
-//  return left_wall;}
-//
-//
-//bool has_right_wall(){     
-//  for(int x = 0; x < 10; x++){
-//  readIR();
-//  avg_right_wall_reading += sensorReading_right;  
-//  }
-//  avg_right_wall_reading /= 10;
-//  
-//  if (avg_right_wall_reading > 40 ) { //120 , 65
-//    right_wall = true;
-//    
-//  }
-//  else{
-//    right_wall = false;
-//  }
-//  
-//  return right_wall;
-//}
-//
-//
-//bool has_45_left_wall(){
-//  for(int x = 0; x < 10; x++){
-//  readIR();
-//  avg_45_left_wall_reading += sensorReading_45_left;  
-//  }
-//  avg_45_left_wall_reading /= 10;
-//  
-//  if (avg_45_left_wall_reading > 32 ) { //80,68,25,30
-//    left_45_wall = true;
-//    
-//  }
-//  else{
-//    left_45_wall = false;
-//  }
-//  
-//  return left_45_wall;
-//  
-//}
-//
-//
-//bool has_45_right_wall(){
-//  for(int x = 0; x < 10; x++){
-//  readIR();
-//  avg_45_right_wall_reading += sensorReading_45_right;  
-//  }
-//  avg_45_right_wall_reading /= 10;
-//
-//  
-//  
-//  if (avg_45_right_wall_reading > 32) { //80,68,22,30 
-//    right_45_wall = true;
-//    
-//  }
-//  else{
-//    right_45_wall = false;
-//  }
-//  
-//  return right_45_wall;
-//}
-//
-//
-//bool has_back_wall(){
-//  
-//  for(int x = 0; x < 10; x++){
-//  readIR();
-//  avg_back_wall_reading += sensorReading_back;  
-//  }
-//  avg_back_wall_reading /= 10;
-//
-//  if (avg_back_wall_reading > 32){
-//    back_wall = true;
-//    
-//  }
-//  else{
-//    back_wall = false;
-//  }
-//  
-//  return back_wall;
-//}
 
 
 void testIR(){

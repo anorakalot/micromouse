@@ -136,9 +136,9 @@ void loop(){
 
 
 //main sequence 
-  readIR();
-  //motor_tick(); 
-  delay(1000);
+//  readIR();
+  motor_tick(); 
+  //delay(1000);
 
 
   //forward();

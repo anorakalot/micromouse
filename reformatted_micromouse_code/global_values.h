@@ -152,6 +152,10 @@ volatile unsigned long right_count = 0;
 //long right_count_pid = 0;
 //unsigned long reverse_count = 0;
 
+//for go one cell
+volatile unsigned long curr_count_cell = 0;
+
+
 // Motor  Tick Enum States
 enum  MOTOR_STATES   {  MOTOR_INIT  ,  GO_ONE_CELL , CHOOSE_MOVE, TURN_REVERSE_L, TURN_REVERSE_R, TURN_LEFT, TURN_RIGHT } motor_state;
 
