@@ -143,7 +143,7 @@ for(int x = 0; x < 10; x++){
 
   
 //front_wall         
-  if (avg_front_wall_reading > 41 ) { // 150, 100,80,72,58,42  
+  if (avg_front_wall_reading > 80 ) { //  
     front_wall = true;
     
   }
@@ -152,7 +152,7 @@ for(int x = 0; x < 10; x++){
   }
 
 //left_wall
-  if (avg_left_wall_reading > 42 ) { //120 , 65
+  if (avg_left_wall_reading > 80 ) { //
     left_wall = true;
     
   }
@@ -161,7 +161,7 @@ for(int x = 0; x < 10; x++){
   }
 
 //right_wall
-  if (avg_right_wall_reading > 40 ) { //120 , 65
+  if (avg_right_wall_reading > 80 ) { //
     right_wall = true;
     
   }
@@ -171,7 +171,7 @@ for(int x = 0; x < 10; x++){
   
 
 //45_left_wall
-  if (avg_45_left_wall_reading > 32 ) { //80,68,25,30
+  if (avg_45_left_wall_reading > 80 ) { //32
     left_45_wall = true;
     
   }
@@ -180,7 +180,7 @@ for(int x = 0; x < 10; x++){
   } 
   
 //45_back_wall
-  if (avg_45_right_wall_reading > 32) { //80,68,22,30 
+  if (avg_45_right_wall_reading > 80) { //32 
     right_45_wall = true;
     
   }
@@ -189,7 +189,7 @@ for(int x = 0; x < 10; x++){
   }
 
 //back_wall
-  if (avg_back_wall_reading > 32){
+  if (avg_back_wall_reading > 80){
     back_wall = true;
     
   }

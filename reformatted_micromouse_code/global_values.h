@@ -23,9 +23,9 @@ bool first_check = true;
 int random_choice = 0;
 
 
-double base_speed =95 ; // 200,150,125,150,200,150,125,100,80,90,88
-double kp = 0.10;//0.50,0.030,0.50, 0.90,0.40,0.36,0.30,0.20
-double kd = 0.10;//0.40,030
+double base_speed =90 ; // 200,150,125,150,200,150,125,100,80,90,88
+double kp = 0.05;//0.50,0.030,0.50, 0.90,0.40,0.36,0.30,0.20,0.10
+double kd = 0.05;//0.40,030
 double ki = 0.00001;
 double error = 0;
 double prev_error = 0;
@@ -88,9 +88,10 @@ unsigned long curr_left_speed;
 unsigned long curr_right_speed;
 
 
-//need to set these speeds doe encoder pid
+//need to set these speeds for encoder pid
+//test the values to get ones that work best
 unsigned long left_wanted_speed = 200;
-unsigned long right_wanted_speed = 200;
+unsigned long right_wanted_speed = 400;//200
 
 double kp_enc = 0.20;//0.50
 double kd_enc = 0.20;//0.30
@@ -108,18 +109,16 @@ double prev_error_r_enc = 0;
 
 double p_control_enc_l = 0;
 double p_control_enc_r = 0;
-
+//
 double d_control_enc_l = 0;
 double d_control_enc_r = 0;
 
-double i_control_enc_l = 0;
-double i_control_enc_r = 0;
-
-unsigned long error_buildup_enc;
-
-
-
-double reset_error_enc = 0;
+//Haven't implemented i control in yet
+//double i_control_enc_l = 0;
+//double i_control_enc_r = 0;
+//
+//unsigned long error_buildup_enc;
+//double reset_error_enc = 0;
 
 
 //may not need these
@@ -279,36 +278,51 @@ double g_conv_factor= 9.81;
 //Timer t;
 
 //FLOODFILL VARIABLES
-//struct pair{
-//  int y_pos;
-//  int x_pos;
-//};
-//
-////floodfill variables
-//struct cell{
-//  bool left_wall;
-//  bool right_wall;
-//  bool top_wall;
-//  bool bottom_wall;
-//  int value;
-//  pair coord;
-//};
-//
-////typedef struct Cell cell;
-////stack pair checks;
-//struct pair goal_coord;
-//
-////pair <int,int> goal_coord(4,4);
-//struct pair mouse_pos;
-//
-////pair <int,int> mouse_pos (8,0);
-//
-//const int maze_x_length = 9;
-//const int maze_y_length = 9;
-//int index_x_max = 8;
-//int index_y_max = 8;
-//
-//struct cell maze[maze_y_length][maze_x_length];
+struct pair{
+  int y_pos;
+  int x_pos;
+};
+
+//floodfill variables
+struct cell{
+  bool left_wall;
+  bool right_wall;
+  bool front_wall;
+  bool back_wall;
+  int value;
+  pair coord;
+};
+
+//stack pair checks;
+
+
+pair goal_coord = {8,8};
+
+pair mouse_pos = {0,0};
+
+pair neighbor_to_push;
+
+pair cell_check;
+
+//imagine seeing maze normally from the bottom
+//0 for going left
+//1 for going to the top
+//2 for going to the right
+//3 for going to the bottom
+int orientation;
+int min_val;
+
+const int maze_x_length = 9;
+const int maze_y_length = 9;
+//idk why this is here but it makes sense since maze is a 2d array
+int index_x_max = 8;
+int index_y_max = 8;
+
+cell maze[maze_y_length][maze_x_length];
+
+StackArray<pair> checks;
+
+
 
 
 

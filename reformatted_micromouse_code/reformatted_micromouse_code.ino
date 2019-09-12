@@ -1,7 +1,7 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
-
+#include <StackArray.h>
 
 
 
@@ -21,17 +21,19 @@
 #include "motor_func.h"
 
 
+
 // interupt testing
 //NEED TO FIND WAY TO SET PCINT to (8,9) (10,11) 
 //ONE FROM EACH OF THE INTERUPTS
 //Also check if just setting count as volatile and 
 //stopping and restarting the intterupts with cli/sei helps already with encoder innacuracy
-//ISR(PCINT0_vect){
+//ISR (PCINT0_vect){
 //  if (motor_state== GO_ONE_CELL){
 //  left_count ++;
 //    
 //  }
 //}
+
 //ISR(PCINT1_vect){
 //  if (motor_state == GO_ONE_CELL){
 //  right_count ++;
@@ -42,6 +44,7 @@
 
 //sets up all the functions and variables
 void setup(){
+
   Serial.begin(9600);
  
   ///*
@@ -137,13 +140,14 @@ void loop(){
 
 //main sequence 
 //  readIR();
-  motor_tick(); 
-  //delay(1000);
+  //motor_tick(); 
+  delay(500);
 
+//testing
+  go_one_cell();
 
   //forward();
   //testIR();
-//go_one_cell();
    // pid_control();
 
     // forward(motor_left, motor_right);
