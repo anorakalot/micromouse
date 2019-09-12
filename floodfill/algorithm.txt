@@ -7,9 +7,10 @@ While mouse pos != maze center{
 		If (current cell value isnt 1 greater than minimum surrounding){
 			Set current cell to 1+= minval
 			Push open neighbors onto the stack
-	 }
-	}
-	Advance to next ideal cell 
+	   }//ends if 
+	  Advance to next ideal cell 
+	}//ends stack while
+//ends mouse!= while	
 }
 
  
