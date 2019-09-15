@@ -23,8 +23,12 @@ bool first_check = true;
 int random_choice = 0;
 
 
-double base_speed =90 ; // 200,150,125,150,200,150,125,100,80,90,88
-double kp = 0.05;//0.50,0.030,0.50, 0.90,0.40,0.36,0.30,0.20,0.10
+double base_speed =100 ; // 200,150,125,150,200,150,125,100,80,90,88
+//made two extra base speeds in order to see if base speeds not being straight enough with equal readings causes pid to fail
+double base_speed_l = 100;
+double bas_speed_r = 93; // based off testing to see which base_speeds go straightest
+
+double kp = 0.50;//0.50,0.030,0.50, 0.90,0.40,0.36,0.30,0.20,0.10,0.05
 double kd = 0.05;//0.40,030
 double ki = 0.00001;
 double error = 0;

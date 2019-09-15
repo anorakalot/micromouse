@@ -181,7 +181,7 @@ void left_turn_until(){
   gyro_angle = 0;
   gyro_sum = 0;
   halt_until(halt_delay);
-  while (  abs(gyro_angle)  < 93) { //150, 175,120,110,130,90,95,96 ,93(for when correct),186
+  while (  abs(gyro_angle)  <80 ) { //150, 175,120,110,130,90,95,96 ,93(for when correct),186,93,90
     gyro_tick();
     left_turn();                  //350,360,380,390
     //left_turn(255);
@@ -197,7 +197,7 @@ void right_turn_until(){ //330,240,220
   gyro_angle = 0;
   gyro_sum = 0;
   halt_until(halt_delay);
-  while ( abs(gyro_angle)  < 93) { //150,175,120,110,130 ,90,95,96,93(for when correct),186
+  while ( abs(gyro_angle)  <80 ) { //150,175,120,110,130 ,90,95,96,93(for when correct),186,93,90,85
     gyro_tick();
     right_turn();                  //350,360,380,390
     //right_turn(255);
@@ -407,8 +407,13 @@ void pid_control_two_45_walls(){
   if (sensorReading_45_left > sensorReading_45_right) {
 
 
-    motor_left = base_speed + (p_control + d_control + i_control); //
-    motor_right = base_speed - (p_control + d_control + i_control); //
+//    motor_left = base_speed + (p_control + d_control + i_control); //
+//    motor_right = base_speed - (p_control + d_control + i_control); //
+
+    motor_left = base_speed + (p_control ); //
+    motor_right = base_speed - (p_control); //
+    
+    
     //    motor_left += (p_control + d_control);
     //    motor_right -= (p_control + d_control);
 
@@ -424,8 +429,99 @@ void pid_control_two_45_walls(){
 
 
 
-    motor_left = base_speed - (p_control  + d_control + i_control); //
-    motor_right = base_speed +  (p_control  + d_control + i_control); //
+//    motor_left = base_speed - (p_control  + d_control + i_control); //
+//    motor_right = base_speed +  (p_control  + d_control + i_control); //
+//    
+    motor_left = base_speed - (p_control ); //
+    motor_right = base_speed + (p_control ); //
+    
+    
+    //    motor_left -= (p_control + d_control);
+    //    motor_right += (p_control + d_control);
+    prev_error = error;
+    return;
+  }
+  //equal to each other
+  else {
+    //nothing
+    //motor_left and motor_right stay the same
+    prev_error = error;
+    return;
+  }
+
+}
+
+
+void pid_control_two_90_walls(){
+  //gets reading for pid
+  readIR();
+
+
+  
+  reset_error ++;
+  //resets reset error which is used for i part of pid  which takes in error from previous cycles
+  if (reset_error > 10000){
+    reset_error = 0;
+    error_buildup = 0;
+  }
+  
+  //error value
+  error = abs(sensorReading_left - sensorReading_right);
+
+//  I THINK THIS IS TO PREVENT DRASTIC CHANGES IN MOTOR 
+//  ALTHOUGH SINCE MY IR'S ARE MUCH BETTER NOW I THINK I SHOULD PROBABLY EITHER CHANGE OR GET RID OF THIS
+//  if (error > 300){//250
+//    error = 150;//175
+//  }
+//  
+  //p control
+  p_control = error * kp;
+
+
+  //i control
+  error_buildup += error;
+  i_control = error_buildup * ki;
+
+
+  //d control
+
+  d_control = abs(error - prev_error) * kd;
+
+
+
+  //too close left
+  if (sensorReading_left > sensorReading_right) {
+
+
+//    motor_left = base_speed + (p_control + d_control + i_control); //
+//    motor_right = base_speed - (p_control + d_control + i_control); //
+
+    motor_left = base_speed + (p_control ); //
+    motor_right = base_speed - (p_control); //
+    
+    
+    //    motor_left += (p_control + d_control);
+    //    motor_right -= (p_control + d_control);
+
+    //
+    prev_error = error;
+    return;
+  }
+
+  //too close right
+  else if (sensorReading_right > sensorReading_left) {
+
+
+
+
+
+//    motor_left = base_speed - (p_control  + d_control + i_control); //
+//    motor_right = base_speed +  (p_control  + d_control + i_control); //
+//    
+    motor_left = base_speed - (p_control ); //
+    motor_right = base_speed + (p_control ); //
+    
+    
     //    motor_left -= (p_control + d_control);
     //    motor_right += (p_control + d_control);
     prev_error = error;
@@ -516,7 +612,7 @@ void pid_control(){
   //pid_control_one_wall_l();
   //pid_control_one_wall_r();
   //pid_control_enc();
-  // pid_control_two_90_walls();
+  //pid_control_two_90_walls();
 
 
   //pid_control_enc();
@@ -594,7 +690,7 @@ void go_one_cell(){
   //unsigned long curr = right_count;
   curr_count_cell = right_count;
   sei();
-  while (abs(right_count - curr_count_cell) <400) { //945, 1400,1380,1438,1000                                                                               400,500,600,650,750,1000,1100,1200  ,1300  , 952 , 930 , 912,908(best so far) , 905 , 890 , 908 ,912,920,930,945,960,1300,1400,1450,1470,1474,1480,1490,1510,1511
+  while (abs(right_count - curr_count_cell) <100) { //945, 1400,1380,1438,1000,400,200                                                                               400,500,600,650,750,1000,1100,1200  ,1300  , 952 , 930 , 912,908(best so far) , 905 , 890 , 908 ,912,920,930,945,960,1300,1400,1450,1470,1474,1480,1490,1510,1511
   //while(abs(left_count - curr) <1380 ){ //1450,1465,1450    readIR();                   //900,500,600,700,800,900,1000,1070,1100, ,1150,1160, 1200 , 1130,1000 , 900    ,1000 , 945  ,800 ,850 , 880 , 885,895 , 915 ,925(over),920(both) , close 905 ,980 ,960(closest)
     // print_encoder_count();
     //pid_control_two_walls();
@@ -608,7 +704,8 @@ void go_one_cell(){
     
     print_encoder_count();
   }
-  forward(0,0);
+  //probably uncomment this below
+  //forward(0,0);
   halt_until(halt_delay);
 
 }
@@ -876,6 +973,10 @@ enum FLOODFILL_STATES{FLOODFILL_INIT,FLOODFILL_START,FLOODFILL_POS_CHECK,FLOODFI
 void floodfill_init(){
   floodfill_state = FLOODFILL_INIT;
 }
+
+//MAIN ISSUE IS MOUSE POS DOES IT HAVE TO BE PRESENT DURING ALL STACK CHECK EVENTS 
+//ALSO NEED TO FIGURE OUT HOW TO UPDATE MAZE AS IT GOES THROUGH THE FIRST TIME
+//KEY WORD IS PROBABLY FIRST TIME
 
 //stack operations assume the stack works just like a standard c++ stack
 void floodfill_tick(){
