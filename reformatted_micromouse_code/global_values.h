@@ -26,10 +26,10 @@ int random_choice = 0;
 double base_speed =100 ; // 200,150,125,150,200,150,125,100,80,90,88
 //made two extra base speeds in order to see if base speeds not being straight enough with equal readings causes pid to fail
 double base_speed_l = 100;
-double bas_speed_r = 93; // based off testing to see which base_speeds go straightest
+double base_speed_r =90 ; // based off testing to see which base_speeds go straightest ,93,94
 
-double kp = 0.50;//0.50,0.030,0.50, 0.90,0.40,0.36,0.30,0.20,0.10,0.05
-double kd = 0.05;//0.40,030
+double kp = 0.02;//0.50,0.030,0.50, 0.90,0.40,0.36,0.30,0.20,0.10,0.05,0.20
+double kd = 0.05;//0.40,0.30,0.05
 double ki = 0.00001;
 double error = 0;
 double prev_error = 0;
@@ -42,7 +42,7 @@ unsigned long error_buildup;
 double reset_error = 0;
 
 
-int middle_point_l = 42;//31,34,36,34,40,37
+int middle_point_l = 130;//31,34,36,34,40,37,42
 int middle_point_90_l = 40;
 //double base_speed = 200; // 200,150,125,150
 double kp_l = 0.20;//0.40,0.30,0.40,0.30
@@ -57,7 +57,7 @@ unsigned long error_buildup_l;
 double reset_error_l = 0;
 
 
-int middle_point_r = 48;//38,40,50,45
+int middle_point_r = 120;//38,40,50,45,48
 int middle_point_90_r = 40;
 
 double kp_r = 0.50;//0.40,0.30
@@ -75,8 +75,8 @@ double reset_error_r = 0;
 ///////////////////////////////////
 //double motor_left = 125;
 //double motor_right = 125;
-double motor_left = base_speed;
-double motor_right = base_speed;
+double motor_left = base_speed_l;
+double motor_right = base_speed_r;
 
 ///////////////////////////////////
 //

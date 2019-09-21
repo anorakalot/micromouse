@@ -382,6 +382,8 @@ void pid_control_two_45_walls(){
   //error value
   error = abs(sensorReading_45_left - sensorReading_45_right);
 
+  Serial.println("ERROR VALUE: ");
+  Serial.println(error);
 //  I THINK THIS IS TO PREVENT DRASTIC CHANGES IN MOTOR 
 //  ALTHOUGH SINCE MY IR'S ARE MUCH BETTER NOW I THINK I SHOULD PROBABLY EITHER CHANGE OR GET RID OF THIS
 //  if (error > 300){//250
@@ -410,8 +412,8 @@ void pid_control_two_45_walls(){
 //    motor_left = base_speed + (p_control + d_control + i_control); //
 //    motor_right = base_speed - (p_control + d_control + i_control); //
 
-    motor_left = base_speed + (p_control ); //
-    motor_right = base_speed - (p_control); //
+    motor_left = base_speed_l + (p_control ); //
+    motor_right = base_speed_r - (p_control); //
     
     
     //    motor_left += (p_control + d_control);
@@ -432,8 +434,8 @@ void pid_control_two_45_walls(){
 //    motor_left = base_speed - (p_control  + d_control + i_control); //
 //    motor_right = base_speed +  (p_control  + d_control + i_control); //
 //    
-    motor_left = base_speed - (p_control ); //
-    motor_right = base_speed + (p_control ); //
+    motor_left = base_speed_l - (p_control ); //
+    motor_right = base_speed_r + (p_control ); //
     
     
     //    motor_left -= (p_control + d_control);
@@ -703,9 +705,10 @@ void go_one_cell(){
     forward(motor_left, motor_right);
     
     print_encoder_count();
+    
   }
   //probably uncomment this below
-  //forward(0,0);
+  forward(0,0);
   halt_until(halt_delay);
 
 }

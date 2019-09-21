@@ -139,7 +139,7 @@ void loop(){
 
 
 //main sequence 
-//  readIR();
+  //readIR();
   motor_tick(); 
   delay(1000);
 
@@ -148,9 +148,10 @@ void loop(){
 //testing
   //left_turn_until();
   //go_one_cell();
-//  forward(base_speed,base_speed-7);//6 still goes left,7 still goes to a side but it goes straighter
+//  forward(base_speed_l,base_speed_r);//r - 6 still goes left,r- 7 still goes to a side but it goes straighter
 //  delay(1000);
 //  halt_until(halt_delay);
+//  delay(1200);
   //forward();
   //testIR();
    // pid_control();
