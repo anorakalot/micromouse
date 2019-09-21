@@ -148,7 +148,7 @@ for(int x = 0; x < 10; x++){
 
   
 //front_wall         
-  if (avg_front_wall_reading > 80 ) { //  
+  if (avg_front_wall_reading > front_wall_thres ) { //  
     front_wall = true;
     
   }
@@ -157,7 +157,7 @@ for(int x = 0; x < 10; x++){
   }
 
 //left_wall
-  if (avg_left_wall_reading > 80 ) { //
+  if (avg_left_wall_reading > left_wall_thres ) { //
     left_wall = true;
     
   }
@@ -166,7 +166,7 @@ for(int x = 0; x < 10; x++){
   }
 
 //right_wall
-  if (avg_right_wall_reading > 80 ) { //
+  if (avg_right_wall_reading > right_wall_thres ) { //
     right_wall = true;
     
   }
@@ -176,7 +176,7 @@ for(int x = 0; x < 10; x++){
   
 
 //45_left_wall
-  if (avg_45_left_wall_reading > 80 ) { //32
+  if (avg_45_left_wall_reading > left_45_wall_thres ) { //32
     left_45_wall = true;
     
   }
@@ -184,8 +184,8 @@ for(int x = 0; x < 10; x++){
     left_45_wall = false;
   } 
   
-//45_back_wall
-  if (avg_45_right_wall_reading > 80) { //32 
+//45_right_wall
+  if (avg_45_right_wall_reading > right_wall_thres) { //32 
     right_45_wall = true;
     
   }
@@ -194,7 +194,7 @@ for(int x = 0; x < 10; x++){
   }
 
 //back_wall
-  if (avg_back_wall_reading > 80){
+  if (avg_back_wall_reading > back_wall_thres){
     back_wall = true;
     
   }
@@ -220,7 +220,7 @@ void has_walls_pid(){
 
   
 //front_wall         
-  if (avg_front_wall_reading > 80 ) { //  
+  if (avg_front_wall_reading > front_wall_thres ) { //  
     front_wall = true;
     
   }
@@ -229,7 +229,7 @@ void has_walls_pid(){
   }
 
 //left_wall
-  if (avg_left_wall_reading > 80 ) { //
+  if (avg_left_wall_reading > left_wall_thres ) { //
     left_wall = true;
     
   }
@@ -238,7 +238,7 @@ void has_walls_pid(){
   }
 
 //right_wall
-  if (avg_right_wall_reading > 80 ) { //
+  if (avg_right_wall_reading > right_wall_thres ) { //
     right_wall = true;
     
   }
@@ -248,7 +248,7 @@ void has_walls_pid(){
   
 
 //45_left_wall
-  if (avg_45_left_wall_reading > 80 ) { //32
+  if (avg_45_left_wall_reading > left_45_wall_thres ) { //32
     left_45_wall = true;
     
   }
@@ -256,8 +256,8 @@ void has_walls_pid(){
     left_45_wall = false;
   } 
   
-//45_back_wall
-  if (avg_45_right_wall_reading > 80) { //32 
+//45_right_wall
+  if (avg_45_right_wall_reading > right_45_wall_thres) { //32 
     right_45_wall = true;
     
   }
@@ -266,15 +266,13 @@ void has_walls_pid(){
   }
 
 //back_wall
-  if (avg_back_wall_reading > 80){
+  if (avg_back_wall_reading > back_wall_thres){
     back_wall = true;
-    
+   
   }
   else{
     back_wall = false;
-  }
-
-  
+  } 
 }
 
 

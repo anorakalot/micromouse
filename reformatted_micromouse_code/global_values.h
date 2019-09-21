@@ -28,9 +28,9 @@ double base_speed =100 ; // 200,150,125,150,200,150,125,100,80,90,88
 double base_speed_l = 100;
 double base_speed_r =90 ; // based off testing to see which base_speeds go straightest ,93,94
 
-double kp = 0.10;//0.50,0.030,0.50, 0.90,0.40,0.36,0.30,0.20,0.10,0.05,0.20,
-double kd = 0.05;//0.40,0.30,0.05
-double ki = 0.00001;
+double kp = 0.10;//0.50,0.030,0.50, 0.90,0.40,0.36,0.30,0.20,0.10,0.05,0.20,0.10
+double kd = 0.05;//0.40,0.30,0.05,0.10
+double ki =  0.00001;//0.00001
 double error = 0;
 double prev_error = 0;
 double p_control = 0;
@@ -42,11 +42,11 @@ unsigned long error_buildup;
 double reset_error = 0;
 
 
-int middle_point_l = 130;//31,34,36,34,40,37,42
+int middle_point_l = 120;//31,34,36,34,40,37,42,130
 int middle_point_90_l = 40;
 //double base_speed = 200; // 200,150,125,150
-double kp_l = 0.20;//0.40,0.30,0.40,0.30
-double kd_l = 0.20;//0.40,0.30
+double kp_l = 0.10;//0.40,0.30,0.40,0.30
+double kd_l = 0.05;//0.40,0.30,0.10
 double ki_l = 0.00001;
 double error_l = 0;
 double prev_error_l = 0;
@@ -60,8 +60,8 @@ double reset_error_l = 0;
 int middle_point_r = 120;//38,40,50,45,48
 int middle_point_90_r = 40;
 
-double kp_r = 0.50;//0.40,0.30
-double kd_r = 0.20;//0.40 0.30
+double kp_r = 0.10;//0.40,0.30
+double kd_r = 0.05;//0.40 0.30,0.20
 double ki_r = 0.00001;
 double error_r = 0;
 double prev_error_r = 0;
@@ -95,11 +95,11 @@ unsigned long curr_right_speed;
 //need to set these speeds for encoder pid
 //test the values to get ones that work best
 unsigned long left_wanted_speed = 200;
-unsigned long right_wanted_speed = 400;//200
+unsigned long right_wanted_speed = 200;//200
 
-double kp_enc = 0.20;//0.50
-double kd_enc = 0.20;//0.30
-double ki_enc = 0.0001;
+double kp_enc = 0.10;//0.50
+double kd_enc = 0.10;//0.30
+double ki_enc = 0.00001;
 
 double error_l_enc = 0;
 double error_r_enc = 0;
@@ -216,7 +216,14 @@ double avg_back_wall_reading;
 double avg_45_left_wall_reading;
 double avg_45_right_wall_reading;
 
-
+//thresholds for if there's a wall or not for the 2 has walls functions
+//comparison is > thres
+int front_wall_thres = 90;
+int left_wall_thres = 90;
+int right_wall_thres = 90;
+int back_wall_thres = 90;
+int left_45_wall_thres = 65;
+int right_45_wall_thres = 65;
 
 ////Strings for printing in ir_tick
 //String left_side_string = "LEFT:"; 
