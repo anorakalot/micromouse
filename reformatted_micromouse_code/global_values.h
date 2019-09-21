@@ -28,7 +28,7 @@ double base_speed =100 ; // 200,150,125,150,200,150,125,100,80,90,88
 double base_speed_l = 100;
 double base_speed_r =90 ; // based off testing to see which base_speeds go straightest ,93,94
 
-double kp = 0.02;//0.50,0.030,0.50, 0.90,0.40,0.36,0.30,0.20,0.10,0.05,0.20
+double kp = 0.10;//0.50,0.030,0.50, 0.90,0.40,0.36,0.30,0.20,0.10,0.05,0.20,
 double kd = 0.05;//0.40,0.30,0.05
 double ki = 0.00001;
 double error = 0;

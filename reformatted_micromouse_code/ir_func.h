@@ -119,7 +119,15 @@ void readIR(){
 //NEW HAS FUNCTION THAT DOES ALL OF THEM IN ONE FUNCTION TO SAVE TIME
 
 void has_walls(){
-
+  //reset them first so they don't just keep adding up
+  avg_front_wall_reading = 0;  
+  avg_left_wall_reading = 0;
+  avg_right_wall_reading = 0; 
+  avg_45_left_wall_reading = 0;  
+  avg_45_right_wall_reading = 0;  
+  avg_back_wall_reading = 0;  
+  
+  
 for(int x = 0; x < 10; x++){
   readIR();
   avg_front_wall_reading += sensorReading_middle;  
@@ -130,12 +138,85 @@ for(int x = 0; x < 10; x++){
   avg_back_wall_reading += sensorReading_back;  
   
   }
+  
   avg_front_wall_reading /= 10;
   avg_left_wall_reading /= 10;
   avg_right_wall_reading /= 10;
   avg_45_left_wall_reading /= 10;
   avg_45_right_wall_reading /= 10;
   avg_back_wall_reading /= 10;
+
+  
+//front_wall         
+  if (avg_front_wall_reading > 80 ) { //  
+    front_wall = true;
+    
+  }
+  else{
+    front_wall = false;
+  }
+
+//left_wall
+  if (avg_left_wall_reading > 80 ) { //
+    left_wall = true;
+    
+  }
+  else{
+    left_wall = false;
+  }
+
+//right_wall
+  if (avg_right_wall_reading > 80 ) { //
+    right_wall = true;
+    
+  }
+  else{
+    right_wall = false;
+  }
+  
+
+//45_left_wall
+  if (avg_45_left_wall_reading > 80 ) { //32
+    left_45_wall = true;
+    
+  }
+  else{
+    left_45_wall = false;
+  } 
+  
+//45_back_wall
+  if (avg_45_right_wall_reading > 80) { //32 
+    right_45_wall = true;
+    
+  }
+  else{
+    right_45_wall = false;
+  }
+
+//back_wall
+  if (avg_back_wall_reading > 80){
+    back_wall = true;
+    
+  }
+  else{
+    back_wall = false;
+  }
+
+}
+
+
+//this is for when running in pid 
+//There's no time to take the average when running the rest of the pid code in conjunction it takes too long to process
+void has_walls_pid(){
+
+  readIR();
+  avg_front_wall_reading = sensorReading_middle;  
+  avg_left_wall_reading = sensorReading_left;
+  avg_right_wall_reading = sensorReading_right; 
+  avg_45_left_wall_reading = sensorReading_45_left;  
+  avg_45_right_wall_reading = sensorReading_45_right;  
+  avg_back_wall_reading = sensorReading_back;  
+  
 
   
 //front_wall         
@@ -226,7 +307,7 @@ void wait_until_start_hand(){
     //delay(500);
     //has_front_wall();
     
-    if (sensorReading_middle > 100) {
+    if (sensorReading_middle > 150) {
       first_check = false;
       delay(500);
       Serial.println(sensorReading_middle);

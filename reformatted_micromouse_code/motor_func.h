@@ -599,7 +599,7 @@ void pid_control_enc(){
 
 //chooses which pid to do
 void pid_control(){
-  readIR();
+  //readIR();
 
   //  has_45_left_wall();
   //  has_45_right_wall();
@@ -607,9 +607,11 @@ void pid_control(){
   //  has_right_wall();
   //  has_back_wall();
   //  has_front_wall();
-  has_walls();
-
+  //has_walls();
+  //does this faster by not having the avg being taken each time
+  has_walls_pid();
   //testing
+  
   pid_control_two_45_walls();
   //pid_control_one_wall_l();
   //pid_control_one_wall_r();
@@ -686,13 +688,14 @@ void go_one_cell(){
 
   //off encoders
   halt_until(halt_delay);  //1455
+  
   //unsigned long curr = right_count;//1490,1480,1485,1487(really goodd but go to 1486 to mitigate going over),1400,1440,1460(sometimes over)
   //unsigned long curr = left_count;
   cli();
   //unsigned long curr = right_count;
   curr_count_cell = right_count;
   sei();
-  while (abs(right_count - curr_count_cell) <100) { //945, 1400,1380,1438,1000,400,200                                                                               400,500,600,650,750,1000,1100,1200  ,1300  , 952 , 930 , 912,908(best so far) , 905 , 890 , 908 ,912,920,930,945,960,1300,1400,1450,1470,1474,1480,1490,1510,1511
+  while (abs(right_count - curr_count_cell) < 1470 ) { //945, 1400,1380,1438,1000,400,200,100,1000,1400(a little off),1500,1430,1460,1480 (too much)                                                                               400,500,600,650,750,1000,1100,1200  ,1300  , 952 , 930 , 912,908(best so far) , 905 , 890 , 908 ,912,920,930,945,960,1300,1400,1450,1470,1474,1480,1490,1510,1511
   //while(abs(left_count - curr) <1380 ){ //1450,1465,1450    readIR();                   //900,500,600,700,800,900,1000,1070,1100, ,1150,1160, 1200 , 1130,1000 , 900    ,1000 , 945  ,800 ,850 , 880 , 885,895 , 915 ,925(over),920(both) , close 905 ,980 ,960(closest)
     // print_encoder_count();
     //pid_control_two_walls();
