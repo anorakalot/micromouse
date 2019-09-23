@@ -412,8 +412,8 @@ void pid_control_two_45_walls(){
 //    motor_left = base_speed + (p_control + d_control + i_control); //
 //    motor_right = base_speed - (p_control + d_control + i_control); //
 
-    motor_left = base_speed_l + (p_control +d_control + i_control); //
-    motor_right = base_speed_r - (p_control + d_control + i_control); //
+    motor_left = base_speed_l + (p_control +d_control); //+ i_control); //
+    motor_right = base_speed_r - (p_control + d_control); //+ i_control); //
     
     
     //    motor_left += (p_control + d_control);
@@ -434,8 +434,8 @@ void pid_control_two_45_walls(){
 //    motor_left = base_speed - (p_control  + d_control + i_control); //
 //    motor_right = base_speed +  (p_control  + d_control + i_control); //
 //    
-    motor_left = base_speed_l - (p_control + d_control + i_control); //
-    motor_right = base_speed_r + (p_control + d_control + i_control); //
+    motor_left = base_speed_l - (p_control + d_control); //+ i_control); //
+    motor_right = base_speed_r + (p_control + d_control); //+ i_control); //
     
     
     //    motor_left -= (p_control + d_control);
@@ -572,7 +572,6 @@ void pid_control_enc(){
 
   else if (left_wanted_speed < curr_left_speed){
     motor_left = base_speed - (p_control_enc_l + d_control_enc_l);
-    
   }
 
 
@@ -751,7 +750,10 @@ void correct_mouse_far(){
 //  halt_until(halt_delay);
 }
 
+//pretty sure this should work in theory
+//need to test pid on reverse 
 void correct_mouse_close(){
+  
   readIR();
   //if (hasfrontwall(){
   halt_until(halt_delay);
@@ -769,6 +771,24 @@ void correct_mouse_close(){
 }
 
 
+void go_one_cell_reverse(){
+  //off encoders
+  halt_until(halt_delay);  //1455
+  cli();
+  //unsigned long curr = right_count;
+  curr_count_cell = right_count;
+  sei();
+  while (abs(right_count - curr_count_cell) < 1420 ) {                                                                                
+    pid_control();
+  
+    reverse(motor_left,motor_right);
+    print_encoder_count();
+    
+  }
+  //probably uncomment this below
+  reverse(0,0);
+  halt_until(halt_delay);
+}
 
 
 
@@ -805,9 +825,12 @@ void motor_tick(){
       //motor_state = RANDOM_MOVE;
       //all walls
       motor_state = CHOOSE_MOVE;
-
       break;
-
+      
+    case GO_ONE_CELL_REVERSE:
+      motor_state = CHOOSE_MOVE;
+      break;
+      
     case CHOOSE_MOVE:
       //structured like a 3 input truth table
 
@@ -919,7 +942,7 @@ void motor_tick(){
 //      }
 
       motor_state = GO_ONE_CELL;
-
+      //motor_state = GO_ONE_CELL_REVERSE;
       //motor_state = REVERSE;
       break;
 
@@ -949,6 +972,9 @@ void motor_tick(){
     case GO_ONE_CELL:
       go_one_cell();//this calls pid inside of it
       Serial.println("GO_ONE_CELL");
+      break;
+    case GO_ONE_CELL_REVERSE:
+      go_one_cell_reverse();
       break;
     case CHOOSE_MOVE:
       //nothing it just chooses move

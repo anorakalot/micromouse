@@ -160,7 +160,7 @@ volatile unsigned long curr_count_cell = 0;
 
 
 // Motor  Tick Enum States
-enum  MOTOR_STATES   {  MOTOR_INIT  ,  GO_ONE_CELL , CHOOSE_MOVE, TURN_REVERSE_L, TURN_REVERSE_R, TURN_LEFT, TURN_RIGHT } motor_state;
+enum  MOTOR_STATES   {  MOTOR_INIT  ,  GO_ONE_CELL , CHOOSE_MOVE, TURN_REVERSE_L, TURN_REVERSE_R, TURN_LEFT, TURN_RIGHT, GO_ONE_CELL_REVERSE } motor_state;
 
 //IRLED
 int left_offset = 20; // last value was 15 , 5 , 30, 10
