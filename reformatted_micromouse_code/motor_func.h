@@ -4,7 +4,7 @@
 //having it take into account when turning would mess up the speed calculations
 //I dont even use encoders for turning anymore anymore
 void left_encoder_event(){
-  if (motor_state== GO_ONE_CELL){
+  if (motor_state== GO_ONE_CELL || motor_state == GO_ONE_CELL_REVERSE){
   left_count ++;
   }
 //  left_count ++;
@@ -17,7 +17,7 @@ void left_encoder_event(){
 //having it take into account when turning would mess up the speed calculations
 //I dont even use encoders for turning anymore anymore
 void right_encoder_event(){
-  if (motor_state == GO_ONE_CELL){
+  if (motor_state == GO_ONE_CELL || motor_state == GO_ONE_CELL_REVERSE){
   right_count ++; 
   }
 //  right_count ++;
@@ -181,7 +181,7 @@ void left_turn_until(){
   gyro_angle = 0;
   gyro_sum = 0;
   halt_until(halt_delay);
-  while (  abs(gyro_angle)  <80 ) { //150, 175,120,110,130,90,95,96 ,93(for when correct),186,93,90
+  while (  abs(gyro_angle) < left_turn_length ) { //150, 175,120,110,130,90,95,96 ,93(for when correct),186,93,90
     gyro_tick();
     left_turn();                  //350,360,380,390
     //left_turn(255);
@@ -197,7 +197,7 @@ void right_turn_until(){ //330,240,220
   gyro_angle = 0;
   gyro_sum = 0;
   halt_until(halt_delay);
-  while ( abs(gyro_angle)  <80 ) { //150,175,120,110,130 ,90,95,96,93(for when correct),186,93,90,85
+  while ( abs(gyro_angle)  <right_turn_length ) { //150,175,120,110,130 ,90,95,96,93(for when correct),186,93,90,85
     gyro_tick();
     right_turn();                  //350,360,380,390
     //right_turn(255);
@@ -248,41 +248,41 @@ void reverse_until(int left_speed, int right_speed, unsigned long stop_time) {
   halt_until(halt_delay);
 }
 
-void regulateSensor_45_L(){
-  if (sensorReading_45_left < 0) {
-    sensorReading_45_left = ~sensorReading_45_left + 1;
-  }
-
-}
-
-//gets sensor data from r to use for pid control function
-//all it does is take the sensors reading and if its less than 0 make it plus one
-//EITHER MAP IN THIS FUNC OR IN READIR
-void regulateSensor_45_R(){
-  if (sensorReading_45_right < 0) {
-    sensorReading_45_right = ~sensorReading_45_right + 1;
-  }
-}
-
-//gets sensor data from l to use for pid control function
-//all it does is take the sensors reading and if its less than 0 make it plus one
-//EITHER MAP IN THIS FUNC OR IN READIR
-void regulateSensorL(){
-
-  if (sensorReading_left < 0) {
-    sensorReading_left = ~sensorReading_left + 1;
-  }
-
-}
-
-//gets sensor data from r to use for pid control function
-//all it does is take the sensors reading and if its less than 0 make it plus one
-//EITHER MAP IN THIS FUNC OR IN READIR
-void regulateSensorR(){
-  if (sensorReading_right < 0) {
-    sensorReading_right = ~sensorReading_right + 1;
-  }
-}
+//void regulateSensor_45_L(){
+//  if (sensorReading_45_left < 0) {
+//    sensorReading_45_left = ~sensorReading_45_left + 1;
+//  }
+//
+//}
+//
+////gets sensor data from r to use for pid control function
+////all it does is take the sensors reading and if its less than 0 make it plus one
+////EITHER MAP IN THIS FUNC OR IN READIR
+//void regulateSensor_45_R(){
+//  if (sensorReading_45_right < 0) {
+//    sensorReading_45_right = ~sensorReading_45_right + 1;
+//  }
+//}
+//
+////gets sensor data from l to use for pid control function
+////all it does is take the sensors reading and if its less than 0 make it plus one
+////EITHER MAP IN THIS FUNC OR IN READIR
+//void regulateSensorL(){
+//
+//  if (sensorReading_left < 0) {
+//    sensorReading_left = ~sensorReading_left + 1;
+//  }
+//
+//}
+//
+////gets sensor data from r to use for pid control function
+////all it does is take the sensors reading and if its less than 0 make it plus one
+////EITHER MAP IN THIS FUNC OR IN READIR
+//void regulateSensorR(){
+//  if (sensorReading_right < 0) {
+//    sensorReading_right = ~sensorReading_right + 1;
+//  }
+//}
 
 //TEST THE ENCODER PID
 //in the meantime this will go off good base values
@@ -368,8 +368,8 @@ void pid_control_two_45_walls(){
   readIR();
 
   //all it does is if reading is negative set it to be opposite plus one
-  regulateSensor_45_L();
-  regulateSensor_45_R();
+//  regulateSensor_45_L();
+//  regulateSensor_45_R();
 
   
   reset_error ++;
@@ -409,11 +409,11 @@ void pid_control_two_45_walls(){
   if (sensorReading_45_left > sensorReading_45_right) {
 
 
-//    motor_left = base_speed + (p_control + d_control + i_control); //
-//    motor_right = base_speed - (p_control + d_control + i_control); //
+    motor_left = base_speed + (p_control + d_control + i_control); //
+    motor_right = base_speed - (p_control + d_control + i_control); //
 
-    motor_left = base_speed_l + (p_control +d_control); //+ i_control); //
-    motor_right = base_speed_r - (p_control + d_control); //+ i_control); //
+//    motor_left = base_speed_l + (p_control +d_control); //+ i_control); //
+//    motor_right = base_speed_r - (p_control + d_control); //+ i_control); //
     
     
     //    motor_left += (p_control + d_control);
@@ -431,11 +431,12 @@ void pid_control_two_45_walls(){
 
 
 
-//    motor_left = base_speed - (p_control  + d_control + i_control); //
-//    motor_right = base_speed +  (p_control  + d_control + i_control); //
+    motor_left = base_speed - (p_control  + d_control + i_control); //
+    motor_right = base_speed +  (p_control  + d_control + i_control); //
 //    
-    motor_left = base_speed_l - (p_control + d_control); //+ i_control); //
-    motor_right = base_speed_r + (p_control + d_control); //+ i_control); //
+
+//    motor_left = base_speed_l - (p_control + d_control); //+ i_control); //
+//    motor_right = base_speed_r + (p_control + d_control); //+ i_control); //
     
     
     //    motor_left -= (p_control + d_control);
@@ -694,7 +695,7 @@ void go_one_cell(){
   //unsigned long curr = right_count;
   curr_count_cell = right_count;
   sei();
-  while (abs(right_count - curr_count_cell) < 1420 ) { //945, 1400,1380,1438,1000,400,200,100,1000,1400(a little off),1500,1430,1460,1480 (too much),1470,1410                                                                               400,500,600,650,750,1000,1100,1200  ,1300  , 952 , 930 , 912,908(best so far) , 905 , 890 , 908 ,912,920,930,945,960,1300,1400,1450,1470,1474,1480,1490,1510,1511
+  while (abs(right_count - curr_count_cell) < go_one_cell_length ) { //945, 1400,1380,1438,1000,400,200,100,1000,1400(a little off),1500,1430,1460,1480 (too much),1470,1410,1420,1405                                                                               400,500,600,650,750,1000,1100,1200  ,1300  , 952 , 930 , 912,908(best so far) , 905 , 890 , 908 ,912,920,930,945,960,1300,1400,1450,1470,1474,1480,1490,1510,1511
   //while(abs(left_count - curr) <1380 ){ //1450,1465,1450    readIR();                   //900,500,600,700,800,900,1000,1070,1100, ,1150,1160, 1200 , 1130,1000 , 900    ,1000 , 945  ,800 ,850 , 880 , 885,895 , 915 ,925(over),920(both) , close 905 ,980 ,960(closest)
     // print_encoder_count();
     //pid_control_two_walls();
@@ -770,6 +771,19 @@ void correct_mouse_close(){
 
 }
 
+void correct_mouse(){
+  reverse(motor_speed_l, motor_speed_r);
+  delay(500);
+  reverse(0,0);
+  halt_until(halt_delay);
+  while(sensorReading_middle < 320){
+    pid_control();
+    forward(motor_left,motor_right);  
+  }
+  forward(0,0);
+  halt_until(halt_delay);  
+}
+
 
 void go_one_cell_reverse(){
   //off encoders
@@ -819,7 +833,8 @@ void motor_tick(){
 
   switch (motor_state) { //transitions
     case MOTOR_INIT:
-      motor_state = GO_ONE_CELL;
+      //motor_state = GO_ONE_CELL;
+      motor_state = CHOOSE_MOVE;
       break;
     case GO_ONE_CELL:
       //motor_state = RANDOM_MOVE;
