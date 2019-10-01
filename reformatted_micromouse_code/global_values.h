@@ -2,7 +2,7 @@ unsigned long halt_delay = 200;//350,300,400
 
 
 unsigned long prev_encoder_tick;
-unsigned long curr_timer;
+
 bool error_check;
 unsigned long prev_timer = 0;
 const long error_check_interval = 8000;//12000
@@ -10,6 +10,7 @@ const long error_check_interval = 8000;//12000
 
 bool first_check = true;
 
+int random_choice = 0;
 
 
 //GLOBAL FOR PID
@@ -20,7 +21,11 @@ bool first_check = true;
 //int permReading_middle;
 //int permReading_right;
 
-int random_choice = 0;
+//timer vars for PID
+unsigned long curr_time = 0;
+unsigned long last_time = 0;
+unsigned long diff_time = 0;
+
 
 
 double base_speed =100 ; // 200,150,125,150,200,150,125,100,80,90,88

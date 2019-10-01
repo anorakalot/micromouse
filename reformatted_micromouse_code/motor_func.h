@@ -248,127 +248,83 @@ void reverse_until(int left_speed, int right_speed, unsigned long stop_time) {
   halt_until(halt_delay);
 }
 
-//void regulateSensor_45_L(){
-//  if (sensorReading_45_left < 0) {
-//    sensorReading_45_left = ~sensorReading_45_left + 1;
-//  }
-//
-//}
-//
-////gets sensor data from r to use for pid control function
-////all it does is take the sensors reading and if its less than 0 make it plus one
-////EITHER MAP IN THIS FUNC OR IN READIR
-//void regulateSensor_45_R(){
-//  if (sensorReading_45_right < 0) {
-//    sensorReading_45_right = ~sensorReading_45_right + 1;
-//  }
-//}
-//
-////gets sensor data from l to use for pid control function
-////all it does is take the sensors reading and if its less than 0 make it plus one
-////EITHER MAP IN THIS FUNC OR IN READIR
-//void regulateSensorL(){
-//
-//  if (sensorReading_left < 0) {
-//    sensorReading_left = ~sensorReading_left + 1;
-//  }
-//
-//}
-//
-////gets sensor data from r to use for pid control function
-////all it does is take the sensors reading and if its less than 0 make it plus one
-////EITHER MAP IN THIS FUNC OR IN READIR
-//void regulateSensorR(){
-//  if (sensorReading_right < 0) {
-//    sensorReading_right = ~sensorReading_right + 1;
-//  }
-//}
+
 
 //TEST THE ENCODER PID
 //in the meantime this will go off good base values
 //MAKE THIS LATER INTO TAKE AVERAGE FOR ONE SIDE AND USE THAT PID
 //BETTER YET USE PID FOR WHAT THE MIDDLE VALUE FOR A SENSOR SHOULD BE AND THEN USE THAT AS THE ERROR FOR KP KI and KD
+//pid = (kp * e(t)) + (ki * integral e(t) * d(t)) + (kd * derivative e(t) * 1/dt)
 void pid_control_one_wall_l(){
   readIR();
+  curr_time = millis();
+  diff_time = curr_time - last_time;
   error_l = abs(sensorReading_45_left - middle_point_l);
-//
-//  if (error_l > 250){
-//    error_l = 175;
-//  }
+
   if (error_l > 600){
     error_l = 300;
   }
   p_control_l = error_l * kp_l;
   
   
-  d_control_l = abs(error_l - prev_error_l) * kd_l;
+  d_control_l = (abs(error_l - prev_error_l) * kd_l ) / diff_time;
 
 
   if (sensorReading_45_left > middle_point_l) {
 
     motor_left = base_speed + ( p_control_l + d_control_l);
     motor_right = base_speed - (p_control_l + d_control_l);
-    prev_error_l = error_l;
-
   }
 
   else if (sensorReading_45_left < middle_point_l) {
     motor_left = base_speed - (p_control_l + d_control_l);
     motor_right = base_speed + (p_control_l + d_control_l);
-    prev_error_l = error_l;
   }
-
-
-  else {
-    //nothing
-    return;
-  }
-
+  
+  prev_error_l = error_l;
+  last_time = curr_time;
+  
 }
 
+//pid = (kp * e(t)) + (ki * integral e(t) * d(t)) + (kd * derivative e(t) * 1/dt)
 void pid_control_one_wall_r(){
+
   readIR();
+  curr_time = millis();
+  diff_time = curr_time - last_time;
+  
   error_r = abs(sensorReading_45_right - middle_point_r);
   if (error_r > 600){
     error_r = 300;
   }
-  
-//  if (error_r > 250){
-//    error_r = 175;
-//  }
 
   p_control_r = error_r * kp_r;
 
-  d_control_r = abs(error_r - prev_error_r) * kd_r;
+  d_control_r = (abs(error_r - prev_error_r) * kd_r) / diff_time;
 
 
   if (sensorReading_45_right > middle_point_r) {
-
     motor_left = base_speed - ( p_control_r + d_control_r);
     motor_right = base_speed + (p_control_r + d_control_r);
-    prev_error_r = error_r;
-
   }
 
   else if (sensorReading_45_right < middle_point_r) {
     motor_left = base_speed + (p_control_r + d_control_r);
     motor_right = base_speed - (p_control_r + d_control_r);
+  }
+  
     prev_error_r = error_r;
-  }
-
-
-  else {
-    //nothing
-    return;
-  }
+    last_time = curr_time;
 
 }
 
 
 
 
-
+//pid = (kp * e(t)) + (ki * integral e(t) * d(t)) + (kd * derivative e(t) * 1/dt)
 void pid_control_two_45_walls(){
+  
+  
   //gets reading for pid
   readIR();
 
@@ -385,6 +341,9 @@ void pid_control_two_45_walls(){
   }
   
   //error value
+  curr_time = millis();
+  diff_time = curr_time - last_time;
+  
   error = abs(sensorReading_45_left - sensorReading_45_right);
   if (error > 600){
     error = 300;
@@ -404,12 +363,12 @@ void pid_control_two_45_walls(){
 
   //i control
   error_buildup += error;
-  i_control = error_buildup * ki;
+  i_control = (error_buildup * ki)*diff_time;
 
 
   //d control
 
-  d_control = abs(error - prev_error) * kd;
+  d_control = (abs(error - prev_error) * kd) / diff_time;
 
 
 
@@ -428,8 +387,7 @@ void pid_control_two_45_walls(){
     //    motor_right -= (p_control + d_control);
 
     //
-    prev_error = error;
-    return;
+    
   }
 
   //too close right
@@ -449,107 +407,101 @@ void pid_control_two_45_walls(){
     
     //    motor_left -= (p_control + d_control);
     //    motor_right += (p_control + d_control);
-    prev_error = error;
-    return;
+    
   }
-  //equal to each other
-  else {
-    //nothing
-    //motor_left and motor_right stay the same
     prev_error = error;
-    return;
-  }
-
+    last_time = curr_time;
 }
 
 
-void pid_control_two_90_walls(){
-  //gets reading for pid
-  readIR();
 
-
-  
-  reset_error ++;
-  //resets reset error which is used for i part of pid  which takes in error from previous cycles
-  if (reset_error > 10000){
-    reset_error = 0;
-    error_buildup = 0;
-  }
-  
-  //error value
-  error = abs(sensorReading_left - sensorReading_right);
-  if (error < 600){
-    error = 300;
-  }
-
-//  I THINK THIS IS TO PREVENT DRASTIC CHANGES IN MOTOR 
-//  ALTHOUGH SINCE MY IR'S ARE MUCH BETTER NOW I THINK I SHOULD PROBABLY EITHER CHANGE OR GET RID OF THIS
-//  if (error > 300){//250
-//    error = 150;//175
+//void pid_control_two_90_walls(){
+//  //gets reading for pid
+//  readIR();
+//
+//
+//  
+//  reset_error ++;
+//  //resets reset error which is used for i part of pid  which takes in error from previous cycles
+//  if (reset_error > 10000){
+//    reset_error = 0;
+//    error_buildup = 0;
 //  }
 //  
-  //p control
-  p_control = error * kp;
-
-
-  //i control
-  error_buildup += error;
-  i_control = error_buildup * ki;
-
-
-  //d control
-
-  d_control = abs(error - prev_error) * kd;
-
-
-
-  //too close left
-  if (sensorReading_left > sensorReading_right) {
-
-
-//    motor_left = base_speed + (p_control + d_control + i_control); //
-//    motor_right = base_speed - (p_control + d_control + i_control); //
-
-    motor_left = base_speed + (p_control ); //
-    motor_right = base_speed - (p_control); //
-    
-    
-    //    motor_left += (p_control + d_control);
-    //    motor_right -= (p_control + d_control);
-
-    //
-    prev_error = error;
-    return;
-  }
-
-  //too close right
-  else if (sensorReading_right > sensorReading_left) {
-
-
-
-
-
-//    motor_left = base_speed - (p_control  + d_control + i_control); //
-//    motor_right = base_speed +  (p_control  + d_control + i_control); //
+//  //error value
+//  error = abs(sensorReading_left - sensorReading_right);
+//  if (error < 600){
+//    error = 300;
+//  }
+//
+////  I THINK THIS IS TO PREVENT DRASTIC CHANGES IN MOTOR 
+////  ALTHOUGH SINCE MY IR'S ARE MUCH BETTER NOW I THINK I SHOULD PROBABLY EITHER CHANGE OR GET RID OF THIS
+////  if (error > 300){//250
+////    error = 150;//175
+////  }
+////  
+//  //p control
+//  p_control = error * kp;
+//
+//
+//  //i control
+//  error_buildup += error;
+//  i_control = error_buildup * ki;
+//
+//
+//  //d control
+//
+//  d_control = abs(error - prev_error) * kd;
+//
+//
+//
+//  //too close left
+//  if (sensorReading_left > sensorReading_right) {
+//
+//
+////    motor_left = base_speed + (p_control + d_control + i_control); //
+////    motor_right = base_speed - (p_control + d_control + i_control); //
+//
+//    motor_left = base_speed + (p_control ); //
+//    motor_right = base_speed - (p_control); //
 //    
-    motor_left = base_speed - (p_control ); //
-    motor_right = base_speed + (p_control ); //
-    
-    
-    //    motor_left -= (p_control + d_control);
-    //    motor_right += (p_control + d_control);
-    prev_error = error;
-    return;
-  }
-  //equal to each other
-  else {
-    //nothing
-    //motor_left and motor_right stay the same
-    prev_error = error;
-    return;
-  }
-
-}
+//    
+//    //    motor_left += (p_control + d_control);
+//    //    motor_right -= (p_control + d_control);
+//
+//    //
+//    prev_error = error;
+//    return;
+//  }
+//
+//  //too close right
+//  else if (sensorReading_right > sensorReading_left) {
+//
+//
+//
+//
+//
+////    motor_left = base_speed - (p_control  + d_control + i_control); //
+////    motor_right = base_speed +  (p_control  + d_control + i_control); //
+////    
+//    motor_left = base_speed - (p_control ); //
+//    motor_right = base_speed + (p_control ); //
+//    
+//    
+//    //    motor_left -= (p_control + d_control);
+//    //    motor_right += (p_control + d_control);
+//    prev_error = error;
+//    return;
+//  }
+//  //equal to each other
+//  else {
+//    //nothing
+//    //motor_left and motor_right stay the same
+//    prev_error = error;
+//    return;
+//  }
+//
+//}
 
 //NEED TO TEST THIS
 //WILL RUN INTO ERRORS IF COUNT GOES UP DURING TURNS THUS MESSING UP THE CURR_SPEED CALCULATIONS
@@ -608,6 +560,7 @@ void pid_control_enc(){
   
 }
 
+//pid = (kp * e(t)) + (ki * integral e(t) * d(t)) + (kd * derivative e(t) * 1/dt)
 //chooses which pid to do
 void pid_control(){
   //readIR();
@@ -636,6 +589,7 @@ void pid_control(){
 
   //using 45 deg sensors
   if (left_45_wall == true && right_45_wall == true) {
+    
     pid_control_two_45_walls();
   }
   else if (left_45_wall == true &&  right_45_wall == false) {
@@ -649,6 +603,7 @@ void pid_control(){
 
   //go off encoders if no walls
   // if encoders are really good go off of encoders even more
+  //otherwise go off of last values
   else if (left_45_wall && right_45_wall == false) {
     //pi_control_enc();
     forward(motor_left,motor_right);
