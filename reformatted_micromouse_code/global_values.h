@@ -14,6 +14,7 @@ bool first_check = true;
 
 //GLOBAL FOR PID
 
+
 //probably wont use these 
 //int permReading_left;
 //int permReading_middle;
@@ -27,8 +28,8 @@ double base_speed =100 ; // 200,150,125,150,200,150,125,100,80,90,88
 double base_speed_l = 100;
 double base_speed_r =90 ; // based off testing to see which base_speeds go straightest ,93,94
 
-double kp = 0.15;//0.50,0.030,0.50, 0.90,0.40,0.36,0.30,0.20,0.10,0.05,0.20,0.10,0.20
-double kd = 0.06;//0.40,0.30,0.05,0.10,005,0.08
+double kp = 0.10;//0.50,0.030,0.50, 0.90,0.40,0.36,0.30,0.20,0.10,0.05,0.20,0.10,0.20,0.15
+double kd = 0.08;//0.40,0.30,0.05,0.10,005,0.08,0.06
 double ki = 0;//0.00001,0.00001
 double error = 0;
 double prev_error = 0;
@@ -44,8 +45,8 @@ double reset_error = 0;
 int middle_point_l = 120;//31,34,36,34,40,37,42,130
 int middle_point_90_l = 40;
 //double base_speed = 200; // 200,150,125,150
-double kp_l = 0.15;//0.40,0.30,0.40,0.30,0.10
-double kd_l = 0.06;//0.40,0.30,0.10
+double kp_l = 0.10;//0.40,0.30,0.40,0.30,0.10,0.15
+double kd_l = 0.08;//0.40,0.30,0.10,0.06
 double ki_l = 0;//0.00001
 double error_l = 0;
 double prev_error_l = 0;
@@ -58,9 +59,9 @@ double reset_error_l = 0;
 
 int middle_point_r = 120;//38,40,50,45,48
 int middle_point_90_r = 40;
-
-double kp_r = 0.15;//0.40,0.30
-double kd_r = 0.06;//0.40 0.30,0.20
+//previous kp_r is same as kp_l because the sensors are so similar
+double kp_r = 0.10;//0.40,0.30
+double kd_r = 0.08;//0.40 0.30,0.20
 double ki_r = 0;//0.00001
 double error_r = 0;
 double prev_error_r = 0;
@@ -156,7 +157,7 @@ volatile unsigned long right_count = 0;
 
 //for go one cell
 volatile unsigned long curr_count_cell = 0;
-unsigned long go_one_cell_length = 1400;
+unsigned long go_one_cell_length = 1410;//1400
 
 
 // Motor  Tick Enum States
@@ -224,6 +225,8 @@ int right_wall_thres = 90;
 int back_wall_thres = 90;
 int left_45_wall_thres = 65;
 int right_45_wall_thres = 65;
+//comparison is < 
+int correct_mouse_thres = 300;
 
 ////Strings for printing in ir_tick
 //String left_side_string = "LEFT:"; 
@@ -281,8 +284,8 @@ double g_conv_factor= 9.81;
 
 //gyro turn values
 // < than the values below
-double left_turn_length = 80;
-double right_turn_length = 80;
+double left_turn_length = 90;//80(too low)
+double right_turn_length = 90;//80(too low)
 
 
 //bool go_one_cell_happening = 0;

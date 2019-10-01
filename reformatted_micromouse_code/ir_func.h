@@ -222,7 +222,6 @@ void has_walls_pid(){
 //front_wall         
   if (avg_front_wall_reading > front_wall_thres ) { //  
     front_wall = true;
-    
   }
   else{
     front_wall = false;
