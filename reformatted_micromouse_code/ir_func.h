@@ -9,7 +9,7 @@ void readIR(){
   
   digitalWrite(sensor_45_right_power,LOW);
   digitalWrite(sensor_45_left_power,LOW);
-  delay(50);
+  delay(ir_delay);
   error_left = analogRead(sensor_left);
   error_middle = analogRead(sensor_middle);
   error_back = analogRead(sensor_back);
@@ -28,7 +28,7 @@ void readIR(){
 
 
 
-  delay(50);
+  delay(ir_delay);
   sensorReading_left = analogRead(sensor_left);
   sensorReading_middle = analogRead(sensor_middle);
   sensorReading_back = analogRead(sensor_back);
@@ -43,7 +43,7 @@ void readIR(){
   digitalWrite(sensor_45_right_power,HIGH);
   digitalWrite(sensor_45_left_power,HIGH);
 
-  delay(50);
+  delay(ir_delay);
   sensorReading_45_left = analogRead(sensor_45_left);
   sensorReading_45_right = analogRead(sensor_45_right);
 //  

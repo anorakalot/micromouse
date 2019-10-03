@@ -248,7 +248,15 @@ void reverse_until(int left_speed, int right_speed, unsigned long stop_time) {
   halt_until(halt_delay);
 }
 
-
+//does the one calculation for pid values because with new code pid should run at regular intervals
+//this should run only once in void setup unless sample time changes mid run
+void tune_pid_constants(){
+  //sample_diff_time = sample_time / conv_to_seconds;
+  ki *= sample_time;
+  kd /= sample_time; 
+  kd_l /= sample_time;
+  kd_r /= sample_time;
+}
 
 //TEST THE ENCODER PID
 //in the meantime this will go off good base values
@@ -259,31 +267,33 @@ void pid_control_one_wall_l(){
   readIR();
   curr_time = millis();
   diff_time = curr_time - last_time;
-  error_l = abs(sensorReading_45_left - middle_point_l);
-
-  if (error_l > 600){
-    error_l = 300;
-  }
-  p_control_l = error_l * kp_l;
+  if (diff_time >= sample_time){
   
+    error_l = abs(sensorReading_45_left - middle_point_l);
   
-  d_control_l = (abs(error_l - prev_error_l) * kd_l ) / diff_time;
-
-
-  if (sensorReading_45_left > middle_point_l) {
-
-    motor_left = base_speed + ( p_control_l + d_control_l);
-    motor_right = base_speed - (p_control_l + d_control_l);
-  }
-
-  else if (sensorReading_45_left < middle_point_l) {
-    motor_left = base_speed - (p_control_l + d_control_l);
-    motor_right = base_speed + (p_control_l + d_control_l);
-  }
+    if (error_l > 600){
+      error_l = 300;
+    }
+    p_control_l = error_l * kp_l;
+    
+    
+    //d_control_l = (abs(error_l - prev_error_l) * kd_l ) / diff_time;
+    d_control_l = (abs(error_l - prev_error_l) * kd_l );
   
-  prev_error_l = error_l;
-  last_time = curr_time;
+    if (sensorReading_45_left > middle_point_l) {
   
+      motor_left = base_speed + ( p_control_l + d_control_l);
+      motor_right = base_speed - (p_control_l + d_control_l);
+    }
+  
+    else if (sensorReading_45_left < middle_point_l) {
+      motor_left = base_speed - (p_control_l + d_control_l);
+      motor_right = base_speed + (p_control_l + d_control_l);
+    }
+    
+    prev_error_l = error_l;
+    last_time = curr_time;
+   }
 }
 
 //pid = (kp * e(t)) + (ki * integral e(t) * d(t)) + (kd * derivative e(t) * 1/dt)
@@ -292,30 +302,31 @@ void pid_control_one_wall_r(){
   readIR();
   curr_time = millis();
   diff_time = curr_time - last_time;
+  if (diff_time >= sample_time){
   
-  error_r = abs(sensorReading_45_right - middle_point_r);
-  if (error_r > 600){
-    error_r = 300;
-  }
-
-  p_control_r = error_r * kp_r;
-
-  d_control_r = (abs(error_r - prev_error_r) * kd_r) / diff_time;
-
-
-  if (sensorReading_45_right > middle_point_r) {
-    motor_left = base_speed - ( p_control_r + d_control_r);
-    motor_right = base_speed + (p_control_r + d_control_r);
-  }
-
-  else if (sensorReading_45_right < middle_point_r) {
-    motor_left = base_speed + (p_control_r + d_control_r);
-    motor_right = base_speed - (p_control_r + d_control_r);
-  }
+    error_r = abs(sensorReading_45_right - middle_point_r);
+    if (error_r > 600){
+      error_r = 300;
+    }
   
-    prev_error_r = error_r;
-    last_time = curr_time;
-
+    p_control_r = error_r * kp_r;
+  
+    //d_control_r = (abs(error_r - prev_error_r) * kd_r) / diff_time;
+    d_control_r = (abs(error_r - prev_error_r) * kd_r);
+  
+    if (sensorReading_45_right > middle_point_r) {
+      motor_left = base_speed - ( p_control_r + d_control_r);
+      motor_right = base_speed + (p_control_r + d_control_r);
+    }
+  
+    else if (sensorReading_45_right < middle_point_r) {
+      motor_left = base_speed + (p_control_r + d_control_r);
+      motor_right = base_speed - (p_control_r + d_control_r);
+    }
+    
+      prev_error_r = error_r;
+      last_time = curr_time;
+  }
 }
 
 
@@ -343,75 +354,70 @@ void pid_control_two_45_walls(){
   //error value
   curr_time = millis();
   diff_time = curr_time - last_time;
+  if (diff_time >= sample_time){
+    
+    error = abs(sensorReading_45_left - sensorReading_45_right);
+    if (error > 600){
+      error = 300;
+    }
+    
+    Serial.println("ERROR VALUE: ");
+    Serial.println(error);
+  //  I THINK THIS IS TO PREVENT DRASTIC CHANGES IN MOTOR 
+  //  ALTHOUGH SINCE MY IR'S ARE MUCH BETTER NOW I THINK I SHOULD PROBABLY EITHER CHANGE OR GET RID OF THIS
+  //  if (error > 300){//250
+  //    error = 150;//175
+  //  }
+  //  
+    //p control
+    p_control = error * kp;
   
-  error = abs(sensorReading_45_left - sensorReading_45_right);
-  if (error > 600){
-    error = 300;
-  }
+    //i control
+    error_buildup += error;
+    //i_control = (error_buildup * ki)*diff_time;
+    i_control = (error_buildup * ki);
   
-  Serial.println("ERROR VALUE: ");
-  Serial.println(error);
-//  I THINK THIS IS TO PREVENT DRASTIC CHANGES IN MOTOR 
-//  ALTHOUGH SINCE MY IR'S ARE MUCH BETTER NOW I THINK I SHOULD PROBABLY EITHER CHANGE OR GET RID OF THIS
-//  if (error > 300){//250
-//    error = 150;//175
-//  }
-//  
-  //p control
-  p_control = error * kp;
-
-
-  //i control
-  error_buildup += error;
-  i_control = (error_buildup * ki)*diff_time;
-
-
-  //d control
-
-  d_control = (abs(error - prev_error) * kd) / diff_time;
-
-
-
-  //too close left
-  if (sensorReading_45_left > sensorReading_45_right) {
-
-
-    motor_left = base_speed + (p_control + d_control + i_control); //
-    motor_right = base_speed - (p_control + d_control + i_control); //
-
-//    motor_left = base_speed_l + (p_control +d_control); //+ i_control); //
-//    motor_right = base_speed_r - (p_control + d_control); //+ i_control); //
-    
-    
-    //    motor_left += (p_control + d_control);
-    //    motor_right -= (p_control + d_control);
-
-    //
-    
-  }
-
-  //too close right
-  else if (sensorReading_45_right > sensorReading_45_left) {
-
-
-
-
-
-    motor_left = base_speed - (p_control  + d_control + i_control); //
-    motor_right = base_speed +  (p_control  + d_control + i_control); //
-//    
-
-//    motor_left = base_speed_l - (p_control + d_control); //+ i_control); //
-//    motor_right = base_speed_r + (p_control + d_control); //+ i_control); //
-    
-    
-    //    motor_left -= (p_control + d_control);
-    //    motor_right += (p_control + d_control);
-    
-  }
-    prev_error = error;
-    last_time = curr_time;
+    //d control
+  
+    //d_control = (abs(error - prev_error) * kd) / diff_time;
+    d_control = (abs(error_r - prev_error_r) * kd);
+  
+    //too close left
+    if (sensorReading_45_left > sensorReading_45_right) {
+  
+      motor_left = base_speed + (p_control + d_control + i_control); //
+      motor_right = base_speed - (p_control + d_control + i_control); //
+  
+  //    motor_left = base_speed_l + (p_control +d_control); //+ i_control); //
+  //    motor_right = base_speed_r - (p_control + d_control); //+ i_control); //
+      
+      
+      //    motor_left += (p_control + d_control);
+      //    motor_right -= (p_control + d_control);
+  
+      //
+      
+    }
+    //too close right
+    else if (sensorReading_45_right > sensorReading_45_left) {
+  
+      motor_left = base_speed - (p_control  + d_control + i_control); //
+      motor_right = base_speed +  (p_control  + d_control + i_control); //
+  //    
+  
+  //    motor_left = base_speed_l - (p_control + d_control); //+ i_control); //
+  //    motor_right = base_speed_r + (p_control + d_control); //+ i_control); //
+      
+      
+      //    motor_left -= (p_control + d_control);
+      //    motor_right += (p_control + d_control);
+      
+    }
+      prev_error = error;
+      last_time = curr_time;
+   }//end of if sample time 
 }
+
 
 
 
@@ -782,7 +788,7 @@ void can_correct_func(){
   if (can_correct == 1) {
     //correct_mouse_far();
     //correct_mouse_close();
-    correct_mouse();
+    //correct_mouse();
     can_correct = 0;
   }
 }

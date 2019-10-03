@@ -113,6 +113,7 @@ void setup(){
   gyro_init(); //sets up gyro
   gyro_tick();//sets up gyro read function
   motor_init();//sets up motor tick state  
+  tune_pid_constants();
   wait_until_start_hand();//waits until hand in front of 
   
   
@@ -123,6 +124,7 @@ void setup(){
 //REMEMBER TO SETUP gyro 
 //PROBABLY THE REASON WHY THE gyro ISN'T WORKING
 //setup_gyro();
+
 
 
 
