@@ -59,7 +59,6 @@ void setup(){
   attachInterrupt(digitalPinToInterrupt(RH_ENCODER_A), right_encoder_event, CHANGE);
   attachInterrupt(digitalPinToInterrupt(RH_ENCODER_B), right_encoder_event, CHANGE);
 
-  
 
 
   //if need to check ir readings from serial monitor
@@ -143,22 +142,23 @@ void loop(){
 //main sequence 
   //readIR();
   motor_tick(); 
-  delay(1000);
+  delay(600);
 
 
 
 //testing
   //left_turn_until();
+  //right_turn_until();
   //go_one_cell();
-//  forward(base_speed_l,base_speed_r);//r - 6 still goes left,r- 7 still goes to a side but it goes straighter
-//  delay(1000);
-//  halt_until(halt_delay);
-//  delay(1200);
+  //forward(base_speed_l,base_speed_r);//r - 6 still goes left,r- 7 still goes to a side but it goes straighter
+  //delay(1000);
+  //halt_until(halt_delay);
+  //delay(1200);
   //forward();
   //testIR();
    // pid_control();
-
-    // forward(motor_left, motor_right);
+  //reverse();
+   // forward(motor_left, motor_right);
 
 
 

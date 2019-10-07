@@ -293,7 +293,7 @@ void pid_control_one_wall_l(){
     
     prev_error_l = error_l;
     last_time = curr_time;
-   }
+   } // end of if sample time
 }
 
 //pid = (kp * e(t)) + (ki * integral e(t) * d(t)) + (kd * derivative e(t) * 1/dt)
@@ -326,7 +326,7 @@ void pid_control_one_wall_r(){
     
       prev_error_r = error_r;
       last_time = curr_time;
-  }
+  } // end of if sample time
 }
 
 
@@ -363,12 +363,7 @@ void pid_control_two_45_walls(){
     
     Serial.println("ERROR VALUE: ");
     Serial.println(error);
-  //  I THINK THIS IS TO PREVENT DRASTIC CHANGES IN MOTOR 
-  //  ALTHOUGH SINCE MY IR'S ARE MUCH BETTER NOW I THINK I SHOULD PROBABLY EITHER CHANGE OR GET RID OF THIS
-  //  if (error > 300){//250
-  //    error = 150;//175
-  //  }
-  //  
+
     //p control
     p_control = error * kp;
   
@@ -415,7 +410,7 @@ void pid_control_two_45_walls(){
     }
       prev_error = error;
       last_time = curr_time;
-   }//end of if sample time 
+   } //end of if sample time 
 }
 
 
@@ -536,7 +531,6 @@ void pid_control_enc(){
   
   if (left_wanted_speed > curr_left_speed){
     motor_left = base_speed  + (p_control_enc_l + d_control_enc_l);
-  
   }
 
 
@@ -595,7 +589,6 @@ void pid_control(){
 
   //using 45 deg sensors
   if (left_45_wall == true && right_45_wall == true) {
-    
     pid_control_two_45_walls();
   }
   else if (left_45_wall == true &&  right_45_wall == false) {
@@ -611,7 +604,7 @@ void pid_control(){
   // if encoders are really good go off of encoders even more
   //otherwise go off of last values
   else if (left_45_wall && right_45_wall == false) {
-    //pi_control_enc();
+    //pid_control_enc();
     forward(motor_left,motor_right);
     //pid_control_two_45_walls();
 
@@ -665,10 +658,11 @@ void go_one_cell(){
   //unsigned long curr = left_count;
   cli();
   //unsigned long curr = right_count;
-  curr_count_cell = right_count;
+  //curr_count_cell = right_count;
+  curr_count_cell = left_count;
   sei();
-  while (abs(right_count - curr_count_cell) < go_one_cell_length ) { //945, 1400,1380,1438,1000,400,200,100,1000,1400(a little off),1500,1430,1460,1480 (too much),1470,1410,1420,1405                                                                               400,500,600,650,750,1000,1100,1200  ,1300  , 952 , 930 , 912,908(best so far) , 905 , 890 , 908 ,912,920,930,945,960,1300,1400,1450,1470,1474,1480,1490,1510,1511
-  //while(abs(left_count - curr) <1380 ){ //1450,1465,1450    readIR();                   //900,500,600,700,800,900,1000,1070,1100, ,1150,1160, 1200 , 1130,1000 , 900    ,1000 , 945  ,800 ,850 , 880 , 885,895 , 915 ,925(over),920(both) , close 905 ,980 ,960(closest)
+  //while (abs(right_count - curr_count_cell) < go_one_cell_length ) { //945, 1400,1380,1438,1000,400,200,100,1000,1400(a little off),1500,1430,1460,1480 (too much),1470,1410,1420,1405                                                                               400,500,600,650,750,1000,1100,1200  ,1300  , 952 , 930 , 912,908(best so far) , 905 , 890 , 908 ,912,920,930,945,960,1300,1400,1450,1470,1474,1480,1490,1510,1511
+  while(abs(left_count - curr_count_cell) <go_one_cell_length ){ //1450,1465,1450    readIR();                   //900,500,600,700,800,900,1000,1070,1100, ,1150,1160, 1200 , 1130,1000 , 900    ,1000 , 945  ,800 ,850 , 880 , 885,895 , 915 ,925(over),920(both) , close 905 ,980 ,960(closest)
     // print_encoder_count();
     //pid_control_two_walls();
     //IF PID IS DONE IN A STATE MACHINE I WONT NEED PID IN THIS FUNCTION
@@ -676,16 +670,18 @@ void go_one_cell(){
     //NEED TO MAKE SURE THIS DOESN'T MESS UP CONTROL GOING FORWARD
 
     pid_control();
-
+    if (sensorReading_middle > correct_mouse_thres){
+      //forward(0,0);
+      halt();
+      break;
+    }
     forward(motor_left, motor_right);
     //reverse(motor_left,motor_right);
     print_encoder_count();
-    
   }
   //probably uncomment this below
   forward(0,0);
   halt_until(halt_delay);
-
 }
 
 
@@ -744,8 +740,8 @@ void correct_mouse_close(){
 }
 
 void correct_mouse(){
-  reverse(motor_left, motor_right);
-  delay(200);//1000 is too long
+  //reverse(motor_left, motor_right);
+  //delay(200);//1000 is too long
   reverse(0,0);
   halt_until(halt_delay);
   readIR();
@@ -769,7 +765,7 @@ void go_one_cell_reverse(){
   sei();
   while (abs(right_count - curr_count_cell) < 1420 ) {                                                                                
     pid_control();
-  
+    
     reverse(motor_left,motor_right);
     print_encoder_count();
     

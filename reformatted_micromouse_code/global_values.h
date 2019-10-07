@@ -25,7 +25,8 @@ int random_choice = 0;
 unsigned long curr_time = 0;
 unsigned long last_time = 0;
 unsigned long diff_time = 0;
-double sample_time = 150;
+int ir_delay = 20;//was 50 for all before(worked good)s,30(did really good)
+double sample_time = 80;//150,100(good with 20 ir delay)
 double conv_to_seconds = 1000;
 double sample_diff_time;
 
@@ -36,7 +37,7 @@ double base_speed_l = 100;
 double base_speed_r =90 ; // based off testing to see which base_speeds go straightest ,93,94
 
 double kp = 0.12;//0.50,0.030,0.50, 0.90,0.40,0.36,0.30,0.20,0.10,0.05,0.20,0.10,0.20,0.15,0.10,0.12(good)
-double kd = 0.10;//0.40,0.30,0.05,0.10,005,0.08,0.06,0.08,0.10(good)
+double kd = 0.12;//0.40,0.30,0.05,0.10,005,0.08,0.06,0.08,0.10(good)
 double ki = 0;//0.00001,0.00001
 double error = 0;
 double prev_error = 0;
@@ -53,7 +54,7 @@ int middle_point_l = 120;//31,34,36,34,40,37,42,130
 int middle_point_90_l = 40;
 //double base_speed = 200; // 200,150,125,150
 double kp_l = 0.12;//0.40,0.30,0.40,0.30,0.10,0.15
-double kd_l = 0.10;//0.40,0.30,0.10,0.06
+double kd_l = 0.12;//0.40,0.30,0.10,0.06
 double ki_l = 0;//0.00001
 double error_l = 0;
 double prev_error_l = 0;
@@ -68,7 +69,7 @@ int middle_point_r = 120;//38,40,50,45,48
 int middle_point_90_r = 40;
 //previous kp_r is same as kp_l because the sensors are so similar
 double kp_r = 0.12;//0.40,0.30
-double kd_r = 0.10;//0.40 0.30,0.20
+double kd_r = 0.12;//0.40 0.30,0.20
 double ki_r = 0;//0.00001
 double error_r = 0;
 double prev_error_r = 0;
@@ -150,11 +151,18 @@ int turn_on_en_2 = 13;
 
 
 //encoder
-int RH_ENCODER_A = 9;
-int RH_ENCODER_B = 8;
+//int RH_ENCODER_A = 9;
+//int RH_ENCODER_B = 8;
+//
+//int LH_ENCODER_A = 10;
+//int LH_ENCODER_B = 11;
 
-int LH_ENCODER_A = 10;
-int LH_ENCODER_B = 11;
+int RH_ENCODER_A = 10;
+int RH_ENCODER_B = 11;
+
+int LH_ENCODER_A = 9;
+int LH_ENCODER_B = 8;
+
 
 volatile unsigned long left_count = 0;
 //long left_count_pid = 0;
@@ -164,14 +172,13 @@ volatile unsigned long right_count = 0;
 
 //for go one cell
 volatile unsigned long curr_count_cell = 0;
-unsigned long go_one_cell_length = 1410;//1400
+unsigned long go_one_cell_length = 1402;//1400,1410(had done good)
 
 
 // Motor  Tick Enum States
 enum  MOTOR_STATES   {  MOTOR_INIT  ,  GO_ONE_CELL , CHOOSE_MOVE, TURN_REVERSE_L, TURN_REVERSE_R, TURN_LEFT, TURN_RIGHT, GO_ONE_CELL_REVERSE } motor_state;
 
-//IRLED
-int left_offset = 20; // last value was 15 , 5 , 30, 10
+//IRLED VARS
 
 //LEFT
 int sensor_left = A2;
@@ -232,8 +239,9 @@ int right_wall_thres = 90;
 int back_wall_thres = 90;
 int left_45_wall_thres = 65;
 int right_45_wall_thres = 65;
-//comparison is < 
-int correct_mouse_thres = 300;
+//comparison is > thres
+int correct_mouse_thres = 200;//300,280,230,210
+
 
 ////Strings for printing in ir_tick
 //String left_side_string = "LEFT:"; 
@@ -248,7 +256,7 @@ int prev_sensorReading_right;
 int prev_sensorReading_middle;
 int prev_sensorReading_left;
 
-int ir_delay = 30;//was 50 for all before(worked good)s
+
 
 int error_left;
 int error_middle;
@@ -257,6 +265,10 @@ int error_right;
 int error_45_left;
 int error_45_right;
 
+
+//IRLED offset 
+//-= offset values
+int right_45_offset = 10; //15
 
 
 
@@ -292,8 +304,8 @@ double g_conv_factor= 9.81;
 
 //gyro turn values
 // < than the values below
-double left_turn_length = 90;//80(too low)
-double right_turn_length = 90;//80(too low)
+double left_turn_length = 80;//80(too low),90 (a little too high),88,85
+double right_turn_length = 81;//80(too low)
 
 
 //bool go_one_cell_happening = 0;
