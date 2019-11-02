@@ -1,11 +1,3 @@
-#include <stack>
-
-#include <cmath>
- 
-
-#include <Wire.h>
-#include <LSM6.h>
-
 #include "global_values.h"
 
 
@@ -17,13 +9,6 @@
 void setup(){
   Serial.begin(9600);
   
-  ///*
-  //interrups set up for turns 
-  attachInterrupt(digitalPinToInterrupt(LH_ENCODER_A), left_encoder_event, CHANGE);
-  attachInterrupt(digitalPinToInterrupt(LH_ENCODER_B), left_encoder_event, CHANGE);
-
-  attachInterrupt(digitalPinToInterrupt(RH_ENCODER_A), right_encoder_event, CHANGE);
-  attachInterrupt(digitalPinToInterrupt(RH_ENCODER_B), right_encoder_event, CHANGE);
 
   
 
@@ -75,12 +60,6 @@ void setup(){
   digitalWrite(turn_on_en_2, LOW);
 
 
-  
-  
-
-
-
-
 
 }
  
@@ -88,6 +67,7 @@ void setup(){
 
 
 void loop(){
+  //PUT CODE HERE
 }
 
 
