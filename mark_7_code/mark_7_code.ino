@@ -110,11 +110,11 @@ void setup(){
 
 //UNCOMMENT THESE WHEN NEEDING TO RUN MOUSE
 //COMMENT THEM WHEN YOU NEED TO TEST SPECIFIC PART OF MOUSE LIKE IR LED'S BEFORE CONSTRUCTING NEW MOUSE
-//  gyro_init(); //sets up gyro
-//  gyro_tick();//sets up gyro read function
-//  motor_init();//sets up motor tick state  
-//  tune_pid_constants();
-//  wait_until_start_hand();//waits until hand in front of 
+  gyro_init(); //sets up gyro
+  gyro_tick();//sets up gyro read function
+  motor_init();//sets up motor tick state  
+  tune_pid_constants();
+  wait_until_start_hand();//waits until hand in front of 
   
   
 
@@ -144,14 +144,18 @@ void loop(){
 //Serial.println();
 
 //main sequence 
-  readIR();
-  motor_tick(); 
-  delay(600);
+  //readIR();
+//  motor_tick(); 
+//  delay(600);
+//  
+  //pid_control_two_45_walls();
+  //forward(motor_left,motor_right);
+  //delay(1000);
 
 
-//forward(0,0);
-//left_turn();
-//right_turn();
+//forward(50,255);
+//left_turn_until();
+//right_turn_until();
 //reverse();
 
 //forward();

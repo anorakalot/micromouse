@@ -26,7 +26,7 @@ unsigned long curr_time = 0;
 unsigned long last_time = 0;
 unsigned long diff_time = 0;
 int ir_delay = 20;//was 50 for all before(worked good)s,30(did really good)
-double sample_time = 80;//150,100(good with 20 ir delay)
+double sample_time = 100;//150,100(good with 20 ir delay),80
 double conv_to_seconds = 1000;
 double sample_diff_time;
 
@@ -36,8 +36,8 @@ double base_speed =100 ; // 200,150,125,150,200,150,125,100,80,90,88
 double base_speed_l = 100;
 double base_speed_r =90 ; // based off testing to see which base_speeds go straightest ,93,94
 
-double kp = 0.12;//0.50,0.030,0.50, 0.90,0.40,0.36,0.30,0.20,0.10,0.05,0.20,0.10,0.20,0.15,0.10,0.12(good)
-double kd = 0.12;//0.40,0.30,0.05,0.10,005,0.08,0.06,0.08,0.10(good)
+double kp = 0.12;//0.50,0.030,0.50, 0.90,0.40,0.36,0.30,0.20,0.10,0.05,0.20,0.10,0.20,0.15,0.10,0.12(good),0.50(overshoots)
+double kd = 0.30;//0.40,0.30,0.05,0.10,005,0.08,0.06,0.08,0.10(good),0.12,0.50
 double ki = 0;//0.00001,0.00001
 double error = 0;
 double prev_error = 0;
@@ -233,9 +233,9 @@ double avg_45_right_wall_reading;
 
 //thresholds for if there's a wall or not for the 2 has walls functions
 //comparison is > thres
-int front_wall_thres = 90;
-int left_wall_thres = 90;
-int right_wall_thres = 90;
+int front_wall_thres = 100;//90
+int left_wall_thres = 120;//90
+int right_wall_thres = 100;//90
 int back_wall_thres = 90;
 int left_45_wall_thres = 65;
 int right_45_wall_thres = 65;
@@ -304,8 +304,8 @@ double g_conv_factor= 9.81;
 
 //gyro turn values
 // < than the values below
-double left_turn_length = 78;//80(too low),90 (a little too high),88,85,80(too high ???)
-double right_turn_length = 80;//80(too low),81(overshoots sometimes)
+double left_turn_length = 140;//80(too low),90 (a little too high),88,85,80(too high ???)//78,130
+double right_turn_length = 140;//80(too low),81(overshoots sometimes)//80,130
 
 
 //bool go_one_cell_happening = 0;

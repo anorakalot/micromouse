@@ -173,10 +173,10 @@ void forward(int left_speed, int right_speed) {
   
   
   digitalWrite(motor_1_logic_1, LOW);
-  digitalWrite(motor_1_logic_2,left_speed );
+  analogWrite(motor_1_logic_2,left_speed );
   
   digitalWrite(motor_2_logic_1, LOW);
-  digitalWrite(motor_2_logic_2, right_speed );
+  analogWrite(motor_2_logic_2, right_speed );
 
 }
 
@@ -356,13 +356,13 @@ void pid_control_two_45_walls(){
   }
   
   //error value
-  curr_time = millis();
-  diff_time = curr_time - last_time;
-  if (diff_time >= sample_time){
+  //curr_time = millis();
+  //diff_time = curr_time - last_time;
+  //if (diff_time >= sample_time){
     
     error = abs(sensorReading_45_left - sensorReading_45_right);
-    if (error > 600){
-      error = 300;
+    if (error > 100){
+      error = 100;
     }
     
     Serial.println("ERROR VALUE: ");
@@ -412,9 +412,13 @@ void pid_control_two_45_walls(){
       //    motor_right += (p_control + d_control);
       
     }
+    Serial.println("Motor_Left");
+    Serial.println(motor_left);
+    Serial.println("Motor_RIGHT");
+    Serial.println(motor_right);
       prev_error = error;
-      last_time = curr_time;
-   } //end of if sample time 
+   //   last_time = curr_time;
+  // } //end of if sample time 
 }
 
 
@@ -574,7 +578,7 @@ void pid_control(){
   has_walls_pid();
   //testing
   
-  //pid_control_two_45_walls();
+  pid_control_two_45_walls();
   //pid_control_one_wall_l();
   //pid_control_one_wall_r();
   //pid_control_enc();
@@ -585,35 +589,35 @@ void pid_control(){
   
 
   //using 45 deg sensors
-  if (left_45_wall == true && right_45_wall == true) {
-    
-    pid_control_two_45_walls();
-    return;
-  }
-  else if (left_45_wall == true &&  right_45_wall == false) {
-    pid_control_one_wall_l();
-    return;
-  }
-  else if (left_45_wall == false && right_45_wall == true) {
-    pid_control_one_wall_r();
-    return;
-  }
-
-  //go off encoders if no walls
-  // if encoders are really good go off of encoders even more
-  //otherwise go off of last values
-  else if (left_45_wall && right_45_wall == false) {
-    //pi_control_enc();
-    forward(motor_left,motor_right);
-    //pid_control_two_45_walls();
-
-    //pid_control_one_wall_r();
-    return;
-  }
-  else {
-    pid_control_two_45_walls();
-    return;
-  }
+//  if (left_45_wall == true && right_45_wall == true) {
+//    
+//    pid_control_two_45_walls();
+//    return;
+//  }
+//  else if (left_45_wall == true &&  right_45_wall == false) {
+//    pid_control_one_wall_l();
+//    return;
+//  }
+//  else if (left_45_wall == false && right_45_wall == true) {
+//    pid_control_one_wall_r();
+//    return;
+//  }
+//
+//  //go off encoders if no walls
+//  // if encoders are really good go off of encoders even more
+//  //otherwise go off of last values
+//  else if (left_45_wall && right_45_wall == false) {
+//    //pi_control_enc();
+//    forward(motor_left,motor_right);
+//    //pid_control_two_45_walls();
+//
+//    //pid_control_one_wall_r();
+//    return;
+//  }
+//  else {
+//    pid_control_two_45_walls();
+//    return;
+//  }
 
   
 
@@ -680,7 +684,7 @@ void go_one_cell(){
     print_encoder_count();
   }
   //probably uncomment this below
-  forward(0,0);
+  //forward(0,0);
   halt_until(halt_delay);
 }
 
@@ -998,277 +1002,277 @@ void motor_tick(){
 //I'll JUST HAVE MOVE TO NEXT IDEAL SPACE IN STACK CHECK
 //IT MAKES THE MOST SENSE TO HAVE IT THERE NOW
 //IF NEEDED I'll CHANGE IT TO MAKE THE CODE NEATER
-enum FLOODFILL_STATES{FLOODFILL_INIT,FLOODFILL_START,FLOODFILL_POS_CHECK,FLOODFILL_STACK_CHECK,FLOODFILL_END} floodfill_state;
-void floodfill_init(){
-  floodfill_state = FLOODFILL_INIT;
-}
-
-//MAIN ISSUE IS MOUSE POS DOES IT HAVE TO BE PRESENT DURING ALL STACK CHECK EVENTS 
-//ALSO NEED TO FIGURE OUT HOW TO UPDATE MAZE AS IT GOES THROUGH THE FIRST TIME
-//KEY WORD IS PROBABLY FIRST TIME
-
-//stack operations assume the stack works just like a standard c++ stack
-void floodfill_tick(){
-  switch(floodfill_state){//transitions
-    case FLOODFILL_INIT:
-      floodfill_state = FLOODFILL_START;
-      break;
-    case FLOODFILL_START:
-      floodfill_state = FLOODFILL_POS_CHECK;
-      break;
-      
-    case FLOODFILL_POS_CHECK:
-      if ((mouse_pos.y_pos == goal_coord.y_pos) &&  (mouse_pos.y_pos == goal_coord.y_pos)){
-        floodfill_state = FLOODFILL_END;
-      }
-      else {
-        floodfill_state = FLOODFILL_STACK_CHECK;
-        //SHOULD PUSH STARTING MOUSE_POS IN FLOODFILL_START INSTEAD SO IT DOESN'T KEEP HAPPENING
-        //NEVERMIND THIS NEEDS TO HAPPEN EACH TIME BECAUSE OF HOW IT POPS THE CELL TO CHECK FROM THE CHECKS STACK
-        //NEVERMIND TO ABOVE NEVERMIND BECAUSE THE ALGORITHM SAYS DIFFERENTLY
-        //NEVERMIND TO ABOVE NEVERMIND BECAUSE DOING IT ON PAPER SAYS DIFFERENTLY
-        checks.push(mouse_pos);
-        //set minval to -10 so if it stays -10 then we know the cellcheck was correct at first;
-        min_val = -10;
-      }
-      break;
-    case FLOODFILL_STACK_CHECK:
-//      if (checks.count() != 0){
-//         floodfill_state = FLOODFILL_STACK_CHECK;
-//         //floodfill_state = FLOODFILL_MOVE_TO_NEXT_SPACE;
+//enum FLOODFILL_STATES{FLOODFILL_INIT,FLOODFILL_START,FLOODFILL_POS_CHECK,FLOODFILL_STACK_CHECK,FLOODFILL_END} floodfill_state;
+//void floodfill_init(){
+//  floodfill_state = FLOODFILL_INIT;
+//}
+//
+////MAIN ISSUE IS MOUSE POS DOES IT HAVE TO BE PRESENT DURING ALL STACK CHECK EVENTS 
+////ALSO NEED TO FIGURE OUT HOW TO UPDATE MAZE AS IT GOES THROUGH THE FIRST TIME
+////KEY WORD IS PROBABLY FIRST TIME
+//
+////stack operations assume the stack works just like a standard c++ stack
+//void floodfill_tick(){
+//  switch(floodfill_state){//transitions
+//    case FLOODFILL_INIT:
+//      floodfill_state = FLOODFILL_START;
+//      break;
+//    case FLOODFILL_START:
+//      floodfill_state = FLOODFILL_POS_CHECK;
+//      break;
+//      
+//    case FLOODFILL_POS_CHECK:
+//      if ((mouse_pos.y_pos == goal_coord.y_pos) &&  (mouse_pos.y_pos == goal_coord.y_pos)){
+//        floodfill_state = FLOODFILL_END;
 //      }
 //      else {
-//        floodfill_state = FLOODFILL_MOVE_TO_NEXT_SPACE;
-//        //floodfill_state = FLOODFILL_POS_CHECK;
+//        floodfill_state = FLOODFILL_STACK_CHECK;
+//        //SHOULD PUSH STARTING MOUSE_POS IN FLOODFILL_START INSTEAD SO IT DOESN'T KEEP HAPPENING
+//        //NEVERMIND THIS NEEDS TO HAPPEN EACH TIME BECAUSE OF HOW IT POPS THE CELL TO CHECK FROM THE CHECKS STACK
+//        //NEVERMIND TO ABOVE NEVERMIND BECAUSE THE ALGORITHM SAYS DIFFERENTLY
+//        //NEVERMIND TO ABOVE NEVERMIND BECAUSE DOING IT ON PAPER SAYS DIFFERENTLY
+//        checks.push(mouse_pos);
+//        //set minval to -10 so if it stays -10 then we know the cellcheck was correct at first;
+//        min_val = -10;
 //      }
-
-        if (checks.count() != 0){
-          floodfill_state = FLOODFILL_STACK_CHECK;
-          min_val = -10;
-        }
-        else{
-          floodfill_state = FLOODFILL_POS_CHECK;
-        }
-      
-      break;
-      
-//    case FLOODFILL_MOVE_TO_NEXT_SPACE:
-//  //    floodfill_state = FLOODFILL_POS_CHECK;
 //      break;
-    
-    
-    case FLOODFILL_END:
-      //keep it in end state 
-      //all it is is 
-      floodfill_state = FLOODFILL_END;
-      break;
-    default:
-      break;
-  }
-  switch(floodfill_state){//actions
-    case FLOODFILL_INIT:
-      break;
-     case FLOODFILL_START:
-      //sets up goal coord in 2d array
-      goal_coord.y_pos = 0;
-      goal_coord.x_pos = 9;
-
-      //sets up mouse pos
-      mouse_pos.y_pos = 9;
-      mouse_pos.x_pos = 0;
-
-      //sets up initial value for all cells in maze
-      for (int x = 0; x < maze_x_length; ++x){
-        for (int y = 0; y < maze_y_length; ++y){
-          maze[y][x].value = abs(goal_coord.y_pos - y) + abs(goal_coord.x_pos - x);
-        }
-      }
-
-      // can set up initial wall config since all starting cells are the same
-      maze[mouse_pos.x_pos][mouse_pos.y_pos].left_wall = 1;
-      maze[mouse_pos.x_pos][mouse_pos.y_pos].right_wall = 1;
-      maze[mouse_pos.x_pos][mouse_pos.y_pos].front_wall = 0;
-      maze[mouse_pos.x_pos][mouse_pos.y_pos].back_wall = 1;
-
-      //because its going up 
-      orientation = 1;
-
-      //got rid of checks.push(mouse_pos) here because it does this in floodfill pos_check
-      break;
-      
-    case FLOODFILL_POS_CHECK:
-      break;
-    case FLOODFILL_STACK_CHECK:
-      cell_check = checks.pop(); // pretty sure this gets and removes from top of stack 
-      //if pop doesn't do both does things do checks.peek and the line after do checks.pop
-      
-      //need to checks and update the walls
-      has_walls();
-
-      // if facing top
-      if (orientation == 1){
-        
-      }
-      
-      //if facing right
-      else if (orientation == 2){
-        
-      }
-      //if facing down/bottom
-      else if (orientation == 3){
-        
-      }
-      //if going left
-      //orientation == 0
-      else {
-        
-      }
-
-
-      
-      //left_wall is different thatn maze[][].left_wall
-      //left_wall is global left wall var
-      //mase[][].left_wall is for if in a specific cell there is a left wall
-      
-      
-      //if left wall is open
-      if (left_wall == false){
-        //       maze[cell_check.y_pos][cell_check.x_pos].leftwall = 0;
-        
-        //if cell_check is not 1 greater 
-        if (maze[cell_check.y_pos][cell_check.x_pos].value  != maze[cell_check.y_pos][cell_check.x_pos-1].value +1  ){
-          if (min_val == -10){
-             min_val = maze[cell_check.y_pos][cell_check.x_pos-1].value;
-          }
-          else{
-            if (maze[cell_check.y_pos][cell_check.x_pos-1].value < min_val){
-              min_val = maze[cell_check.y_pos][cell_check.x_pos-1].value;
-            }
-          }
-          neighbor_to_push.y_pos = cell_check.y_pos;
-          neighbor_to_push.x_pos = cell_check.x_pos - 1;
-          checks.push(neighbor_to_push);
-        }
-        //if is 1 greater nothing
-        else{
-          // do nothing
-        }
-      }
-
-      if (left_wall == true){
-        maze[cell_check.y_pos][cell_check.x_pos].left_wall = 1;        
-      }
-
-      //if front wall is open
-      if (front_wall == false){
-         maze[cell_check.y_pos][cell_check.x_pos].front_wall = 0;
-        //if cell_check is not 1 greater 
-        if (maze[cell_check.y_pos][cell_check.x_pos].value  != maze[cell_check.y_pos-1][cell_check.x_pos].value + 1  ){
-          if (min_val == -10){
-             min_val = maze[cell_check.y_pos - 1][cell_check.x_pos].value;
-          }
-          else{
-            if (maze[cell_check.y_pos - 1][cell_check.x_pos].value < min_val){
-              min_val = maze[cell_check.y_pos - 1][cell_check.x_pos].value;
-            }
-          }
-          neighbor_to_push.y_pos = cell_check.y_pos - 1;
-          neighbor_to_push.x_pos = cell_check.x_pos;
-          checks.push(neighbor_to_push);
-        }
-        //if cell check is 1 greater
-        else{
-          //nothing
-        }
-      }
-
-
-      if (front_wall == true){
-        maze[cell_check.y_pos][cell_check.x_pos].front_wall = 1;        
-      }
-      
-
-      //if right wall is open
-      if (right_wall == false){
-         maze[cell_check.y_pos][cell_check.x_pos].right_wall = 0;
-        //if cell_check is not 1 greater 
-        if (maze[cell_check.y_pos][cell_check.x_pos].value  != maze[cell_check.y_pos][cell_check.x_pos+1].value +1  ){
-          if (min_val == -10){
-             min_val = maze[cell_check.y_pos][cell_check.x_pos+1].value;
-          }
-          else{
-            if (maze[cell_check.y_pos][cell_check.x_pos+1].value < min_val){
-              min_val = maze[cell_check.y_pos][cell_check.x_pos+1].value;
-            }
-          }
-          neighbor_to_push.y_pos = cell_check.y_pos;
-          neighbor_to_push.x_pos = cell_check.x_pos + 1;
-          checks.push(neighbor_to_push);
-        }
-        //if cell check is 1 greater
-        else{
-          //nothing
-        }
-      }
-
-
-      if (right_wall == true){
-        maze[cell_check.y_pos][cell_check.x_pos].right_wall = 1;        
-      }
-      
-           
-      //if back wall is open
-      if (back_wall == false){
-         maze[cell_check.y_pos][cell_check.x_pos].back_wall = 0;
-        //if cell_check is not 1 greater 
-        if (maze[cell_check.y_pos][cell_check.x_pos].value  != maze[cell_check.y_pos+1][cell_check.x_pos].value +1  ){
-          if (min_val == -10){
-             min_val = maze[cell_check.y_pos+1][cell_check.x_pos].value;
-          }
-          else{
-            if (maze[cell_check.y_pos+1][cell_check.x_pos].value < min_val){
-              min_val = maze[cell_check.y_pos+1][cell_check.x_pos].value;
-            }
-          }
-          neighbor_to_push.y_pos = cell_check.y_pos + 1;
-          neighbor_to_push.x_pos = cell_check.x_pos;
-          checks.push(neighbor_to_push);
-        }
-        //if cell check is 1 greater
-        else{
-          //nothing
-        }
-      }
-
-
-      if (back_wall == true){
-        maze[cell_check.y_pos][cell_check.x_pos].back_wall = 1;        
-      }
-      
-      //remember above is for only one orientation (going top) need to do above for all orientations
-      
-
-      // if min_val != -10 it means minval was made thus if statement in algorithm 
-      // has to run 
-      if (min_val != -10){
-        //cell_check should work for this //also see if mouse_pos would fit as well but I think it would not 
-        // update for multiple passes through stack check
-        maze[cell_check.y_pos][cell_check.x_pos].value = min_val + 1;
-      }
-      
-
-      //REMEMBER TO RESET MOUSE_POS WHEN YOU GO TO NEXT IDEAL CELL
-      //ADVANCE TO NEXT IDEAL CELL
-      //ALSO REMEMBER TO PUT IN NEW ORIENTATION
-      
-      
-      break;
-    case FLOODFILL_END:
-      halt();
-      break;
-  }
-  
-}
+//    case FLOODFILL_STACK_CHECK:
+////      if (checks.count() != 0){
+////         floodfill_state = FLOODFILL_STACK_CHECK;
+////         //floodfill_state = FLOODFILL_MOVE_TO_NEXT_SPACE;
+////      }
+////      else {
+////        floodfill_state = FLOODFILL_MOVE_TO_NEXT_SPACE;
+////        //floodfill_state = FLOODFILL_POS_CHECK;
+////      }
+//
+//        if (checks.count() != 0){
+//          floodfill_state = FLOODFILL_STACK_CHECK;
+//          min_val = -10;
+//        }
+//        else{
+//          floodfill_state = FLOODFILL_POS_CHECK;
+//        }
+//      
+//      break;
+//      
+////    case FLOODFILL_MOVE_TO_NEXT_SPACE:
+////  //    floodfill_state = FLOODFILL_POS_CHECK;
+////      break;
+//    
+//    
+//    case FLOODFILL_END:
+//      //keep it in end state 
+//      //all it is is 
+//      floodfill_state = FLOODFILL_END;
+//      break;
+//    default:
+//      break;
+//  }
+//  switch(floodfill_state){//actions
+//    case FLOODFILL_INIT:
+//      break;
+//     case FLOODFILL_START:
+//      //sets up goal coord in 2d array
+//      goal_coord.y_pos = 0;
+//      goal_coord.x_pos = 9;
+//
+//      //sets up mouse pos
+//      mouse_pos.y_pos = 9;
+//      mouse_pos.x_pos = 0;
+//
+//      //sets up initial value for all cells in maze
+//      for (int x = 0; x < maze_x_length; ++x){
+//        for (int y = 0; y < maze_y_length; ++y){
+//          maze[y][x].value = abs(goal_coord.y_pos - y) + abs(goal_coord.x_pos - x);
+//        }
+//      }
+//
+//      // can set up initial wall config since all starting cells are the same
+//      maze[mouse_pos.x_pos][mouse_pos.y_pos].left_wall = 1;
+//      maze[mouse_pos.x_pos][mouse_pos.y_pos].right_wall = 1;
+//      maze[mouse_pos.x_pos][mouse_pos.y_pos].front_wall = 0;
+//      maze[mouse_pos.x_pos][mouse_pos.y_pos].back_wall = 1;
+//
+//      //because its going up 
+//      orientation = 1;
+//
+//      //got rid of checks.push(mouse_pos) here because it does this in floodfill pos_check
+//      break;
+//      
+//    case FLOODFILL_POS_CHECK:
+//      break;
+//    case FLOODFILL_STACK_CHECK:
+//      cell_check = checks.pop(); // pretty sure this gets and removes from top of stack 
+//      //if pop doesn't do both does things do checks.peek and the line after do checks.pop
+//      
+//      //need to checks and update the walls
+//      has_walls();
+//
+//      // if facing top
+//      if (orientation == 1){
+//        
+//      }
+//      
+//      //if facing right
+//      else if (orientation == 2){
+//        
+//      }
+//      //if facing down/bottom
+//      else if (orientation == 3){
+//        
+//      }
+//      //if going left
+//      //orientation == 0
+//      else {
+//        
+//      }
+//
+//
+//      
+//      //left_wall is different thatn maze[][].left_wall
+//      //left_wall is global left wall var
+//      //mase[][].left_wall is for if in a specific cell there is a left wall
+//      
+//      
+//      //if left wall is open
+//      if (left_wall == false){
+//        //       maze[cell_check.y_pos][cell_check.x_pos].leftwall = 0;
+//        
+//        //if cell_check is not 1 greater 
+//        if (maze[cell_check.y_pos][cell_check.x_pos].value  != maze[cell_check.y_pos][cell_check.x_pos-1].value +1  ){
+//          if (min_val == -10){
+//             min_val = maze[cell_check.y_pos][cell_check.x_pos-1].value;
+//          }
+//          else{
+//            if (maze[cell_check.y_pos][cell_check.x_pos-1].value < min_val){
+//              min_val = maze[cell_check.y_pos][cell_check.x_pos-1].value;
+//            }
+//          }
+//          neighbor_to_push.y_pos = cell_check.y_pos;
+//          neighbor_to_push.x_pos = cell_check.x_pos - 1;
+//          checks.push(neighbor_to_push);
+//        }
+//        //if is 1 greater nothing
+//        else{
+//          // do nothing
+//        }
+//      }
+//
+//      if (left_wall == true){
+//        maze[cell_check.y_pos][cell_check.x_pos].left_wall = 1;        
+//      }
+//
+//      //if front wall is open
+//      if (front_wall == false){
+//         maze[cell_check.y_pos][cell_check.x_pos].front_wall = 0;
+//        //if cell_check is not 1 greater 
+//        if (maze[cell_check.y_pos][cell_check.x_pos].value  != maze[cell_check.y_pos-1][cell_check.x_pos].value + 1  ){
+//          if (min_val == -10){
+//             min_val = maze[cell_check.y_pos - 1][cell_check.x_pos].value;
+//          }
+//          else{
+//            if (maze[cell_check.y_pos - 1][cell_check.x_pos].value < min_val){
+//              min_val = maze[cell_check.y_pos - 1][cell_check.x_pos].value;
+//            }
+//          }
+//          neighbor_to_push.y_pos = cell_check.y_pos - 1;
+//          neighbor_to_push.x_pos = cell_check.x_pos;
+//          checks.push(neighbor_to_push);
+//        }
+//        //if cell check is 1 greater
+//        else{
+//          //nothing
+//        }
+//      }
+//
+//
+//      if (front_wall == true){
+//        maze[cell_check.y_pos][cell_check.x_pos].front_wall = 1;        
+//      }
+//      
+//
+//      //if right wall is open
+//      if (right_wall == false){
+//         maze[cell_check.y_pos][cell_check.x_pos].right_wall = 0;
+//        //if cell_check is not 1 greater 
+//        if (maze[cell_check.y_pos][cell_check.x_pos].value  != maze[cell_check.y_pos][cell_check.x_pos+1].value +1  ){
+//          if (min_val == -10){
+//             min_val = maze[cell_check.y_pos][cell_check.x_pos+1].value;
+//          }
+//          else{
+//            if (maze[cell_check.y_pos][cell_check.x_pos+1].value < min_val){
+//              min_val = maze[cell_check.y_pos][cell_check.x_pos+1].value;
+//            }
+//          }
+//          neighbor_to_push.y_pos = cell_check.y_pos;
+//          neighbor_to_push.x_pos = cell_check.x_pos + 1;
+//          checks.push(neighbor_to_push);
+//        }
+//        //if cell check is 1 greater
+//        else{
+//          //nothing
+//        }
+//      }
+//
+//
+//      if (right_wall == true){
+//        maze[cell_check.y_pos][cell_check.x_pos].right_wall = 1;        
+//      }
+//      
+//           
+//      //if back wall is open
+//      if (back_wall == false){
+//         maze[cell_check.y_pos][cell_check.x_pos].back_wall = 0;
+//        //if cell_check is not 1 greater 
+//        if (maze[cell_check.y_pos][cell_check.x_pos].value  != maze[cell_check.y_pos+1][cell_check.x_pos].value +1  ){
+//          if (min_val == -10){
+//             min_val = maze[cell_check.y_pos+1][cell_check.x_pos].value;
+//          }
+//          else{
+//            if (maze[cell_check.y_pos+1][cell_check.x_pos].value < min_val){
+//              min_val = maze[cell_check.y_pos+1][cell_check.x_pos].value;
+//            }
+//          }
+//          neighbor_to_push.y_pos = cell_check.y_pos + 1;
+//          neighbor_to_push.x_pos = cell_check.x_pos;
+//          checks.push(neighbor_to_push);
+//        }
+//        //if cell check is 1 greater
+//        else{
+//          //nothing
+//        }
+//      }
+//
+//
+//      if (back_wall == true){
+//        maze[cell_check.y_pos][cell_check.x_pos].back_wall = 1;        
+//      }
+//      
+//      //remember above is for only one orientation (going top) need to do above for all orientations
+//      
+//
+//      // if min_val != -10 it means minval was made thus if statement in algorithm 
+//      // has to run 
+//      if (min_val != -10){
+//        //cell_check should work for this //also see if mouse_pos would fit as well but I think it would not 
+//        // update for multiple passes through stack check
+//        maze[cell_check.y_pos][cell_check.x_pos].value = min_val + 1;
+//      }
+//      
+//
+//      //REMEMBER TO RESET MOUSE_POS WHEN YOU GO TO NEXT IDEAL CELL
+//      //ADVANCE TO NEXT IDEAL CELL
+//      //ALSO REMEMBER TO PUT IN NEW ORIENTATION
+//      
+//      
+//      break;
+//    case FLOODFILL_END:
+//      halt();
+//      break;
+//  }
+//  
+//}
 
 
 
