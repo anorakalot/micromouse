@@ -1,17 +1,14 @@
 unsigned long halt_delay = 200;//350,300,400
 
-
 unsigned long prev_encoder_tick;
 
 bool error_check;
 unsigned long prev_timer = 0;
 const long error_check_interval = 8000;//12000
 
-
 bool first_check = true;
 
 int random_choice = 0;
-
 
 //GLOBAL FOR PID
 
@@ -36,25 +33,26 @@ double base_speed =100 ; // 200,150,125,150,200,150,125,100,80,90,88
 double base_speed_l = 100;
 double base_speed_r =90 ; // based off testing to see which base_speeds go straightest ,93,94
 
-double kp = 0.12;//0.50,0.030,0.50, 0.90,0.40,0.36,0.30,0.20,0.10,0.05,0.20,0.10,0.20,0.15,0.10,0.12(good),0.50(overshoots)
-double kd = 0.30;//0.40,0.30,0.05,0.10,005,0.08,0.06,0.08,0.10(good),0.12,0.50
+double kp = 0.25;//0.50,0.030,0.50, 0.90,0.40,0.36,0.30,0.20,0.10,0.05,0.20,0.10,0.20,0.15,0.10,0.12(good),0.50(overshoots),0.30
+double kd = 0.25;//0.40,0.30,0.05,0.10,005,0.08,0.06,0.08,0.10(good),0.12,0.50,0.30,0
 double ki = 0;//0.00001,0.00001
 double error = 0;
 double prev_error = 0;
 double p_control = 0;
 double d_control = 0;
 double i_control = 0;
-
+  //adding to sensorReading_45 in pid_control_two _45_walls
+double right_45_offset_for_pid = 50;
 unsigned long error_buildup;
 
 double reset_error = 0;
 
 
-int middle_point_l = 120;//31,34,36,34,40,37,42,130
+int middle_point_l = 170;//31,34,36,34,40,37,42,130,120,180,140,150,160
 int middle_point_90_l = 40;
 //double base_speed = 200; // 200,150,125,150
-double kp_l = 0.12;//0.40,0.30,0.40,0.30,0.10,0.15
-double kd_l = 0.12;//0.40,0.30,0.10,0.06
+double kp_l = 0.50;//0.40,0.30,0.40,0.30,0.10,0.15,0.25
+double kd_l = 0.25;//0.40,0.30,0.10,0.06,0.25
 double ki_l = 0;//0.00001
 double error_l = 0;
 double prev_error_l = 0;
@@ -65,11 +63,11 @@ unsigned long error_buildup_l;
 double reset_error_l = 0;
 
 
-int middle_point_r = 160;//38,40,50,45,48,120
+int middle_point_r = 140;//38,40,50,45,48,120,160,140
 int middle_point_90_r = 40;
 //previous kp_r is same as kp_l because the sensors are so similar
-double kp_r = 0.15;//0.40,0.30,0.12
-double kd_r = 0.15;//0.40 0.30,0.20,0.12
+double kp_r = 0.45;//0.40,0.30,0.12,0.15,0.25,0.50
+double kd_r = 0.20;//0.40 0.30,0.20,0.12,0.15,0.25,0.25
 double ki_r = 0;//0.00001
 double error_r = 0;
 double prev_error_r = 0;
@@ -172,7 +170,7 @@ volatile unsigned long right_count = 0;
 
 //for go one cell
 volatile unsigned long curr_count_cell = 0;
-unsigned long go_one_cell_length = 1402;//1400,1410(had done good)
+unsigned long go_one_cell_length = 1890;//1400,1410(had done good),1600,1800,2000,1900,1850,1875,1880
 
 
 // Motor  Tick Enum States
@@ -184,7 +182,6 @@ enum  MOTOR_STATES   {  MOTOR_INIT  ,  GO_ONE_CELL , CHOOSE_MOVE, TURN_REVERSE_L
 int sensor_left = A2;
 int sensorReading_left;
 int sensor_left_power = 0;
-
 
 //MIDDLE
 int sensor_middle = A1 ;
@@ -236,9 +233,9 @@ double avg_45_right_wall_reading;
 int front_wall_thres = 100;//90
 int left_wall_thres = 120;//90
 int right_wall_thres = 100;//90
-int back_wall_thres = 90;
-int left_45_wall_thres = 65;
-int right_45_wall_thres = 65;
+int back_wall_thres = 100;//90
+int left_45_wall_thres = 100;//65
+int right_45_wall_thres = 100;//65
 //comparison is > thres
 int correct_mouse_thres = 200;//300,280,230,210
 
@@ -304,8 +301,8 @@ double g_conv_factor= 9.81;
 
 //gyro turn values
 // < than the values below
-double left_turn_length = 140;//80(too low),90 (a little too high),88,85,80(too high ???)//78,130
-double right_turn_length = 140;//80(too low),81(overshoots sometimes)//80,130
+double left_turn_length = 160;//80(too low),90 (a little too high),88,85,80(too high ???)//78,130,140
+double right_turn_length = 180;//80(too low),81(overshoots sometimes)//80,130,160
 
 
 //bool go_one_cell_happening = 0;

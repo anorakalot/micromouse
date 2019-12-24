@@ -79,7 +79,7 @@ void readIR(){
   sensorReading_45_left -= error_45_left;
   sensorReading_45_right -= error_45_right;
   //to made pid go more in the middle
-  sensorReading_45_right -= right_45_offset;//15
+  //sensorReading_45_right -= right_45_offset;//15
 
   Serial.println("Sensor Reading with Minus Errors: ");
   Serial.print( "LEFT : ");

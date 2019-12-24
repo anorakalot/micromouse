@@ -68,10 +68,10 @@ void reverse(double left_speed, double right_speed) {
   digitalWrite(turn_on_en_1, HIGH);
   digitalWrite(turn_on_en_2, HIGH);
 
-  digitalWrite(motor_1_logic_1, left_speed);
+  analogWrite(motor_1_logic_1, left_speed);
   digitalWrite(motor_1_logic_2, LOW);
 
-  digitalWrite(motor_2_logic_1, right_speed);
+  analogWrite(motor_2_logic_1, right_speed);
   digitalWrite(motor_2_logic_2, LOW);
 
 }
@@ -354,11 +354,13 @@ void pid_control_two_45_walls(){
     reset_error = 0;
     error_buildup = 0;
   }
+
+  sensorReading_45_right += right_45_offset_for_pid;
   
   //error value
-  //curr_time = millis();
-  //diff_time = curr_time - last_time;
-  //if (diff_time >= sample_time){
+  curr_time = millis();
+  diff_time = curr_time - last_time;
+  if (diff_time >= sample_time){
     
     error = abs(sensorReading_45_left - sensorReading_45_right);
     if (error > 100){
@@ -417,100 +419,13 @@ void pid_control_two_45_walls(){
     Serial.println("Motor_RIGHT");
     Serial.println(motor_right);
       prev_error = error;
-   //   last_time = curr_time;
-  // } //end of if sample time 
+      last_time = curr_time;
+   } //end of if sample time 
 }
 
 
 
 
-//void pid_control_two_90_walls(){
-//  //gets reading for pid
-//  readIR();
-//
-//
-//  
-//  reset_error ++;
-//  //resets reset error which is used for i part of pid  which takes in error from previous cycles
-//  if (reset_error > 10000){
-//    reset_error = 0;
-//    error_buildup = 0;
-//  }
-//  
-//  //error value
-//  error = abs(sensorReading_left - sensorReading_right);
-//  if (error < 600){
-//    error = 300;
-//  }
-//
-////  I THINK THIS IS TO PREVENT DRASTIC CHANGES IN MOTOR 
-////  ALTHOUGH SINCE MY IR'S ARE MUCH BETTER NOW I THINK I SHOULD PROBABLY EITHER CHANGE OR GET RID OF THIS
-////  if (error > 300){//250
-////    error = 150;//175
-////  }
-////  
-//  //p control
-//  p_control = error * kp;
-//
-//
-//  //i control
-//  error_buildup += error;
-//  i_control = error_buildup * ki;
-//
-//
-//  //d control
-//
-//  d_control = abs(error - prev_error) * kd;
-//
-//
-//
-//  //too close left
-//  if (sensorReading_left > sensorReading_right) {
-//
-//
-////    motor_left = base_speed + (p_control + d_control + i_control); //
-////    motor_right = base_speed - (p_control + d_control + i_control); //
-//
-//    motor_left = base_speed + (p_control ); //
-//    motor_right = base_speed - (p_control); //
-//    
-//    
-//    //    motor_left += (p_control + d_control);
-//    //    motor_right -= (p_control + d_control);
-//
-//    //
-//    prev_error = error;
-//    return;
-//  }
-//
-//  //too close right
-//  else if (sensorReading_right > sensorReading_left) {
-//
-//
-//
-//
-//
-////    motor_left = base_speed - (p_control  + d_control + i_control); //
-////    motor_right = base_speed +  (p_control  + d_control + i_control); //
-////    
-//    motor_left = base_speed - (p_control ); //
-//    motor_right = base_speed + (p_control ); //
-//    
-//    
-//    //    motor_left -= (p_control + d_control);
-//    //    motor_right += (p_control + d_control);
-//    prev_error = error;
-//    return;
-//  }
-//  //equal to each other
-//  else {
-//    //nothing
-//    //motor_left and motor_right stay the same
-//    prev_error = error;
-//    return;
-//  }
-//
-//}
 
 //NEED TO TEST THIS
 //WILL RUN INTO ERRORS IF COUNT GOES UP DURING TURNS THUS MESSING UP THE CURR_SPEED CALCULATIONS
@@ -578,53 +493,48 @@ void pid_control(){
   has_walls_pid();
   //testing
   
-  pid_control_two_45_walls();
+  //pid_control_two_45_walls();
   //pid_control_one_wall_l();
   //pid_control_one_wall_r();
   //pid_control_enc();
   //pid_control_two_90_walls();
 
-
-  
   
 
   //using 45 deg sensors
-//  if (left_45_wall == true && right_45_wall == true) {
-//    
-//    pid_control_two_45_walls();
-//    return;
-//  }
-//  else if (left_45_wall == true &&  right_45_wall == false) {
-//    pid_control_one_wall_l();
-//    return;
-//  }
-//  else if (left_45_wall == false && right_45_wall == true) {
-//    pid_control_one_wall_r();
-//    return;
-//  }
-//
-//  //go off encoders if no walls
-//  // if encoders are really good go off of encoders even more
-//  //otherwise go off of last values
-//  else if (left_45_wall && right_45_wall == false) {
-//    //pi_control_enc();
-//    forward(motor_left,motor_right);
-//    //pid_control_two_45_walls();
-//
-//    //pid_control_one_wall_r();
-//    return;
-//  }
-//  else {
-//    pid_control_two_45_walls();
-//    return;
-//  }
+  if (left_45_wall == true && right_45_wall == true) {
+    
+    pid_control_two_45_walls();
+    return;
+  }
+  else if (left_45_wall == true &&  right_45_wall == false) {
+    pid_control_one_wall_l();
+    return;
+  }
+  else if (left_45_wall == false && right_45_wall == true) {
+    pid_control_one_wall_r();
+    return;
+  }
 
-  
+  //go off encoders if no walls
+  // if encoders are really good go off of encoders even more
+  //otherwise go off of last values
+  else if (left_45_wall && right_45_wall == false) {
+    //pi_control_enc();
+    forward(motor_left,motor_right);
+    //pid_control_two_45_walls();
+
+    //pid_control_one_wall_r();
+    return;
+  }
+  else {
+    pid_control_two_45_walls();
+    return;
+  }
 
 //I GOT RID OF 90 degree sensor PID to shorten code 
 //if I need it back look at old github versions to get back the code 
 //but in the meantime it was just taking up space
-
 
   return;
 }
@@ -660,10 +570,14 @@ void go_one_cell(){
   
   //unsigned long curr = right_count;//1490,1480,1485,1487(really goodd but go to 1486 to mitigate going over),1400,1440,1460(sometimes over)
   //unsigned long curr = left_count;
+  
+  //turns off interrupts to prevent interrupt from runnin while getting count value
   cli();
   //unsigned long curr = right_count;
   //curr_count_cell = right_count;
   curr_count_cell = left_count;
+
+  //turns interrupt back on to 
   sei();
   //while (abs(right_count - curr_count_cell) < go_one_cell_length ) { //945, 1400,1380,1438,1000,400,200,100,1000,1400(a little off),1500,1430,1460,1480 (too much),1470,1410,1420,1405                                                                               400,500,600,650,750,1000,1100,1200  ,1300  , 952 , 930 , 912,908(best so far) , 905 , 890 , 908 ,912,920,930,945,960,1300,1400,1450,1470,1474,1480,1490,1510,1511
   while(abs(left_count - curr_count_cell) <go_one_cell_length ){ //1450,1465,1450    readIR();                   //900,500,600,700,800,900,1000,1070,1100, ,1150,1160, 1200 , 1130,1000 , 900    ,1000 , 945  ,800 ,850 , 880 , 885,895 , 915 ,925(over),920(both) , close 905 ,980 ,960(closest)
@@ -768,11 +682,13 @@ void correct_mouse(){
 void go_one_cell_reverse(){
   //off encoders
   halt_until(halt_delay);  //1455
+  //turns off interrupts to prevent interrupt from runnin while getting count value
   cli();
-  //unsigned long curr = right_count;
-  curr_count_cell = right_count;
+  curr_count_cell = left_count;
+
+  //turns interrupt back on to 
   sei();
-  while (abs(right_count - curr_count_cell) < 1420 ) {                                                                                
+  while (abs(left_count - curr_count_cell) < go_one_cell_length ) {                                                                                
     pid_control();
     
     reverse(motor_left,motor_right);
@@ -795,7 +711,7 @@ void can_correct_func(){
     //correct_mouse_close();
     //correct_mouse();
     can_correct = 0;
-  }
+   }
 }
 
 
@@ -905,10 +821,12 @@ void motor_tick(){
               can_correct = 1;
               readIR();
                 if (sensorReading_right > sensorReading_left){
-                motor_state = TURN_REVERSE_L;
+                //motor_state = TURN_REVERSE_L;
+                motor_state = TURN_REVERSE_R;
                 }
                 else if (sensorReading_right< sensorReading_left){
-                motor_state = TURN_REVERSE_R;
+                 //motor_state = TURN_REVERSE_R
+                 motor_state = TURN_REVERSE_L;
                 }
       
                 else{
