@@ -145,11 +145,13 @@ void loop(){
 
 //main sequence 
   //readIR();
-  motor_tick(); 
-  delay(600);
+//  motor_tick(); 
+//  delay(600);
+
   
-  //pid_control_two_45_walls();
+  //pid_control();
   //forward(motor_left,motor_right);
+  //reverse(motor_left,motor_right);
   //delay(1000);
   
   

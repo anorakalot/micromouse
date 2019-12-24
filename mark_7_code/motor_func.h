@@ -245,7 +245,7 @@ void forward_until(int left_speed, int right_speed, unsigned long stop_time) {
 void reverse_until(int left_speed, int right_speed, unsigned long stop_time) {
   halt_until(halt_delay);
   unsigned long curr = millis();
-  while (millis() - curr < stop_time) {
+  while (abs(millis() - curr) < stop_time) {
   reverse(left_speed,right_speed);
   }
   reverse(0,0);
@@ -657,26 +657,49 @@ void correct_mouse_close(){
 
 }
 
+//void correct_mouse(){
+//  //reverse(motor_left, motor_right);
+//  //delay(200);//1000 is too long
+//  reverse(0,0);
+//  halt_until(halt_delay);
+//  readIR();
+//  while(sensorReading_middle < correct_mouse_thres){
+//    //pid_control();
+//    pid_control();
+//    if (sensorReading_middle > correct_mouse_thres){
+//      halt();
+//      break;
+//    }
+//    forward(motor_left,motor_right);  
+//    
+//    //readIR();
+//  }
+//  forward(0,0);
+//  halt_until(halt_delay);  
+//}
+
 void correct_mouse(){
-  //reverse(motor_left, motor_right);
-  //delay(200);//1000 is too long
-  reverse(0,0);
   halt_until(halt_delay);
   readIR();
-  while(sensorReading_middle < correct_mouse_thres){
+  //while(sensorReading_middle < correct_mouse_thres){
+  if(sensorReading_middle > 200){
     //pid_control();
-    pid_control();
-    if (sensorReading_middle > correct_mouse_thres){
-      halt();
-      break;
+    reverse_until(motor_left,motor_right,800);
+    while(sensorReading_middle<150 ){
+      pid_control();
+      forward(motor_left,motor_right);    
     }
-    forward(motor_left,motor_right);  
-    
-    //readIR();
-  }
-  forward(0,0);
-  halt_until(halt_delay);  
+      halt_until(halt_delay);
+   }//end of close if
+  else if (sensorReading_middle < 120){
+    while(sensorReading_middle < 150){
+      pid_control();
+      forward(motor_left,motor_right);
+    }
+    halt_until(halt_delay);
+  }// end of far away if
 }
+
 
 
 void go_one_cell_reverse(){
