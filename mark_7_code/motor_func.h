@@ -448,9 +448,11 @@ void pid_control_enc(){
   p_control_enc_l = error_l_enc * kp_enc;
   p_control_enc_r = error_r_enc * kp_enc;
 
-  d_control_enc_l = error_l_enc - prev_error_l_enc;
-  d_control_enc_r = error_r_enc - prev_error_r_enc;
+  d_control_enc_l = abs(error_l_enc - prev_error_l_enc);
+  d_control_enc_r = abs(error_r_enc - prev_error_r_enc);
 
+  d_control_enc_l *= kd_enc;
+  d_control_enc_r *= kd_enc;
   
   if (left_wanted_speed > curr_left_speed){
     motor_left = base_speed  + (p_control_enc_l + d_control_enc_l);
@@ -464,12 +466,10 @@ void pid_control_enc(){
 
   if (right_wanted_speed > curr_right_speed){
     motor_right = base_speed  + (p_control_enc_r + d_control_enc_r);
-    
   }
 
   else if (right_wanted_speed < curr_right_speed){
     motor_right = base_speed - (p_control_enc_r + d_control_enc_r);
-    
   }
 
   //for getting curr speed;
@@ -520,8 +520,8 @@ void pid_control(){
   // if encoders are really good go off of encoders even more
   //otherwise go off of last values
   else if (left_45_wall && right_45_wall == false) {
-    //pi_control_enc();
-    forward(motor_left,motor_right);
+    pid_control_enc();
+    //forward(motor_left,motor_right);
     //pid_control_two_45_walls();
 
     //pid_control_one_wall_r();
@@ -862,7 +862,9 @@ void motor_tick(){
             else{
               motor_state = GO_ONE_CELL;
             }
-     
+
+//              motor_state = GO_ONE_CELL;
+      
       
       //testing
 //      if (front_wall == true) {
@@ -878,7 +880,6 @@ void motor_tick(){
 //        motor_state = GO_ONE_CELL;
 //      }
 
-      //motor_state = GO_ONE_CELL;
       //motor_state = GO_ONE_CELL_REVERSE;
       //motor_state = REVERSE;
       break;
