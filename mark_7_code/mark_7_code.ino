@@ -147,14 +147,23 @@ void loop(){
   //readIR();
   motor_tick(); 
   delay(600);
-
+    
   
   //pid_control();
   //forward(motor_left,motor_right);
-  //reverse(motor_left,motor_right);
+  //reverse_until(motor_left,motor_right,1000);
+  //halt_until(800);
   //delay(1000);
-  
-  
+  //analog_off();
+  //delay(10);
+//  forward(base_speed,base_speed);
+//  delay(1000);
+//  halt_until(halt_delay);
+////  analog_off();
+//  reverse(base_speed-6,base_speed);
+//  delay(1000);
+//  halt_until(halt_delay);
+  //analog_off();
 //forward(50,255);
 //left_turn_until();
 //right_turn_until();

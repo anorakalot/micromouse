@@ -170,7 +170,7 @@ volatile unsigned long right_count = 0;
 
 //for go one cell
 volatile unsigned long curr_count_cell = 0;
-unsigned long go_one_cell_length = 1890;//1400,1410(had done good),1600,1800,2000,1900,1850,1875,1880
+unsigned long go_one_cell_length = 1900;//1400,1410(had done good),1600,1800,2000,1900,1850,1875,1880,1890
 
 
 // Motor  Tick Enum States
@@ -237,7 +237,7 @@ int back_wall_thres = 100;//90
 int left_45_wall_thres = 100;//65
 int right_45_wall_thres = 100;//65
 //comparison is > thres
-int correct_mouse_thres = 200;//300,280,230,210
+int correct_mouse_thres = 260;//300,280,230,210,200(worked good)
 
 
 ////Strings for printing in ir_tick

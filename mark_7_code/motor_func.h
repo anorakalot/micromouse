@@ -164,6 +164,17 @@ void right_turn(int turn_speed) {
   digitalWrite(motor_2_logic_1, turn_speed);
   digitalWrite(motor_2_logic_2, LOW);
 }
+void analog_off(){
+  digitalWrite(turn_on_en_1, HIGH);
+  digitalWrite(turn_on_en_2, HIGH);
+  
+  
+  analogWrite(motor_1_logic_1, LOW);
+  analogWrite(motor_1_logic_2,LOW );
+  
+  analogWrite(motor_2_logic_1, LOW);
+  analogWrite(motor_2_logic_2, LOW );
+}
 
 void forward(int left_speed, int right_speed) {
 
@@ -177,7 +188,6 @@ void forward(int left_speed, int right_speed) {
   
   digitalWrite(motor_2_logic_1, LOW);
   analogWrite(motor_2_logic_2, right_speed );
-
 }
 
 //GYROSCOPE turn functions
@@ -245,7 +255,7 @@ void forward_until(int left_speed, int right_speed, unsigned long stop_time) {
 void reverse_until(int left_speed, int right_speed, unsigned long stop_time) {
   halt_until(halt_delay);
   unsigned long curr = millis();
-  while (abs(millis() - curr) < stop_time) {
+  while (millis() - curr < stop_time) {
   reverse(left_speed,right_speed);
   }
   reverse(0,0);
@@ -258,8 +268,13 @@ void tune_pid_constants(){
   //sample_diff_time = sample_time / conv_to_seconds;
   ki *= sample_time;
   kd /= sample_time; 
+  
   kd_l /= sample_time;
   kd_r /= sample_time;
+  
+  ki_enc *= sample_time;
+  kd_enc /= sample_time;
+  
 }
 
 //TEST THE ENCODER PID
@@ -436,7 +451,10 @@ void pid_control_enc(){
   curr_left_count = left_count;
   curr_right_count = right_count;
   sei();
-  
+
+  curr_time = millis();
+  diff_time = curr_time-last_time;
+  if (diff_time >= sample_time){
   //take derivative to get curr speed
   curr_left_speed = curr_left_count - prev_left_count;
   curr_right_speed = curr_right_count - prev_right_count;
@@ -479,7 +497,8 @@ void pid_control_enc(){
   //for d_control
   prev_error_l_enc = error_l_enc;
   prev_error_r_enc = error_r_enc;
-  
+  last_time = curr_time;
+  }//end of if sample time is met
   
 }
 
@@ -557,7 +576,7 @@ void go_one_cell(){
   //    //NEED TO MAKE SURE THIS DOESN'T MESS UP CONTROL GOING FORWARD
   //    pid_control();
   //
-  //    //nforward();
+  //    //forward();
   //    forward(motor_left, motor_right);
   ////    read_distance();
   //  }
@@ -597,25 +616,8 @@ void go_one_cell(){
     //reverse(motor_left,motor_right);
     print_encoder_count();
   }
-  //probably uncomment this below
-  //forward(0,0);
   halt_until(halt_delay);
 }
-
-
-
-void reverse_until( unsigned long stop_time) {
-
-  unsigned long curr = millis();
-  while (millis() - curr < stop_time) {
-    pid_control();
-    reverse(motor_left, motor_right);
-
-  }
-}
-
-
-
 
 
 //correct mouse if theirs a front wall in front
@@ -644,7 +646,7 @@ void correct_mouse_close(){
   readIR();
   //if (hasfrontwall(){
   halt_until(halt_delay);
-  while (sensorReading_middle >90) {//50,54,48,45,70(might be good too),68,86,90 ,
+  while (sensorReading_middle >90) {//50,54,48,45,70(might be good too),68,86,90
     pid_control();
     //reverse(motor_left - 20, motor_right - 20);
     reverse(motor_left,motor_right);
@@ -682,18 +684,31 @@ void correct_mouse(){
   halt_until(halt_delay);
   readIR();
   //while(sensorReading_middle < correct_mouse_thres){
-  if(sensorReading_middle > 200){
+  if(sensorReading_middle > 330){//200 //too close
     //pid_control();
-    reverse_until(motor_left,motor_right,800);
-    while(sensorReading_middle<150 ){
+    //halt_until(halt_delay);
+    analog_off();
+    while(sensorReading_middle >250){
+      reverse(base_speed-6,base_speed);
+      delay(400);//800 too long
+      readIR();
+    }
+    //reverse(0,0);
+    //reverse_until(motor_left,motor_right,800);
+    analog_off();
+    halt_until(halt_delay);
+    while(sensorReading_middle < 280){//150,250,310
       pid_control();
+      //readIR();
       forward(motor_left,motor_right);    
     }
       halt_until(halt_delay);
    }//end of close if
-  else if (sensorReading_middle < 120){
-    while(sensorReading_middle < 150){
+  else if (sensorReading_middle < 250){//   //too far
+    //halt_until(halt_delay);
+    while(sensorReading_middle < 280){//150,310
       pid_control();
+      //readIR();
       forward(motor_left,motor_right);
     }
     halt_until(halt_delay);
@@ -732,7 +747,7 @@ void can_correct_func(){
   if (can_correct == 1) {
     //correct_mouse_far();
     //correct_mouse_close();
-    //correct_mouse();
+    correct_mouse();
     can_correct = 0;
    }
 }
@@ -843,13 +858,15 @@ void motor_tick(){
             else if (front_wall == true && left_wall == true && right_wall == true){
               can_correct = 1;
               readIR();
+                //reversed direction taken because doing the opposite stops back from hitting the wall more often 
+                //probably because it has more room to manuever with the side opposite having more space
                 if (sensorReading_right > sensorReading_left){
-                //motor_state = TURN_REVERSE_L;
-                motor_state = TURN_REVERSE_R;
+                motor_state = TURN_REVERSE_L;
+                //motor_state = TURN_REVERSE_R; //original
                 }
                 else if (sensorReading_right< sensorReading_left){
-                 //motor_state = TURN_REVERSE_R
-                 motor_state = TURN_REVERSE_L;
+                 motor_state = TURN_REVERSE_R;
+                 //motor_state = TURN_REVERSE_L; //original
                 }
       
                 else{
