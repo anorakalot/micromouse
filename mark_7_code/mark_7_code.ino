@@ -113,7 +113,7 @@ void setup(){
   gyro_init(); //sets up gyro
   gyro_tick();//sets up gyro read function
   motor_init();//sets up motor tick state  
-  tune_pid_constants();
+  tune_pid_constants(); // does ki * sample time and kd / sample time for pid because its in the math formula for pid
   wait_until_start_hand();//waits until hand in front of 
   
   
@@ -147,7 +147,7 @@ void loop(){
   //readIR();
   motor_tick(); 
   delay(600);
-    
+  
   
   //pid_control();
   //forward(motor_left,motor_right);

@@ -105,14 +105,14 @@ unsigned long right_wanted_speed = 200;//200
 
 double kp_enc = 0.10;//0.50
 double kd_enc = 0.10;//0.30
-double ki_enc = 0.00001;
+double ki_enc = 0.10;//0.00001
 
 double error_l_enc = 0;
 double error_r_enc = 0;
 
 //to keep track of prev count so i can get curr speed
-double prev_left_count;
-double prev_right_count;
+double prev_left_count = 0;
+double prev_right_count = 0;
 
 double prev_error_l_enc = 0;
 double prev_error_r_enc = 0;
@@ -127,8 +127,9 @@ double d_control_enc_r = 0;
 //double i_control_enc_l = 0;
 //double i_control_enc_r = 0;
 //
-//unsigned long error_buildup_enc;
-//double reset_error_enc = 0;
+unsigned long error_buildup_enc_l;
+unsigned long error_buildup_enc_r;
+double reset_error_enc = 0;
 
 
 //may not need these
@@ -302,7 +303,7 @@ double g_conv_factor= 9.81;
 //gyro turn values
 // < than the values below
 double left_turn_length = 160;//80(too low),90 (a little too high),88,85,80(too high ???)//78,130,140
-double right_turn_length = 180;//80(too low),81(overshoots sometimes)//80,130,160
+double right_turn_length = 185;//80(too low),81(overshoots sometimes)//80,130,160,180
 
 
 //bool go_one_cell_happening = 0;

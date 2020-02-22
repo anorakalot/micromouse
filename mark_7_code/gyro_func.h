@@ -18,7 +18,7 @@ void setup_gyro(){
 //read angle gyro sum and angle is reset each time a new turn is started to not have constantly increasing error
 void read_angle(){
   gyro.read();
-  gyro_raw_data = ((int)gyro.g.z);
+  gyro_raw_data = ((int)gyro.g.z); //get raw data from the z aaxis
   gyro_dps = (gyro_raw_data * gyro_raw_dps_conversion_factor) / 1000; //divided by 1000 because if not it's in mdps not dps
   gyro_sum += (gyro_dps /50); // divided / multipled by 0.05 because thats the sampling period of 50 ms delay
   gyro_angle = gyro_sum; 
@@ -30,7 +30,8 @@ void read_angle(){
 //needed to add accel_force_sum because its integrated just like they gyro
     
 
-  //complementary filter
+  //complementary filter // complementary is because gryo good short term but not long term and accelerometer good long term and not short term
+  //easiest filter without having to do kaplan filter math
  // gyro_angle = (0.97 * gyro_angle) + (0.03 * accel_force_data);
  
   

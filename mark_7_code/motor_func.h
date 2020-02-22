@@ -7,6 +7,10 @@ void left_encoder_event(){
   if (motor_state == GO_ONE_CELL || motor_state == GO_ONE_CELL_REVERSE){
   left_count ++;
   }
+  //test to make sure resetting it doesn't mess up encoder pid
+  if (left_count >  400000000){
+    left_count = 0;
+  }
 //  left_count ++;
 }
 
@@ -19,6 +23,10 @@ void left_encoder_event(){
 void right_encoder_event(){
   if (motor_state == GO_ONE_CELL || motor_state == GO_ONE_CELL_REVERSE){
   right_count ++; 
+  }
+  //test to make sure resetting it doesn't mess up encoder pid
+  if (right_count >  400000000){
+    right_count = 0;
   }
 //  right_count ++;
 }
@@ -45,8 +53,6 @@ void forward(){
   
   digitalWrite(motor_2_logic_1, LOW);
   digitalWrite(motor_2_logic_2, HIGH);
-
-
 }
 
 
@@ -92,6 +98,7 @@ void halt(){
 
 }
 
+//halts for a certain time in millis
 void halt_until(unsigned long stop_time ) {
   unsigned long curr = millis();
   while (abs(millis() - curr) < stop_time) {
@@ -223,53 +230,61 @@ void right_turn_until(){ //330,240,220
 
 
 void reverse_turn_until_r(){ //330,240,220
-  gyro_angle = 0;
-  gyro_sum = 0;
+  //don't need to set them to zero if they're set to zero in the functions called below since the values are global
+  //gyro_angle = 0;
+  //gyro_sum = 0;
   right_turn_until();
   delay(100);
   right_turn_until();
 
 }
+
 void reverse_turn_until_l(){
-  gyro_angle = 0;
-  gyro_sum = 0;
+  //don't need to set them to zero if they're set to zero in the functions called below since the values are global
+  //gyro_angle = 0;
+  //gyro_sum = 0;
 
   left_turn_until();
   delay(100);
   left_turn_until();
 
 }
-
-//only uses this forward until function for certain special times when going forward
-void forward_until(int left_speed, int right_speed, unsigned long stop_time) {
-  halt_until(halt_delay);
-  unsigned long curr = millis();
-  while (millis() - curr < stop_time) {
-    forward(left_speed,right_speed);
-  }
-  forward(0,0);
-  halt_until(halt_delay);
-}
-
-//only uses this forward until function for certain special times when going forward
-void reverse_until(int left_speed, int right_speed, unsigned long stop_time) {
-  halt_until(halt_delay);
-  unsigned long curr = millis();
-  while (millis() - curr < stop_time) {
-  reverse(left_speed,right_speed);
-  }
-  reverse(0,0);
-  halt_until(halt_delay);
-}
+//commented below functions out since I don't use them actually
+//
+////only uses this forward until function for certain special times when going forward
+////not actually sure I even use this function i checked correct mouse and it doesn't use it
+//void forward_until(int left_speed, int right_speed, unsigned long stop_time) {
+//  halt_until(halt_delay);
+//  unsigned long curr = millis();
+//  while (millis() - curr < stop_time) {
+//    forward(left_speed,right_speed);
+//  }
+//  forward(0,0);
+//  halt_until(halt_delay);
+//}
+//
+////only uses this reverse until function for certain special times when going reverse like correction
+////not actually sure I even use this function i checked correct mouse and it doesn't use it
+//void reverse_until(int left_speed, int right_speed, unsigned long stop_time) {
+//  halt_until(halt_delay);
+//  unsigned long curr = millis();
+//  while (millis() - curr < stop_time) {
+//  reverse(left_speed,right_speed);
+//  }
+//  reverse(0,0);
+//  halt_until(halt_delay);
+//}
 
 //does the one calculation for pid values because with new code pid should run at regular intervals
 //this should run only once in void setup unless sample time changes mid run
+//pid = (kp * e(t)) + (ki * integral e(t) * d(t)) + (kd * derivative e(t) * 1/dt)
 void tune_pid_constants(){
   //sample_diff_time = sample_time / conv_to_seconds;
   ki *= sample_time;
   kd /= sample_time; 
   
   kd_l /= sample_time;
+  
   kd_r /= sample_time;
   
   ki_enc *= sample_time;
@@ -363,12 +378,6 @@ void pid_control_two_45_walls(){
 //  regulateSensor_45_R();
 
   
-  reset_error ++;
-  //resets reset error which is used for i part of pid  which takes in error from previous cycles
-  if (reset_error > 10000){
-    reset_error = 0;
-    error_buildup = 0;
-  }
 
   sensorReading_45_right += right_45_offset_for_pid;
   
@@ -376,7 +385,13 @@ void pid_control_two_45_walls(){
   curr_time = millis();
   diff_time = curr_time - last_time;
   if (diff_time >= sample_time){
-    
+    reset_error ++;
+    //resets reset error which is used for i part of pid  which takes in error from previous cycles
+    if (reset_error > 10000){
+      reset_error = 0;
+      error_buildup = 0;
+    }
+
     error = abs(sensorReading_45_left - sensorReading_45_right);
     if (error > 100){
       error = 100;
@@ -433,8 +448,8 @@ void pid_control_two_45_walls(){
     Serial.println(motor_left);
     Serial.println("Motor_RIGHT");
     Serial.println(motor_right);
-      prev_error = error;
-      last_time = curr_time;
+     prev_error = error;
+     last_time = curr_time;
    } //end of if sample time 
 }
 
@@ -446,110 +461,144 @@ void pid_control_two_45_walls(){
 //WILL RUN INTO ERRORS IF COUNT GOES UP DURING TURNS THUS MESSING UP THE CURR_SPEED CALCULATIONS
 //TEST TO SEE IF IT WORKS GOING FORWARD ONLY FIRST
 //does both motors 
+//pid = (kp * e(t)) + (ki * integral e(t) * d(t)) + (kd * derivative e(t) * 1/dt)
 void pid_control_enc(){
-  cli();
-  curr_left_count = left_count;
-  curr_right_count = right_count;
-  sei();
 
   curr_time = millis();
   diff_time = curr_time-last_time;
+  
   if (diff_time >= sample_time){
-  //take derivative to get curr speed
-  curr_left_speed = curr_left_count - prev_left_count;
-  curr_right_speed = curr_right_count - prev_right_count;
 
-  //get error from difference between wanted speed and curr speed
-  error_l_enc = abs(curr_left_speed - left_wanted_speed);
-  error_r_enc = abs(curr_right_speed - right_wanted_speed);
+    cli();
+    curr_left_count = left_count;
+    curr_right_count = right_count;
+    sei();
+    
+    reset_error_enc ++;
+    if (reset_error_enc > 10000){
+      reset_error_enc = 0;
+      error_buildup_enc_l = 0;
+      error_buildup_enc_r = 0;
+    }
+    
+    //take derivative to get curr speed
+    curr_left_speed = curr_left_count - prev_left_count;
+    curr_right_speed = curr_right_count - prev_right_count;
+
+
   
-  p_control_enc_l = error_l_enc * kp_enc;
-  p_control_enc_r = error_r_enc * kp_enc;
+    //get error from difference between wanted speed and curr speed
+    error_l_enc = abs(curr_left_speed - left_wanted_speed);
+    error_r_enc = abs(curr_right_speed - right_wanted_speed);
 
-  d_control_enc_l = abs(error_l_enc - prev_error_l_enc);
-  d_control_enc_r = abs(error_r_enc - prev_error_r_enc);
+    //if error is too big need to set it to something smaller
+    if (error_l_enc > 300){
+      error_l_enc = 300;
+    }
+    if (error_r_enc > 300) {
+      error_r_enc = 300;
+    }
 
-  d_control_enc_l *= kd_enc;
-  d_control_enc_r *= kd_enc;
+    // use d for error values since error is difference from last count;
+    
+    d_control_enc_l = error_l_enc * kd_enc;
+    d_control_enc_r = error_r_enc * kd_enc;
   
-  if (left_wanted_speed > curr_left_speed){
-    motor_left = base_speed  + (p_control_enc_l + d_control_enc_l);
-  }
-
-
-  else if (left_wanted_speed < curr_left_speed){
-    motor_left = base_speed - (p_control_enc_l + d_control_enc_l);
-  }
-
-
-  if (right_wanted_speed > curr_right_speed){
-    motor_right = base_speed  + (p_control_enc_r + d_control_enc_r);
-  }
-
-  else if (right_wanted_speed < curr_right_speed){
-    motor_right = base_speed - (p_control_enc_r + d_control_enc_r);
-  }
-
-  //for getting curr speed;
-  prev_left_count = curr_left_count;
-  prev_right_count = curr_right_count;
-
-  //for d_control
-  prev_error_l_enc = error_l_enc;
-  prev_error_r_enc = error_r_enc;
-  last_time = curr_time;
-  }//end of if sample time is met
+    error_buildup_enc_l += error_l_enc;
+    error_buildup_enc_r += error_r_enc;
+    // integrate error to get proportional 
+    // reasoning is that derivative is already the error 
+    p_control_enc_l =  error_buildup_enc_l * kp_enc;
+    p_control_enc_r =  error_buildup_enc_r * kp_enc; 
+    // i don't know whether to use kp_enc or ki_enc or if it even matters
+    // difference between kp_enc and ki_enc is that ki_enc is divided by dt
+    
+    
+    //OLD BAD METHOD FOR PID ENC
+    
+    //p_control_enc_l = error_l_enc * kp_enc;
+    //p_control_enc_r = error_r_enc * kp_enc;
+  
+    //d_control_enc_l = abs(error_l_enc - prev_error_l_enc);
+    //d_control_enc_r = abs(error_r_enc - prev_error_r_enc);
+  
+    //d_control_enc_l *= kd_enc;
+    //d_control_enc_r *= kd_enc;
+    
+    if (left_wanted_speed > curr_left_speed){
+      motor_left = base_speed  + (p_control_enc_l + d_control_enc_l);
+    }
+  
+  
+    else if (left_wanted_speed < curr_left_speed){
+      motor_left = base_speed - (p_control_enc_l + d_control_enc_l);
+    }
+  
+  
+    if (right_wanted_speed > curr_right_speed){
+      motor_right = base_speed  + (p_control_enc_r + d_control_enc_r);
+    }
+  
+    else if (right_wanted_speed < curr_right_speed){
+      motor_right = base_speed - (p_control_enc_r + d_control_enc_r);
+    }
+  
+    //for getting curr speed;
+    prev_left_count = curr_left_count;
+    prev_right_count = curr_right_count;
+  
+    //for d_control
+    last_time = curr_time;
+    }//end of if sample time is met
   
 }
 
 //pid = (kp * e(t)) + (ki * integral e(t) * d(t)) + (kd * derivative e(t) * 1/dt)
 //chooses which pid to do
 void pid_control(){
-  //readIR();
-
-  //has_walls();
+  
   //does this faster by not having the avg being taken each time
   has_walls_pid();
-  //testing
   
+  //testing
+ 
   //pid_control_two_45_walls();
   //pid_control_one_wall_l();
   //pid_control_one_wall_r();
-  //pid_control_enc();
+  pid_control_enc();
   //pid_control_two_90_walls();
-
   
-
+  
+  //actual pid_control branch 
   //using 45 deg sensors
-  if (left_45_wall == true && right_45_wall == true) {
-    
-    pid_control_two_45_walls();
-    return;
-  }
-  else if (left_45_wall == true &&  right_45_wall == false) {
-    pid_control_one_wall_l();
-    return;
-  }
-  else if (left_45_wall == false && right_45_wall == true) {
-    pid_control_one_wall_r();
-    return;
-  }
-
-  //go off encoders if no walls
-  // if encoders are really good go off of encoders even more
-  //otherwise go off of last values
-  else if (left_45_wall && right_45_wall == false) {
-    pid_control_enc();
-    //forward(motor_left,motor_right);
-    //pid_control_two_45_walls();
-
-    //pid_control_one_wall_r();
-    return;
-  }
-  else {
-    pid_control_two_45_walls();
-    return;
-  }
+//  if (left_45_wall == true && right_45_wall == true) {
+//    pid_control_two_45_walls();
+//    return;
+//  }
+//  else if (left_45_wall == true &&  right_45_wall == false) {
+//    pid_control_one_wall_l();
+//    return;
+//  }
+//  else if (left_45_wall == false && right_45_wall == true) {
+//    pid_control_one_wall_r();
+//    return;
+//  }
+//
+//  //go off encoders if no walls
+//  // if encoders are really good go off of encoders even more
+//  //otherwise go off of last values
+//  else if (left_45_wall && right_45_wall == false) {
+//    //pid_control_enc(); // probably reason for why it messed up while testing a little
+//    forward(motor_left,motor_right);
+//    //pid_control_two_45_walls();
+//
+//    //pid_control_one_wall_r();
+//    return;
+//  }
+//  else {
+//    pid_control_two_45_walls();
+//    return;
+//  }
 
 //I GOT RID OF 90 degree sensor PID to shorten code 
 //if I need it back look at old github versions to get back the code 
@@ -605,7 +654,10 @@ void go_one_cell(){
     //IF PID IS DONE IN A STATE MACHINE I WONT NEED PID IN THIS FUNCTION
     //HAVING IN STATE MACHINES COULD MEAN I COULD HAVE BETTER READ RESULTS
     //NEED TO MAKE SURE THIS DOESN'T MESS UP CONTROL GOING FORWARD
-  
+
+    //ACTUALLY SINCE THE MOTOR TICK STATE MACHINE JUST CALLS GO ONE CELL
+    //ITS FINE TO LEAVE PID CONTROL INSIDE THIS FUNCTION BECAUSE ITS THE ONLY TIME
+    //I NEED TO CALL PID 
     pid_control();
     if (sensorReading_middle > correct_mouse_thres){
       //forward(0,0);
@@ -620,65 +672,7 @@ void go_one_cell(){
 }
 
 
-//correct mouse if theirs a front wall in front
-//should replace bumping into walls in random_move function
-//run pid while reversing so it straightens it self out even more
-void correct_mouse_far(){
-//  readIR();
-//  halt_until(halt_delay);
-//  while (sensorReading_middle < 58) { //70
-//    //    readIR();
-//    //    if (sensorReading_middle > 60){
-//    //      break;
-//    //    }
-//    pid_control();
-//    forward(motor_left - 20, motor_right - 20);
-//    readIR();
-//  }
-//  forward(0,0);
-//  halt_until(halt_delay);
-}
 
-//pretty sure this should work in theory
-//need to test pid on reverse 
-void correct_mouse_close(){
-  
-  readIR();
-  //if (hasfrontwall(){
-  halt_until(halt_delay);
-  while (sensorReading_middle >90) {//50,54,48,45,70(might be good too),68,86,90
-    pid_control();
-    //reverse(motor_left - 20, motor_right - 20);
-    reverse(motor_left,motor_right);
-    //reverse(base_speed-20,base_speed-20);
-    //reverse(base_speed,base_speed);
-    readIR();
-  }
-  reverse(0,0);
-  halt_until(halt_delay);
-
-}
-
-//void correct_mouse(){
-//  //reverse(motor_left, motor_right);
-//  //delay(200);//1000 is too long
-//  reverse(0,0);
-//  halt_until(halt_delay);
-//  readIR();
-//  while(sensorReading_middle < correct_mouse_thres){
-//    //pid_control();
-//    pid_control();
-//    if (sensorReading_middle > correct_mouse_thres){
-//      halt();
-//      break;
-//    }
-//    forward(motor_left,motor_right);  
-//    
-//    //readIR();
-//  }
-//  forward(0,0);
-//  halt_until(halt_delay);  
-//}
 
 void correct_mouse(){
   halt_until(halt_delay);
@@ -793,7 +787,7 @@ void motor_tick(){
           
 
         //front left right
-      //000
+          //000
             if (front_wall == false && left_wall == false && right_wall == false){
               random_choice = random(millis()) % 2;
               if (random_choice == 0){
