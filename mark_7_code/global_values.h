@@ -105,7 +105,7 @@ unsigned long curr_right_speed;
 //need to set these speeds for encoder pid
 //test the values to get ones that work best
 unsigned long left_wanted_speed = 200; //200,180
-unsigned long right_wanted_speed = 260;//200, 210,205,300,280
+unsigned long right_wanted_speed = 250;//200, 210,205,300,280,260
 
 double kp_enc = 0.10;//0.50,0.10
 double kd_enc = 0.10;//0.30
