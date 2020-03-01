@@ -91,6 +91,10 @@ double motor_right = base_speed_r;
 //FOR PID ENCODERS
 unsigned long curr_left_count;
 unsigned long curr_right_count;
+
+//to keep track of prev count so i can get curr speed
+double prev_left_count = 0;
+double prev_right_count = 0;
 //long expec_left_count = 1500;
 //long expec_right_count = 1500;
 
@@ -100,22 +104,19 @@ unsigned long curr_right_speed;
 
 //need to set these speeds for encoder pid
 //test the values to get ones that work best
-unsigned long left_wanted_speed = 200;
-unsigned long right_wanted_speed = 200;//200
+unsigned long left_wanted_speed = 200; //200,180
+unsigned long right_wanted_speed = 260;//200, 210,205,300,280
 
-double kp_enc = 0.10;//0.50
+double kp_enc = 0.10;//0.50,0.10
 double kd_enc = 0.10;//0.30
 double ki_enc = 0.10;//0.00001
 
 double error_l_enc = 0;
 double error_r_enc = 0;
 
-//to keep track of prev count so i can get curr speed
-double prev_left_count = 0;
-double prev_right_count = 0;
-
 double prev_error_l_enc = 0;
 double prev_error_r_enc = 0;
+
 
 double p_control_enc_l = 0;
 double p_control_enc_r = 0;

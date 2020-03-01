@@ -1,16 +1,20 @@
+//TODO 
+//PID for ENCODERS or do two front ir's 
+//floodfill
+//
+
+//NOTE
+//SOMETHINGS STOPPING RIGHT COUNT FROM GOING UP WHEN ONLY RUNNING GO_ONE_CELL AND PID_enc
+
 //#include <avr/io.h>
 //#include <avr/interrupt.h>
 
 #include <StackArray.h>
 
 
-
 //floodfill libraries
 #include <stack>
-
 #include <cmath>
- 
-
 #include <Wire.h>
 #include <LSM6.h>
 
@@ -145,6 +149,7 @@ void loop(){
 
 //main sequence 
   //readIR();
+  //go_one_cell();
   motor_tick(); 
   delay(600);
   
@@ -159,6 +164,7 @@ void loop(){
 //  forward(base_speed,base_speed);
 //  delay(1000);
 //  halt_until(halt_delay);
+//  print_encoder_count();
 ////  analog_off();
 //  reverse(base_speed-6,base_speed);
 //  delay(1000);
