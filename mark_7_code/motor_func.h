@@ -267,6 +267,10 @@ void tune_pid_constants(){
   
   ki_enc *= sample_time;
   kd_enc /= sample_time;
+
+  ki_gyro *= sample_time;
+  kd_gyro /= sample_time;
+  
   
 }
 
@@ -291,13 +295,15 @@ void pid_control_one_wall_l(){
     
     //d_control_l = (abs(error_l - prev_error_l) * kd_l ) / diff_time;
     d_control_l = (abs(error_l - prev_error_l) * kd_l );
-  
+
+    //too far to the left  
     if (sensorReading_45_left > middle_point_l) {
   
       motor_left = base_speed + ( p_control_l + d_control_l);
       motor_right = base_speed - (p_control_l + d_control_l);
     }
-  
+
+    //too far to the right
     else if (sensorReading_45_left < middle_point_l) {
       motor_left = base_speed - (p_control_l + d_control_l);
       motor_right = base_speed + (p_control_l + d_control_l);
@@ -305,6 +311,11 @@ void pid_control_one_wall_l(){
     
     prev_error_l = error_l;
     last_time = curr_time;
+    //put it here to stop weird initialization error with pid
+   //probably becaus of wack curr_side_speed calculation since 
+   //its curr_left_count - prev_left_count 
+    prev_left_count = left_count;
+    prev_right_count = right_count; 
    } // end of if sample time
 }
 
@@ -325,12 +336,14 @@ void pid_control_one_wall_r(){
   
     //d_control_r = (abs(error_r - prev_error_r) * kd_r) / diff_time;
     d_control_r = (abs(error_r - prev_error_r) * kd_r);
-  
+
+    //too far to the right    
     if (sensorReading_45_right > middle_point_r) {
       motor_left = base_speed - ( p_control_r + d_control_r);
       motor_right = base_speed + (p_control_r + d_control_r);
     }
-  
+
+    //too far to the left
     else if (sensorReading_45_right < middle_point_r) {
       motor_left = base_speed + (p_control_r + d_control_r);
       motor_right = base_speed - (p_control_r + d_control_r);
@@ -338,6 +351,12 @@ void pid_control_one_wall_r(){
     
       prev_error_r = error_r;
       last_time = curr_time;
+      
+    //put it here to stop weird initialization error with pid
+   //probably becaus of wack curr_side_speed calculation since 
+   //its curr_left_count - prev_left_count 
+    prev_left_count = left_count;
+    prev_right_count = right_count; 
   } // end of if sample time
 }
 
@@ -387,9 +406,12 @@ void pid_control_two_45_walls(){
     i_control = (error_buildup * ki);
   
     //d control
-  
-    //d_control = (abs(error - prev_error) * kd) / diff_time;
-    d_control = (abs(error_r - prev_error_r) * kd);
+
+    //this should be the d control 
+    d_control = (abs(error - prev_error) * kd) ;// / diff_time; //(because already did kd / difftime in set up constants function
+    
+    
+    //d_control = (abs(error_r - prev_error_r) * kd);
   
     //too close left
     if (sensorReading_45_left > sensorReading_45_right) {
@@ -428,9 +450,108 @@ void pid_control_two_45_walls(){
     Serial.println(motor_right);
      prev_error = error;
      last_time = curr_time;
+
+   //put it here to stop weird initialization error with pid
+   //probably becaus of wack curr_side_speed calculation since 
+   //its curr_left_count - prev_left_count 
+    prev_left_count = left_count;
+    prev_right_count = right_count; 
    } //end of if sample time 
 }
 
+//pid = (kp * e(t)) + (ki * integral e(t) * d(t)) + (kd * derivative e(t) * 1/dt)
+void pid_control_gyro(){
+  
+  gyro_pid_bool = 1;
+  //gets reading for gyro
+  gyro_tick();
+  //error value
+  curr_time = millis();
+  diff_time = curr_time - last_time;
+  if (diff_time >= sample_time){
+    reset_error ++;
+    //resets reset error which is used for i part of pid  which takes in error from previous cycles
+    if (reset_error_gyro > 10000){
+      reset_error_gyro = 0;
+      error_buildup_gyro = 0;
+    }
+
+    error_gyro = gyro_angle_pid; //gyro_angle_pid - 0 //(reading - setpoint) so should be 0;
+    if (error_gyro > 100){
+      error_gyro = 100;
+    }
+    
+    Serial.println("ERROR VALUE: ");
+    Serial.println(error);
+
+    //p control
+    p_control_gyro = error_gyro * kp_gyro;
+  
+    //i control
+    error_buildup_gyro += error_gyro;
+    //i_control = (error_buildup * ki)*diff_time;
+    i_control_gyro = (error_buildup_gyro * ki_gyro);
+  
+    //d control
+  
+    d_control_gyro = (abs(error_gyro - prev_error_gyro) * kd_gyro); // / diff_time; // done in tune pid constants
+    //d_control = (abs(error_r - prev_error_r) * kd);
+  
+    //too close left
+    //gyro output is positive
+    if (error_gyro > 0) {
+  
+      motor_left = base_speed + (p_control_gyro + d_control_gyro + i_control_gyro); //
+      motor_right = base_speed - (p_control_gyro + d_control_gyro + i_control_gyro); //
+  
+  //    motor_left = base_speed_l + (p_control +d_control); //+ i_control); //
+  //    motor_right = base_speed_r - (p_control + d_control); //+ i_control); //
+      
+      
+      //    motor_left += (p_control + d_control);
+      //    motor_right -= (p_control + d_control);
+  
+      //
+      
+    }
+    //too close right
+    //gyro output is negative
+    else if (error_gyro < 0) {
+  
+      motor_left = base_speed - (p_control_gyro  + d_control_gyro + i_control_gyro); //
+      motor_right = base_speed +  (p_control_gyro  + d_control_gyro + i_control_gyro); //
+  
+  
+  //    motor_left = base_speed_l - (p_control + d_control); //+ i_control); //
+  //    motor_right = base_speed_r + (p_control + d_control); //+ i_control); //
+      
+      
+      //    motor_left -= (p_control + d_control);
+      //    motor_right += (p_control + d_control);
+      
+    }
+//actually below if it is equal to zero the motor left and motor right would just stay the same anyway    
+//    //in case the readings are exactly zero which it might be if it start off this way
+//    else{
+//      motor_left = motor_left;
+//      motor_right = motor_right;
+//    }
+    Serial.println("Motor_Left");
+    Serial.println(motor_left);
+    Serial.println("Motor_RIGHT");
+    Serial.println(motor_right);
+     prev_error_gyro = error_gyro;
+     last_time = curr_time;
+
+   //put it here to stop weird initialization error with pid
+   //probably becaus of wack curr_side_speed calculation since 
+   //its curr_left_count - prev_left_count 
+    prev_left_count = left_count;
+    prev_right_count = right_count; 
+   } //end of if sample time 
+   //sets gyro pid bool off to do gyro normally for turns and such
+   gyro_pid_bool = 0;
+}
 
 //NEED TO TEST THIS
 //WILL RUN INTO ERRORS IF COUNT GOES UP DURING TURNS THUS MESSING UP THE CURR_SPEED CALCULATIONS
@@ -460,7 +581,7 @@ void pid_control_enc(){
     curr_left_speed = curr_left_count - prev_left_count;
     curr_right_speed = curr_right_count - prev_right_count;
 
-    //curr_right_speed += (curr_left_speed * 0.10);
+    //curr_left_speed += (curr_right_speed * 0.20);
   
     //get error from difference between wanted speed and curr speed
     error_l_enc = abs(curr_left_speed - left_wanted_speed);
@@ -531,11 +652,12 @@ void pid_control(){
   //pid_control_one_wall_l();
   //pid_control_one_wall_r();
   //pid_control_enc();
+  //pid_control_gyro();
   //pid_control_two_90_walls();
   
   
-//  //actual pid_control branch 
-//  //using 45 deg sensors
+  //actual pid_control branch 
+  //using 45 deg sensors
   if (left_45_wall == true && right_45_wall == true) {
     pid_control_two_45_walls();
     return;
@@ -552,12 +674,12 @@ void pid_control(){
   //go off encoders if no walls
   // if encoders are really good go off of encoders even more
   //otherwise go off of last values
-  else if (left_45_wall && right_45_wall == false) {
+  else if (left_45_wall  == false && right_45_wall == false) {
     //pid_control_enc(); // probably reason for why it messed up while testing a little
     forward(motor_left,motor_right);
     //pid_control_two_45_walls();
-
     //pid_control_one_wall_r();
+    //pid_control_gyro      
     return;
   }
   else {

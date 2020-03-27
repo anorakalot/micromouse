@@ -1,7 +1,8 @@
 //TODO 
 //PID for ENCODERS or do two front ir's 
 //floodfill
-//
+//FISHBONES
+
 
 //NOTE
 //SOMETHINGS STOPPING RIGHT COUNT FROM GOING UP WHEN ONLY RUNNING GO_ONE_CELL AND PID_enc
@@ -149,10 +150,12 @@ void loop(){
 
 //main sequence 
   //readIR();
+
+  //gyro_tick();
+ 
   //go_one_cell();
   motor_tick(); 
   delay(600);
-  
   
   //pid_control();
   //forward(motor_left,motor_right);

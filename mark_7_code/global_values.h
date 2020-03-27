@@ -105,8 +105,8 @@ unsigned long curr_right_speed;
 //need to set these speeds for encoder pid
 //test the values to get ones that work best
 unsigned long left_wanted_speed = 200; //200,180
-unsigned long right_wanted_speed = 250;//200, 210,205,300,280,260
-
+unsigned long right_wanted_speed = 182;//200, 210,205,300,280,260,250,245,238
+                                //180,200,190,185,182,183
 double kp_enc = 0.10;//0.50,0.10
 double kd_enc = 0.10;//0.30
 double ki_enc = 0.10;//0.00001
@@ -137,6 +137,20 @@ double reset_error_enc = 0;
 //int left_ir_low_bound = 995;
 //int left_ir_high_bound = 1009;
 
+//pid values for gyro pid function
+double kp_gyro = 0.25;//0.50,0.030,0.50, 0.90,0.40,0.36,0.30,0.20,0.10,0.05,0.20,0.10,0.20,0.15,0.10,0.12(good),0.50(overshoots),0.30
+double kd_gyro = 0.25;//0.40,0.30,0.05,0.10,005,0.08,0.06,0.08,0.10(good),0.12,0.50,0.30,0
+double ki_gyro = 0;//0.00001,0.00001
+double error_gyro = 0;
+double prev_error_gyro = 0;
+double p_control_gyro = 0;
+double d_control_gyro = 0;
+double i_control_gyro = 0;
+  //adding to sensorReading_45 in pid_control_two _45_walls
+//double right_45_offset_for_pid = 50;
+unsigned long error_buildup_gyro;
+
+double reset_error_gyro = 0;
 
 
 //Motor
@@ -285,10 +299,13 @@ signed long gyro_angle = 0;
 double gyro_raw_dps_conversion_factor = 8.75;
 double gyro_reset_limit = 1000;
 
+
+
 //accelerometer values
 double accel_raw_data;
 double accel_force_conversion_factor = 0.061;
 double accel_force_data;
+
 
 
 
@@ -307,6 +324,25 @@ double left_turn_length = 160;//80(too low),90 (a little too high),88,85,80(too 
 double right_turn_length = 185;//80(too low),81(overshoots sometimes)//80,130,160,180
 
 
+//gryo values for PID
+//I PUT GRYO VARIABLES IN GRYO_FUNC DUE TO ERRORS
+
+LSM6 gyro_pid;
+double gyro_dps_pid; //degrees per second
+double gyro_raw_data_pid;
+signed long gyro_sum_pid = 0;
+signed long gyro_angle_pid = 0;
+//double gyro_raw_dps_conversion_factor_pid = 8.75; //technically don't need this since it's the same factor number
+double gyro_reset_limit_pid = 1000;
+
+
+
+//accelerometer values
+double accel_raw_data_pid;
+double accel_force_conversion_factor_pid = 0.061;
+double accel_force_data_pid;
+
+bool gyro_pid_bool= 0;
 //bool go_one_cell_happening = 0;
 
 
